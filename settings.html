@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>设置</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+  <div class="topbar">
+    <div class="hamburger" onclick="openMenu()" id="hamburger">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+
+  <div class="sidebar" id="sidebar">
+    <a href="/">首页</a>
+    <a href="/help">帮助</a>
+    <a href="/submit">投稿</a>
+    <a href="/archive">往期</a>
+    <a href="/settings">设置</a>
+  </div>
+
+  <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+  <main>
+    <div class="glass-card">
+      <h1>设置</h1>
+      <div class="glass-card">
+  <h1>设置</h1>
+
+  <div class="theme-switch">
+    <button onclick="setLightMode()">浅色模式</button>
+    <button onclick="setDarkMode()">深色模式</button>
+  </div>
+</div>
+
+    </div>
+  </main>
+
+  <script>
+    function openMenu() {
+      document.getElementById("sidebar").style.left = "0";
+      document.getElementById("overlay").style.display = "block";
+      document.getElementById("hamburger").classList.add("active");
+    }
+
+    function closeMenu() {
+      document.getElementById("sidebar").style.left = "-300px";
+      document.getElementById("overlay").style.display = "none";
+      document.getElementById("hamburger").classList.remove("active");
+    }
+  </script>
+
+</body>
+</html>
