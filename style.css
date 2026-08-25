@@ -1,4 +1,6 @@
-/* 全站 Liquid Glass 背景 */
+/* ================================
+   全站 Liquid Glass 背景
+================================ */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
@@ -6,39 +8,31 @@ body {
   background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(240,240,255,0.4));
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  color: #333;
+  line-height: 1.4;
 }
 
 /* ================================
-   全站基础样式（字体调到 64px）
+   页面主体内容
 ================================ */
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
-  background: #fafafa;
-  color: #333;
-  font-size: 64px; /* 全站字体调到 64px */
-  line-height: 1.4;
+main {
+  padding: 40px;
 }
+
 /* 投稿页输入框黑边样式 */
 .submit-input {
   width: 90%;
   padding: 20px;
   font-size: 64px;
-  border: 4px solid black;   /* 黑色边框 */
+  border: 4px solid black;
   border-radius: 12px;
   margin-bottom: 40px;
   background: white;
 }
 
-/* 页面主体内容 */
-main {
-  padding: 40px;
-}
-
-
 /* ================================
-   顶部栏（汉堡按钮所在）
-/* Liquid Glass 顶部栏 */
+   顶部栏（Liquid Glass）
+================================ */
 .topbar {
   width: 100%;
   height: 120px;
@@ -56,7 +50,9 @@ main {
   border-radius: 0 0 40px 40px;
 }
 
-/* Liquid Glass 汉堡按钮 */
+/* ================================
+   汉堡按钮（Liquid Glass + 变 X）
+================================ */
 .hamburger {
   width: 80px;
   height: 60px;
@@ -86,76 +82,33 @@ main {
   transform: translateY(-24px) rotate(-45deg);
 }
 
+/* ================================
+   侧滑菜单（Liquid Glass）
 ================================ */
-/* Liquid Glass 按钮 */
-.sidebar a {
-  display: block;
-  width: 100%;
-  padding: 40px 0;
-  text-align: center;
-  font-size: 64px;
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: 300px;
+  height: 100%;
+  padding-top: 160px;
 
-  background: rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-
-  border-radius: 30px;
-  margin: 20px 0;
-
-  color: #333;
-  text-decoration: none;
-
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  transition: 0.25s;
-}
-
-.sidebar a:hover {
-  background: rgba(255, 255, 255, 0.55);
-  transform: scale(1.03);
-}
-
-/* Liquid Glass 按钮 */
-.sidebar a {
-  display: block;
-  width: 100%;
-  padding: 40px 0;
-  text-align: center;
-  font-size: 64px;
-
-  background: rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-
-  border-radius: 30px;
-  margin: 20px 0;
-
-  color: #333;
-  text-decoration: none;
-
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  transition: 0.25s;
-}
-
-.sidebar a:hover {
-  background: rgba(255, 255, 255, 0.55);
-  transform: scale(1.03);
-}
-
-
-  /* 关键：液态玻璃效果 */
-  background: rgba(255, 255, 255, 0.25); /* 半透明玻璃 */
-  backdrop-filter: blur(30px) saturate(180%); /* 强模糊 + 饱和度 */
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(30px) saturate(180%);
   -webkit-backdrop-filter: blur(30px) saturate(180%);
 
-  border-right: 1px solid rgba(255, 255, 255, 0.4); /* 玻璃边缘高光 */
-  box-shadow: 8px 0 30px rgba(0, 0, 0, 0.15); /* 柔和阴影 */
+  border-right: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 8px 0 30px rgba(0, 0, 0, 0.15);
 
-  border-radius: 0 40px 40px 0; /* 右侧圆角，像 iOS 卡片 */
+  border-radius: 0 40px 40px 0;
 
   transition: left 0.35s cubic-bezier(0.25, 1.3, 0.3, 1);
   z-index: 300;
 }
-/* Liquid Glass 按钮 */
+
+/* ================================
+   菜单按钮（Liquid Glass）
+================================ */
 .sidebar a {
   display: block;
   width: 100%;
@@ -163,66 +116,55 @@ main {
   text-align: center;
   font-size: 64px;
 
-  background: rgba(255, 255, 255, 0.35); /* 半透明按钮 */
+  background: rgba(255, 255, 255, 0.35);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 
-  border-radius: 30px; /* 圆角按钮 */
+  border-radius: 30px;
   margin: 20px 0;
 
   color: #333;
   text-decoration: none;
 
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1); /* 轻柔阴影 */
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   transition: 0.25s;
 }
 
 .sidebar a:hover {
-  background: rgba(255, 255, 255, 0.55); /* hover 更亮 */
-  transform: scale(1.03); /* 微缩放 */
+  background: rgba(255, 255, 255, 0.55);
+  transform: scale(1.03);
 }
 
-
-.sidebar a:hover {
-  background: #0078ff;
-  color: white;
-}
-
-}
-
-/* 菜单按钮字体仍然保持 64px */
-.sidebar a {
-  display: block;
-  padding: 40px 50px;
-  font-size: 64px;
-  text-decoration: none;
-  color: #333;
-  border-bottom: 2px solid #eee;
-  transition: 0.2s;
-}
-
-
-.sidebar a:hover {
-  background: #0078ff;
-  color: white;
-}
-/* Liquid Glass 遮罩层 */
+/* ================================
+   遮罩层（Liquid Glass）
+================================ */
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  backdrop-filter: blur(6px); /* 背景轻模糊 */
-  background: rgba(0,0,0,0.25); /* 更柔和的暗化 */
+  backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.25);
   display: none;
   z-index: 250;
 }
 
-
+/* ================================
+   页面内容玻璃卡片
+================================ */
+.glass-card {
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-radius: 40px;
+  padding: 60px;
+  margin: 40px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+}
 
 /* ================================
-   手机端适配（仍然保持大字体）
+   手机端适配
 ================================ */
 @media (max-width: 600px) {
   body {
@@ -250,14 +192,4 @@ main {
   .hamburger div {
     height: 10px;
   }
-}
-/* 页面内容玻璃卡片 */
-.glass-card {
-  background: rgba(255,255,255,0.35);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border-radius: 40px;
-  padding: 60px;
-  margin: 40px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
 }
