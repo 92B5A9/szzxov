@@ -18,50 +18,25 @@
     <a href="/url">友情链接</a>
   </div>
 
-  <!-- 主体内容 -->
-  <main class="home-layout">
+  <!-- 主体内容（不使用滚动动画） -->
+  <main style="padding: 20px;">
 
-    <div class="home-right">
+    <div class="glass-card">
 
-      <section class="home-section fade-pair">
-        <div class="glass-card">
+      <h1>设置</h1>
 
-          <h1>设置</h1>
+      <div class="glass-card" style="margin-top:20px;">
+        <h2>模式</h2>
 
-          <div class="glass-card" style="margin-top:20px;">
-            <h2>模式</h2>
-
-            <div class="theme-switch">
-              <button onclick="setLightMode()">浅色模式</button>
-              <button onclick="setDarkMode()">深色模式</button>
-            </div>
-          </div>
-
+        <div class="theme-switch">
+          <button onclick="setLightMode()">浅色模式</button>
+          <button onclick="setDarkMode()">深色模式</button>
         </div>
-      </section>
+      </div>
 
     </div>
 
   </main>
-
-  <!-- 滚动淡入动画 -->
-  <script>
-    const sections = document.querySelectorAll('.fade-pair');
-
-    function checkSections() {
-      const trigger = window.innerHeight * 0.7;
-
-      sections.forEach(sec => {
-        const rect = sec.getBoundingClientRect();
-        if (rect.top < trigger) {
-          sec.classList.add('visible');
-        }
-      });
-    }
-
-    document.querySelector('.home-right').addEventListener('scroll', checkSections);
-    window.onload = checkSections;
-  </script>
 
   <!-- 深色模式 -->
   <script>
