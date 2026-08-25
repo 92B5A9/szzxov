@@ -2,13 +2,13 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>友情链接丨苏州中学OV广播社</title>
+  <title>友情链接</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 
 <body class="light-mode">
 
-  <!-- 顶部横向导航条（全站统一） -->
+  <!-- 顶部横向导航条 -->
   <div class="topbar">
     <a href="/">首页</a>
     <a href="/submit">投稿</a>
@@ -18,34 +18,42 @@
     <a href="/url">友情链接</a>
   </div>
 
-  <!-- 主体内容（不使用滑动，不使用 home-right，不使用 home-section） -->
+  <!-- 主体内容 -->
   <main style="padding: 20px;">
 
     <div class="glass-card fade-pair">
 
       <h1 class="center-title">友情链接</h1>
 
-      <!-- 你已有的链接 -->
-      <a class="friend-card" href="https://szzxshumei.com" target="_blank">
-        苏州中学树莓社
-      </a>
+      <!-- 友情链接列表 -->
+      <div class="friend-list">
 
-      <a class="friend-card" href="https://game.ion-storm.vip" target="_blank">
-        离子风暴•化学牌
-      </a>
+        <a class="friend-card" href="https://szzxshumei.com" target="_blank">
+          <img class="favicon" src="https://szzxshumei.com/favicon.ico" onerror="this.src='https://www.google.com/s2/favicons?domain=szzxshumei.com';">
+          <span>苏州中学树莓社</span>
+        </a>
 
-      <!-- 继续添加即可 -->
-      <!--
-      <a class="friend-card" href="https://你的新链接.com" target="_blank">
-        新链接名称
-      </a>
-      -->
+        <a class="friend-card" href="https://game.ion-storm.vip" target="_blank">
+          <img class="favicon" src="https://game.ion-storm.vip/favicon.ico" onerror="this.src='https://www.google.com/s2/favicons?domain=game.ion-storm.vip';">
+          <span>离子风暴·化学牌</span>
+        </a>
+
+        <!-- 新增链接示例 -->
+        <!--
+        <a class="friend-card" href="https://你的链接.com" target="_blank">
+          <img class="favicon" src="https://你的链接.com/favicon.ico"
+               onerror="this.src='https://www.google.com/s2/favicons?domain=你的链接.com';">
+          <span>你的名称</span>
+        </a>
+        -->
+
+      </div>
 
     </div>
 
   </main>
 
-  <!-- 淡入动画 -->
+  <!-- 动画 + 深色模式 -->
   <script>
     window.onload = function() {
       const savedTheme = localStorage.getItem("theme");
