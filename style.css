@@ -1,45 +1,37 @@
-/* ================================
-   全站 Liquid Glass 背景
-================================ */
+/* =========================================
+   全站基础样式（字体 + 背景）
+========================================= */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
   font-size: 64px;
-  background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(240,240,255,0.4));
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  color: #333;
   line-height: 1.4;
+  color: #333;
+  transition: background 0.6s ease, color 0.6s ease;
 }
 
-/* ================================
-   页面主体内容
-================================ */
-main {
-  padding: 40px;
+/* 浅色模式 */
+body.light-mode {
+  background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(240,240,255,0.4));
+  color: #333;
 }
 
-/* 投稿页输入框黑边样式 */
-.submit-input {
-  width: 90%;
-  padding: 20px;
-  font-size: 64px;
-  border: 4px solid black;
-  border-radius: 12px;
-  margin-bottom: 40px;
-  background: white;
+/* 深色模式 */
+body.dark-mode {
+  background: linear-gradient(135deg, rgba(20,20,30,0.7), rgba(10,10,20,0.6));
+  color: #f0f0f0;
 }
 
-/* ================================
+/* =========================================
    顶部栏（Liquid Glass）
-================================ */
+========================================= */
 .topbar {
   width: 100%;
   height: 120px;
   display: flex;
   align-items: center;
   padding-left: 30px;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255,255,255,0.25);
   backdrop-filter: blur(25px) saturate(180%);
   -webkit-backdrop-filter: blur(25px) saturate(180%);
   border-bottom: 1px solid rgba(255,255,255,0.4);
@@ -50,60 +42,31 @@ main {
   border-radius: 0 0 40px 40px;
 }
 
-/* ===========================
-   移动端：启用汉堡菜单
-   =========================== */
-@media (max-width: 899px) {
-
-  /* 汉堡菜单显示 */
-  .hamburger {
-    display: flex;
-  }
-
-  /* 侧栏默认隐藏 */
-  .sidebar {
-    left: -300px;
-  }
-
-  /* 内容区不需要右移 */
-  main {
-    margin-left: 0;
-  }
+body.dark-mode .topbar {
+  background: rgba(40,40,60,0.35);
 }
 
-/* ===========================
-   PC端：禁用汉堡菜单
-   =========================== */
-@media (min-width: 900px) {
+/* =========================================
+   汉堡菜单（移动端）
+========================================= */
+.hamburger {
+  width: 80px;
+  height: 80px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
 
-  /* PC端隐藏汉堡菜单 */
-  .hamburger {
-    display: none !important;
-  }
-
-  /* PC端侧栏固定展开 */
-  .sidebar {
-    left: 0 !important;
-    position: fixed;
-  }
-
-  /* PC端不显示遮罩层 */
-  .overlay {
-    display: none !important;
-  }
-
-  /* 内容区自动右移，避免被侧栏挡住 */
-  main {
-    margin-left: 300px;
-  }
-
-  /* 防止误触发 active 导致汉堡菜单变形 */
-  .hamburger.active div {
-    transform: none !important;
-    opacity: 1 !important;
-  }
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
 }
-/* 三条横线 */
+
+body.dark-mode .hamburger {
+  background: rgba(40,40,60,0.35);
+}
+
 .hamburger div {
   width: 100%;
   height: 10px;
@@ -112,7 +75,6 @@ main {
   transition: 0.3s;
 }
 
-/* 深色模式横线变亮 */
 body.dark-mode .hamburger div {
   background: #f0f0f0;
 }
@@ -121,18 +83,69 @@ body.dark-mode .hamburger div {
 .hamburger.active div:nth-child(1) {
   transform: translateY(20px) rotate(45deg);
 }
-
 .hamburger.active div:nth-child(2) {
   opacity: 0;
 }
-
 .hamburger.active div:nth-child(3) {
   transform: translateY(-20px) rotate(-45deg);
 }
 
-/* ================================
-   遮罩层（Liquid Glass）
-================================ */
+/* =========================================
+   侧栏（Liquid Glass）
+========================================= */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: 300px;
+  height: 100%;
+  padding-top: 160px;
+
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(30px) saturate(180%);
+  border-right: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 8px 0 30px rgba(0,0,0,0.15);
+  border-radius: 0 40px 40px 0;
+
+  transition: left 0.35s cubic-bezier(0.25, 1.3, 0.3, 1);
+  z-index: 300;
+}
+
+body.dark-mode .sidebar {
+  background: rgba(40,40,60,0.35);
+}
+
+.sidebar a {
+  display: block;
+  padding: 40px 0;
+  text-align: center;
+  font-size: 64px;
+  text-decoration: none;
+  color: #333;
+
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(20px);
+  border-radius: 30px;
+  margin: 20px;
+  transition: 0.25s;
+}
+
+.sidebar a:hover {
+  background: rgba(255,255,255,0.55);
+}
+
+body.dark-mode .sidebar a {
+  background: rgba(40,40,60,0.35);
+  color: #f0f0f0;
+}
+
+body.dark-mode .sidebar a:hover {
+  background: rgba(80,80,120,0.55);
+}
+
+/* =========================================
+   遮罩层
+========================================= */
 .overlay {
   position: fixed;
   top: 0;
@@ -145,189 +158,30 @@ body.dark-mode .hamburger div {
   z-index: 250;
 }
 
-/* ================================
-   页面内容玻璃卡片
-================================ */
-.glass-card {
-  background: rgba(255,255,255,0.35);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border-radius: 40px;
-  padding: 60px;
-  margin: 40px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+/* =========================================
+   PC / 移动端布局切换
+========================================= */
+@media (max-width: 899px) {
+  .hamburger { display: flex; }
+  .sidebar { left: -300px; }
+  main { margin-left: 0; }
 }
 
-/* ================================
-   手机端适配
-================================ */
-@media (max-width: 600px) {
-  body {
-    font-size: 48px;
-  }
-
-  .sidebar {
-    width: 320px;
-  }
-
-  .sidebar a {
-    font-size: 48px;
-    padding: 30px 40px;
-  }
-
-  .topbar {
-    height: 100px;
-  }
-
-  .hamburger {
-    width: 70px;
-    height: 50px;
-  }
-
-  .hamburger div {
-    height: 10px;
-  }
-}
-/* 设置页主题切换按钮 */
-.theme-switch button {
-  font-size: 48px;
-  padding: 20px 40px;
-  margin: 20px;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-
-  background: rgba(255,255,255,0.35);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  transition: 0.25s;
+@media (min-width: 900px) {
+  .hamburger { display: none !important; }
+  .sidebar { left: 0 !important; position: fixed; }
+  .overlay { display: none !important; }
+  main { margin-left: 300px; }
 }
 
-.theme-switch button:hover {
-  background: rgba(255,255,255,0.55);
-  transform: scale(1.05);
-}/* 主题切换动画（苹果风） */
-body {
-  transition: background 0.6s ease, color 0.6s ease;
-}
-
-/* 玻璃组件的动画 */
-.glass-card,
-.sidebar,
-.sidebar a,
-.topbar {
-  transition: background 0.6s ease, color 0.6s ease, backdrop-filter 0.6s ease;
-}
-
-
-/* 浅色模式（默认） */
-body.light-mode {
-  background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(240,240,255,0.4));
-  color: #333;
-}
-
-/* 深色模式 */
-body.dark-mode {
-  background: linear-gradient(135deg, rgba(20,20,30,0.7), rgba(10,10,20,0.6));
-  color: #f0f0f0;
-}
-
-/* 深色模式下的玻璃卡片 */
-body.dark-mode .glass-card,
-body.dark-mode .sidebar,
-body.dark-mode .sidebar a,
-body.dark-mode .topbar {
-  background: rgba(40,40,60,0.35);
-  backdrop-filter: blur(30px) saturate(180%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
-  color: #f0f0f0;
-}
-/* 深色模式背景 */
-body.dark-mode {
-  background: linear-gradient(135deg, rgba(20,20,30,0.7), rgba(10,10,20,0.6));
-  color: #f0f0f0;
-}
-
-/* 深色模式玻璃组件 */
-body.dark-mode .glass-card,
-body.dark-mode .sidebar,
-body.dark-mode .sidebar a,
-body.dark-mode .topbar {
-  background: rgba(40,40,60,0.35) !important;
-  color: #f0f0f0 !important;
-  backdrop-filter: blur(30px) saturate(180%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
-}
-
-/* 深色模式按钮 hover */
-body.dark-mode .sidebar a:hover {
-  background: rgba(80,80,120,0.55);
-}
-/* 深色模式背景 */
-body.dark-mode {
-  background: linear-gradient(135deg, rgba(20,20,30,0.7), rgba(10,10,20,0.6));
-  color: #f0f0f0;
-}
-
-/* 深色模式玻璃组件 */
-body.dark-mode .glass-card,
-body.dark-mode .sidebar,
-body.dark-mode .sidebar a,
-body.dark-mode .topbar {
-  background: rgba(40,40,60,0.35);
-  color: #f0f0f0;
-  backdrop-filter: blur(30px) saturate(180%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
-}
-/* 首页整体左右布局 */
-.home-layout {
-  display: flex;
-  height: 100vh; /* 整屏高度 */
-  overflow: hidden;
-}
-
-/* 左半边：图片区域 */
-.home-left {
-  width: 50%;
-  height: 100%;
-  padding: 40px;
-  box-sizing: border-box;
-}
-
-.home-photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 40px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-}
-
-/* 右半边：五段文字区域（可滚动） */
-.home-right {
-  width: 50%;
-  height: 100%;
-  overflow-y: scroll; /* 右边可以滚动 */
-  scroll-snap-type: y mandatory; /* 分屏滚动 */
-}
-
-/* 每段文字占一屏 */
-.home-section {
-  height: 100vh;
-  scroll-snap-align: start; /* 每段自动对齐屏幕顶部 */
-  display: flex;
-  align-items: center;
-  padding: 40px;
-  box-sizing: border-box;
-}
-/* 整体布局 */
+/* =========================================
+   首页布局（右侧滚动）
+========================================= */
 .home-layout {
   height: 100vh;
   overflow: hidden;
 }
 
-/* 滚动区域 */
 .home-right {
   width: 100%;
   height: 100%;
@@ -335,52 +189,51 @@ body.dark-mode .topbar {
   scroll-snap-type: y mandatory;
 }
 
-/* 每屏占满一屏 */
 .home-section {
   height: 100vh;
   scroll-snap-align: start;
   display: flex;
   align-items: center;
-  justify-content: center; /* 关键：全部居中 */
+  justify-content: center;
   padding: 40px;
-  box-sizing: border-box;
 }
 
-/* 广播社标题加粗 */
-.home-section h1 {
-  font-size: 96px;
-  font-weight: 800;
-  text-align: center;
-}
-.fade-pair {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+/* =========================================
+   玻璃卡片 + 3D 效果
+========================================= */
+.glass-card {
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(25px);
+  border-radius: 40px;
+  padding: 60px;
+  margin: 40px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+
+  transform-style: preserve-3d;
+  perspective: 1200px;
 }
 
-.fade-pair.visible {
-  opacity: 1;
-  transform: translateY(0);
+body.dark-mode .glass-card {
+  background: rgba(40,40,60,0.35);
 }
 
-/* 初始状态：透明 + 下移 + 轻微缩小 + 轻微倾斜 */
+/* =========================================
+   淡入 + 3D 浮动动画
+========================================= */
 .fade-pair {
   opacity: 0;
   transform: translateY(40px) scale(0.97) rotateX(4deg);
-  transition:
-    opacity 0.8s ease,
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* 出现状态：完全显示 + 回到正常位置 */
 .fade-pair.visible {
   opacity: 1;
   transform: translateY(0) scale(1) rotateX(0deg);
 }
-.glass-card {
-  transform-style: preserve-3d;
-  perspective: 1200px;
-}
+
+/* =========================================
+   友情链接
+========================================= */
 .friend-links {
   display: flex;
   flex-direction: column;
@@ -399,9 +252,7 @@ body.dark-mode .topbar {
 
   background: rgba(255,255,255,0.35);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-
   transition: 0.25s;
 }
 
