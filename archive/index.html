@@ -18,7 +18,7 @@
     <a href="/url">友情链接</a>
   </div>
 
-  <!-- 主体内容（正常排版，无滑动动画） -->
+  <!-- 主体内容 -->
   <main style="padding: 20px;">
 
     <div class="glass-card">
@@ -33,36 +33,112 @@
 
       <div id="list" class="glass-card" style="margin-top:20px;">
         投稿列表加载中（后端待接入）
-        <script>
-async function loadList() {
-  const res = await fetch('/api/archive');
-  const data = await res.json();
-
-  const list = document.getElementById('list');
-  list.innerHTML = "";
-
-  data.results.forEach(item => {
-    const div = document.createElement('div');
-    div.className = "glass-card";
-    div.style.marginTop = "12px";
-    div.innerHTML = `
-      <strong>${item.title}</strong><br>
-      ${item.author}<br>
-      第 ${item.issue} 期<br>
-      <span style="opacity:0.7;">${item.created_at}</span>
-    `;
-    list.appendChild(div);
-  });
-}
-
-loadList();
-</script>
-
       </div>
 
     </div>
 
   </main>
+
+  <!-- 后端数据加载脚本（必须放在外面） -->
+  <script>
+    async function loadList() {
+      const res = await fetch('/api/archive');
+      const data = await res.json();
+
+      const list = document.getElementById('list');
+      list.innerHTML = "";
+
+      data.results.forEach(item => {
+        const div = document.createElement('div');
+        div.className = "glass-card";
+        div.style.marginTop = "12px";
+        div.innerHTML = `
+          <strong>${item.title}</strong><br>
+          ${item.author}<br>
+          第 ${item.issue} 期<br>
+          <span style="opacity:0.7;">${item.created_at}</span>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    loadList();
+
+
+    async function loadIssues() {
+      const res = await fetch('/api/archive');
+      const data = await res.json();
+
+      const filter = document.getElementById('filter');
+      const issues = new Set();
+
+      data.results.forEach(item => issues.add(item.issue));
+
+      issues.forEach(issue => {
+        const opt = document.createElement('option');
+        opt.value = issue;
+        opt.textContent = `第 ${issue} 期`;
+        filter.appendChild(opt);
+      });
+    }
+
+    loadIssues();
+
+
+    document.getElementById('filter').addEventListener('change', async (e) => {
+      const issue = e.target.value;
+
+      const res = await fetch('/api/archive');
+      const data = await res.json();
+
+      const list = document.getElementById('list');
+      list.innerHTML = "";
+
+      data.results
+        .filter(item => !issue || item.issue == issue)
+        .forEach(item => {
+          const div = document.createElement('div');
+          div.className = "glass-card";
+          div.style.marginTop = "12px";
+          div.innerHTML = `
+            <strong>${item.title}</strong><br>
+            ${item.author}<br>
+            第 ${item.issue} 期<br>
+            <span style="opacity:0.7;">${item.created_at}</span>
+          `;
+          list.appendChild(div);
+        });
+    });
+
+
+    document.getElementById('search').addEventListener('input', async (e) => {
+      const keyword = e.target.value.toLowerCase();
+
+      const res = await fetch('/api/archive');
+      const data = await res.json();
+
+      const list = document.getElementById('list');
+      list.innerHTML = "";
+
+      data.results
+        .filter(item =>
+          item.title.toLowerCase().includes(keyword) ||
+          item.author.toLowerCase().includes(keyword)
+        )
+        .forEach(item => {
+          const div = document.createElement('div');
+          div.className = "glass-card";
+          div.style.marginTop = "12px";
+          div.innerHTML = `
+            <strong>${item.title}</strong><br>
+            ${item.author}<br>
+            第 ${item.issue} 期<br>
+            <span style="opacity:0.7;">${item.created_at}</span>
+          `;
+          list.appendChild(div);
+        });
+    });
+  </script>
 
   <!-- 深色模式 -->
   <script>
