@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>提交投稿</title>
+</head>
+<body>
+  <h1>提交投稿</h1>
+
+  <form id="submitForm">
+    <label>歌曲名：</label><br>
+    <input type="text" name="title" required><br><br>
+
+    <label>作者：</label><br>
+    <input type="text" name="author" required><br><br>
+
+    <button type="submit">提交</button>
+  </form>
+
+  <p id="result"></p>
+
+  <script>
+    document.getElementById('submitForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      const data = {
+        title: formData.get('title'),
+        author: formData.get('author')
+      };
+
+      // 后端 API 之后再接入，现在先假装成功
+      document.getElementById('result').innerText = "投稿已提交（后端待接入）";
+    });
+  </script>
+</body>
+</html>
