@@ -3,11 +3,6 @@
   <link rel="stylesheet" href="/style.css">
 <head>
   <meta charset="UTF-8">
-  <nav class="navbar">
-  <a href="/">首页</a>
-  <a href="/help">帮助</a>
-  <a href="/submit">投稿</a>
-  <a href="/archive">往期</a>
 </nav>
   <title>帮助页</title>
 </head>
@@ -19,5 +14,17 @@
   </div>
 
   <a href="/index.html">返回首页</a>
+  <script>
+  function openMenu() {
+    document.getElementById("sidebar").style.left = "0";
+    document.getElementById("overlay").style.display = "block";
+  }
+
+  function closeMenu() {
+    document.getElementById("sidebar").style.left = "-300px"; /* 与宽度一致 */
+    document.getElementById("overlay").style.display = "none";
+  }
+</script>
+
 </body>
 </html>
