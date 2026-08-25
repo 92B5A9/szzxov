@@ -237,3 +237,25 @@ body.dark-mode .topbar {
   -webkit-backdrop-filter: blur(30px) saturate(180%);
   color: #f0f0f0;
 }
+/* 深色模式背景 */
+body.dark-mode {
+  background: linear-gradient(135deg, rgba(20,20,30,0.7), rgba(10,10,20,0.6));
+  color: #f0f0f0;
+}
+
+/* 深色模式玻璃组件 */
+body.dark-mode .glass-card,
+body.dark-mode .sidebar,
+body.dark-mode .sidebar a,
+body.dark-mode .topbar {
+  background: rgba(40,40,60,0.35) !important;
+  color: #f0f0f0 !important;
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+}
+
+/* 深色模式按钮 hover */
+body.dark-mode .sidebar a:hover {
+  background: rgba(80,80,120,0.55);
+}
+
