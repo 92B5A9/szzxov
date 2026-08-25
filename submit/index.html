@@ -25,18 +25,20 @@
 
       <h1>提交投稿</h1>
 
-      <form id="submitForm" style="margin-top:20px;">
+    <form id="submitForm" style="margin-top:20px;">
 
-        <label class="form-label">歌曲名</label>
-        <input type="text" name="title" class="submit-input input-glass" placeholder="请输入歌曲名">
+  <label class="form-label">歌曲名</label>
+  <input type="text" name="title" class="submit-input input-glass" placeholder="请输入歌曲名">
 
-        <label class="form-label">歌手</label>
-        <input type="text" name="author" class="submit-input input-glass" placeholder="请输入歌手">
+  <label class="form-label">歌手</label>
+  <input type="text" name="author" class="submit-input input-glass" placeholder="请输入歌手">
 
-        <button type="submit" class="submit-btn">提交</button>
+  <label class="form-label">期数</label>
+  <input type="number" name="issue" class="submit-input input-glass" placeholder="请输入期数">
 
-      </form>
+  <button type="submit" class="submit-btn">提交</button>
 
+</form>
       <p id="result"></p>
 
     </div>
@@ -44,27 +46,29 @@
   </main>
 
   <!-- 投稿提交逻辑（后端待接入） -->
+
 <script>
-  document.getElementById('submitForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
+document.getElementById('submitForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
 
-    const title = e.target.title.value;
-    const author = e.target.author.value;
+  const title = e.target.title.value;
+  const author = e.target.author.value;
+  const issue = Number(e.target.issue.value);
 
-    const res = await fetch('/api/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, author })
-    });
-
-    const result = await res.json();
-
-    if (result.ok) {
-      document.getElementById('result').innerText = "投稿已提交！";
-    } else {
-      document.getElementById('result').innerText = "提交失败，请稍后再试。";
-    }
+  const res = await fetch('/api/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title, author, issue })
   });
+
+  const result = await res.json();
+
+  if (result.ok) {
+    document.getElementById('result').innerText = "投稿已提交！";
+  } else {
+    document.getElementById('result').innerText = "提交失败，请稍后再试。";
+  }
+});
 </script>
 
 
