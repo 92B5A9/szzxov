@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -7,18 +6,10 @@
   <link rel="stylesheet" href="/style.css">
 </head>
 
-<body>
 <body class="light-mode">
 
+  <!-- 顶部横向导航条（全站统一） -->
   <div class="topbar">
-    <div class="hamburger" onclick="openMenu()" id="hamburger">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-  </div>
-
-  <div class="sidebar" id="sidebar">
     <a href="/">首页</a>
     <a href="/submit">投稿</a>
     <a href="/archive">往期</a>
@@ -27,59 +18,74 @@
     <a href="/url">友情链接</a>
   </div>
 
-  <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+  <!-- 主体内容 -->
+  <main class="home-layout">
 
-  <main>
-    <div class="glass-card">
-      <h1>设置</h1>
-      <div class="glass-card">
-  <h1>设置</h1>
+    <div class="home-right">
 
-  <div class="theme-switch">
-    <button onclick="setLightMode()">浅色模式</button>
-    <button onclick="setDarkMode()">深色模式</button>
-  </div>
-</div>
+      <section class="home-section fade-pair">
+        <div class="glass-card">
+
+          <h1>设置</h1>
+
+          <div class="glass-card" style="margin-top:20px;">
+            <h2>模式</h2>
+
+            <div class="theme-switch">
+              <button onclick="setLightMode()">浅色模式</button>
+              <button onclick="setDarkMode()">深色模式</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
 
     </div>
+
   </main>
 
+  <!-- 滚动淡入动画 -->
   <script>
-    function openMenu() {
-      document.getElementById("sidebar").style.left = "0";
-      document.getElementById("overlay").style.display = "block";
-      document.getElementById("hamburger").classList.add("active");
+    const sections = document.querySelectorAll('.fade-pair');
+
+    function checkSections() {
+      const trigger = window.innerHeight * 0.7;
+
+      sections.forEach(sec => {
+        const rect = sec.getBoundingClientRect();
+        if (rect.top < trigger) {
+          sec.classList.add('visible');
+        }
+      });
     }
 
-    function closeMenu() {
-      document.getElementById("sidebar").style.left = "-300px";
-      document.getElementById("overlay").style.display = "none";
-      document.getElementById("hamburger").classList.remove("active");
+    document.querySelector('.home-right').addEventListener('scroll', checkSections);
+    window.onload = checkSections;
+  </script>
+
+  <!-- 深色模式 -->
+  <script>
+    function setLightMode() {
+      document.body.classList.remove("dark-mode");
+      document.body.classList.add("light-mode");
+      localStorage.setItem("theme", "light");
+    }
+
+    function setDarkMode() {
+      document.body.classList.remove("light-mode");
+      document.body.classList.add("dark-mode");
+      localStorage.setItem("theme", "dark");
+    }
+
+    window.onload = function() {
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+      } else {
+        document.body.classList.add("light-mode");
+      }
     }
   </script>
-<script>
-  function setLightMode() {
-    document.body.classList.remove("dark-mode");
-    document.body.classList.add("light-mode");
-    localStorage.setItem("theme", "light");
-  }
-
-  function setDarkMode() {
-    document.body.classList.remove("light-mode");
-    document.body.classList.add("dark-mode");
-    localStorage.setItem("theme", "dark");
-  }
-
-  // 页面加载时自动应用上次选择的主题
-  window.onload = function() {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.add("light-mode");
-    }
-  }
-</script>
 
 </body>
 </html>
