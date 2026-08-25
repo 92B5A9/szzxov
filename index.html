@@ -12,14 +12,49 @@
   <title>社团投稿系统</title>
 </head>
 <body>
-  <h1>社团投稿系统</h1>
+  <body>
+  <div class="topbar">
+    <div class="hamburger" onclick="openMenu()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+    <body>
 
+  <!-- 汉堡菜单 -->
+  <div class="topbar">...</div>
+
+  <!-- 侧滑菜单栏（这里插入） -->
+  <div class="sidebar" id="sidebar">
+    <a href="/">首页</a>
+    <a href="/help">帮助</a>
+    <a href="/submit">投稿</a>
+    <a href="/archive">往期</a>
+  </div>
+
+  <!-- 遮罩层 -->
+  <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+  <h1>社团投稿系统</h1>
   <div style="text-align:center; margin-top:50px;">
-    <p>（这里放一小段社团简介，之后你再补）</p>
+    <p> Our Voice广播社 </p>
 
     <a href="/submit.html">
       <button style="padding:10px 20px; font-size:18px;">提交投稿</button>
     </a>
   </div>
+    <script>
+  function openMenu() {
+    document.getElementById("sidebar").style.left = "0";
+    document.getElementById("overlay").style.display = "block";
+  }
+
+  function closeMenu() {
+    document.getElementById("sidebar").style.left = "-260px";
+    document.getElementById("overlay").style.display = "none";
+  }
+</script>
+
 </body>
 </html>
