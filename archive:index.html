@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>往期投稿展示</title>
+</head>
+<body>
+  <h1>往期投稿展示</h1>
+
+  <input type="text" id="search" placeholder="搜索歌曲名或作者">
+  <select id="filter">
+    <option value="">全部期数</option>
+    <!-- 期数选项之后由后端填充 -->
+  </select>
+
+  <div id="list">
+    <!-- 投稿列表（后端接入前先留空） -->
+  </div>
+
+  <script>
+    // 之后接入 /api/list
+    document.getElementById('list').innerText = "投稿列表加载中（后端待接入）";
+  </script>
+</body>
+</html>
