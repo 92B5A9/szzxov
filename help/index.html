@@ -7,6 +7,25 @@
   <title>帮助页</title>
 </head>
 <body>
+  <!-- 顶部汉堡菜单 -->
+<div class="topbar">
+  <div class="hamburger" onclick="openMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
+<!-- 左侧滑出菜单栏 -->
+<div class="sidebar" id="sidebar">
+  <a href="/">首页</a>
+  <a href="/help">帮助</a>
+  <a href="/submit">投稿</a>
+  <a href="/archive">往期</a>
+</div>
+
+<!-- 点击遮罩层关闭菜单 -->
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
   <h1>投稿帮助</h1>
 
   <div>
