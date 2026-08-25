@@ -22,11 +22,11 @@ body.dark-mode {
 }
 
 /* =========================================
-   顶部栏（移动端导航条容器）
+   顶部栏（PC 顶部固定条）
 ========================================= */
 .topbar {
   width: 100%;
-  height: 72px;
+  height: 60px;
   display: flex;
   align-items: center;
   padding: 0 12px;
@@ -66,26 +66,12 @@ body.dark-mode {
   font-size: 18px;
   margin: 8px;
 
-  /* 上一版按钮风格 */
   background: rgba(255,255,255,0.35);
   backdrop-filter: blur(20px);
   border-radius: 18px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 
   transition: 0.25s;
-}
-
-.sidebar a:hover {
-  background: rgba(255,255,255,0.55);
-}
-
-body.dark-mode .sidebar a {
-  background: rgba(40,40,60,0.35);
-  color: #f0f0f0;
-}
-
-body.dark-mode .sidebar a:hover {
-  background: rgba(80,80,120,0.55);
 }
 
 /* PC 主体右移 */
@@ -96,7 +82,6 @@ main {
 
 /* =========================================
    移动端：顶部水平导航条（scrollable）
-   使用上一版按钮样式
 ========================================= */
 @media (max-width: 899px) {
 
@@ -105,8 +90,9 @@ main {
     display: none !important;
   }
 
-  /* 顶部导航条容器 */
+  /* 顶部导航条高度缩小，避免压住首页内容 */
   .topbar {
+    height: 48px;
     overflow-x: auto;
     white-space: nowrap;
     scrollbar-width: none;
@@ -115,18 +101,18 @@ main {
     display: none;
   }
 
-  /* 顶部水平按钮（使用上一版按钮风格） */
+  /* 顶部水平按钮（上一版按钮风格） */
   .topbar a {
     display: inline-block;
-    padding: 12px 24px;
+    padding: 8px 20px;
     margin-right: 12px;
-    font-size: 20px;
+    font-size: 18px;
     text-decoration: none;
     color: #333;
 
     background: rgba(255,255,255,0.35);
     backdrop-filter: blur(20px);
-    border-radius: 18px;
+    border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 
     transition: 0.25s;
@@ -160,6 +146,8 @@ main {
   display: flex;
   align-items: flex-start;
   justify-content: center;
+
+  /* ⭐ 移动端顶部导航条高度减少后，这里保持 20px 即可 */
   padding-top: 20px;
 }
 
