@@ -162,3 +162,45 @@ body.dark-mode .input-glass {
 .submit-btn:hover {
   background: rgba(255,255,255,0.65);
 }
+.friend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.friend-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  padding: 20px;
+  border-radius: 20px;
+
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+
+  text-decoration: none;
+  color: #333;
+  font-size: 22px;
+}
+
+.friend-card:hover {
+  background: rgba(255,255,255,0.55);
+}
+
+.favicon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+
+body.dark-mode .friend-card {
+  background: rgba(40,40,60,0.35);
+  color: #f0f0f0;
+}
+
+body.dark-mode .friend-card:hover {
+  background: rgba(80,80,120,0.55);
+}
