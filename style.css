@@ -1,42 +1,53 @@
-/* =========================================
-   全站基础样式（响应式字体）
-========================================= */
+/* 全站基础 */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
   font-size: clamp(18px, 2vw, 28px);
   line-height: 1.4;
   color: #333;
-  transition: background 0.6s ease, color 0.6s ease;
 }
 
-/* 去掉所有按钮下划线 */
 a {
   text-decoration: none !important;
 }
 
-/* =========================================
-   顶部栏（PC 顶部固定条）
-========================================= */
+/* 顶部水平导航条（移动端） */
 .topbar {
   width: 100%;
-  height: 48px; /* ⭐ 缩小高度，避免压住首页内容 */
+  height: 48px;
   display: flex;
   align-items: center;
-  padding: 0 10px; /* ⭐ 缩小 padding */
+  padding: 0 10px;
+  overflow-x: auto;
+  white-space: nowrap;
+
   background: rgba(255,255,255,0.25);
   backdrop-filter: blur(25px);
   border-bottom: 1px solid rgba(255,255,255,0.4);
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+
   position: sticky;
   top: 0;
   z-index: 300;
-  border-radius: 0 0 24px 24px;
 }
 
-/* =========================================
-   PC 端侧栏（悬浮）
-========================================= */
+.topbar::-webkit-scrollbar {
+  display: none;
+}
+
+.topbar a {
+  display: inline-block;
+  padding: 6px 18px;
+  margin-right: 10px;
+  font-size: 18px;
+
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* PC 端悬浮侧栏 */
 .sidebar {
   position: fixed;
   top: 10px;
@@ -49,8 +60,6 @@ a {
   backdrop-filter: blur(40px);
   border-radius: 24px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-
-  z-index: 300;
 }
 
 .sidebar a {
@@ -64,83 +73,30 @@ a {
   backdrop-filter: blur(20px);
   border-radius: 18px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-
-  transition: 0.25s;
 }
 
 /* PC 主体右移 */
-main {
-  margin-left: 200px;
-  padding: 20px;
+@media (min-width: 900px) {
+  main {
+    margin-left: 200px;
+    padding: 20px;
+  }
 }
 
-/* =========================================
-   移动端：顶部水平导航条（scrollable）
-========================================= */
+/* 移动端隐藏侧栏 */
 @media (max-width: 899px) {
-
-  /* PC 侧栏隐藏 */
   .sidebar {
     display: none !important;
   }
-
-  /* 顶部导航条高度缩小，避免压住首页内容 */
-  .topbar {
-    height: 42px; /* ⭐ 再缩小一点，确保首页三行文字完全恢复 */
-    overflow-x: auto;
-    white-space: nowrap;
-    scrollbar-width: none;
-  }
-  .topbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* 顶部水平按钮（上一版按钮风格） */
-  .topbar a {
-    display: inline-block;
-    padding: 6px 18px; /* ⭐ 缩小按钮高度 */
-    margin-right: 10px;
-    font-size: 18px;
-    color: #333;
-
-    background: rgba(255,255,255,0.35);
-    backdrop-filter: blur(20px);
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-
-    transition: 0.25s;
-  }
-
-  .topbar a:hover {
-    background: rgba(255,255,255,0.55);
-  }
-
-  body.dark-mode .topbar a {
-    background: rgba(40,40,60,0.35);
-    color: #f0f0f0;
-  }
-
-  body.dark-mode .topbar a:hover {
-    background: rgba(80,80,120,0.55);
-  }
-
-  /* 主体不右移 */
-  main {
-    margin-left: 0 !important;
-    padding: 16px;
-  }
 }
 
-/* =========================================
-   首页文本浮窗（上调）
-========================================= */
+/* 首页文本浮窗 */
 .home-section {
   height: 100vh;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-
-  padding-top: 20px; /* ⭐ 保持正常，不再被顶掉 */
+  padding-top: 20px;
 }
 
 .glass-card {
@@ -148,14 +104,11 @@ main {
   backdrop-filter: blur(25px);
   border-radius: 32px;
   padding: 32px;
-  margin-top: 0;
   margin-bottom: 20px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.15);
 }
 
-/* =========================================
-   动画
-========================================= */
+/* 动画 */
 .fade-pair {
   opacity: 0;
   transform: translateY(40px) scale(0.97);
