@@ -97,18 +97,19 @@ function toggleMenu() {
   const sidebar = document.getElementById("sidebar");
   const hamburger = document.getElementById("hamburger");
 
-  // PC端不启用汉堡菜单
+  // PC 端不启用汉堡
   if (window.innerWidth >= 900) return;
 
   if (hamburger.classList.contains("active")) {
     hamburger.classList.remove("active");
-    sidebar.style.left = "-260px";
+    sidebar.style.left = "-280px";  // 对应移动端隐藏位置
   } else {
     hamburger.classList.add("active");
-    sidebar.style.left = "0";
+    sidebar.style.left = "0";       // 滑出
   }
 }
 </script>
+
 
 
   <!-- 深色模式 -->
