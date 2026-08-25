@@ -4,10 +4,7 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
-
-  /* 响应式字号：自动适配 PC / 移动端 */
   font-size: clamp(18px, 2.2vw, 32px);
-
   line-height: 1.4;
   color: #333;
   transition: background 0.6s ease, color 0.6s ease;
@@ -16,7 +13,6 @@ body {
 /* 浅色模式 */
 body.light-mode {
   background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(240,240,255,0.4));
-  color: #333;
 }
 
 /* 深色模式 */
@@ -26,14 +22,14 @@ body.dark-mode {
 }
 
 /* =========================================
-   顶部栏（Liquid Glass）
+   顶部栏（取消白条）
 ========================================= */
 .topbar {
   width: 100%;
-  height: 120px;
+  height: 80px; /* 原120 → 缩小，白条消失 */
   display: flex;
   align-items: center;
-  padding-left: 30px;
+  padding-left: 20px; /* 原30 → 缩小 */
   background: rgba(255,255,255,0.25);
   backdrop-filter: blur(25px) saturate(180%);
   border-bottom: 1px solid rgba(255,255,255,0.4);
@@ -41,7 +37,7 @@ body.dark-mode {
   position: sticky;
   top: 0;
   z-index: 200;
-  border-radius: 0 0 40px 40px;
+  border-radius: 0 0 30px 30px;
 }
 
 body.dark-mode .topbar {
@@ -52,14 +48,13 @@ body.dark-mode .topbar {
    汉堡菜单（移动端）
 ========================================= */
 .hamburger {
-  width: 100px;        /* 加宽 */
+  width: 100px;
   height: 100px;
   padding: 24px;
-  display: none;       /* 默认 PC 不显示 */
+  display: none;
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
-
   background: rgba(255,255,255,0.35);
   backdrop-filter: blur(20px);
   border-radius: 24px;
@@ -71,7 +66,7 @@ body.dark-mode .hamburger {
 
 .hamburger div {
   width: 100%;
-  height: 12px;        /* 加粗 */
+  height: 12px;
   background: #333;
   border-radius: 12px;
   transition: 0.3s;
@@ -93,19 +88,19 @@ body.dark-mode .hamburger div {
 }
 
 /* =========================================
-   侧栏（PC 缩窄 50%）
+   侧栏（PC 缩窄 + 按钮整体上移）
 ========================================= */
 .sidebar {
   position: fixed;
-  top: 20px;
-  left: 20px;
+  top: 10px; /* 原20 → 上移一个身位 */
+  left: 10px; /* 原20 → 上移一个身位 */
   width: 160px; /* PC端缩窄 50% */
-  height: calc(100% - 40px);
-  padding-top: 140px;
+  height: calc(100% - 20px);
+  padding-top: 80px; /* 原140 → 上移一个身位 */
 
   background: rgba(255,255,255,0.25);
   backdrop-filter: blur(40px) saturate(180%);
-  border-radius: 30px;
+  border-radius: 24px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.25);
 
   z-index: 300;
@@ -117,19 +112,16 @@ body.dark-mode .sidebar {
 
 .sidebar a {
   display: block;
-  padding: 16px 0; /* 缩小 */
+  padding: 14px 0; /* 原16 → 更紧凑 */
   text-align: center;
-
-  /* 链接字号缩小 */
   font-size: clamp(16px, 1.4vw, 24px);
-
   text-decoration: none;
   color: #333;
 
   background: rgba(255,255,255,0.35);
   backdrop-filter: blur(20px);
   border-radius: 20px;
-  margin: 12px;
+  margin: 10px; /* 原12 → 上移整体按钮 */
   transition: 0.25s;
 }
 
@@ -147,11 +139,11 @@ body.dark-mode .sidebar a:hover {
 }
 
 /* =========================================
-   主体内容右移（PC 缩窄后同步缩小）
+   主体内容右移（同步上移）
 ========================================= */
 main {
-  margin-left: 220px; /* PC端缩窄后同步缩小 */
-  padding: 40px;
+  margin-left: 200px; /* 原220 → 上移一个身位 */
+  padding: 20px; /* 原40 → 更紧凑 */
 }
 
 /* =========================================
@@ -164,11 +156,11 @@ main {
   }
 
   .sidebar {
-    left: -260px; /* 移动端默认隐藏 */
-    width: 260px; /* 移动端侧栏更宽 */
+    left: -260px;
+    width: 260px;
     height: 100%;
     top: 0;
-    padding-top: 140px;
+    padding-top: 120px;
     border-radius: 0 30px 30px 0;
     transition: left 0.35s cubic-bezier(0.25, 1.3, 0.3, 1);
   }
@@ -212,7 +204,6 @@ main {
   padding: 60px;
   margin: 40px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-
   transform-style: preserve-3d;
   perspective: 1200px;
 }
@@ -248,9 +239,7 @@ body.dark-mode .glass-card {
 .friend-card {
   display: block;
   padding: 40px;
-
   font-size: clamp(20px, 2.5vw, 48px);
-
   text-align: center;
   border-radius: 30px;
   text-decoration: none;
