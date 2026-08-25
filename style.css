@@ -65,9 +65,27 @@ body.dark-mode {
   text-align: center;
   font-size: 18px;
   margin: 8px;
+
+  /* 上一版按钮风格 */
   background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(20px);
   border-radius: 18px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+
   transition: 0.25s;
+}
+
+.sidebar a:hover {
+  background: rgba(255,255,255,0.55);
+}
+
+body.dark-mode .sidebar a {
+  background: rgba(40,40,60,0.35);
+  color: #f0f0f0;
+}
+
+body.dark-mode .sidebar a:hover {
+  background: rgba(80,80,120,0.55);
 }
 
 /* PC 主体右移 */
@@ -78,6 +96,7 @@ main {
 
 /* =========================================
    移动端：顶部水平导航条（scrollable）
+   使用上一版按钮样式
 ========================================= */
 @media (max-width: 899px) {
 
@@ -90,14 +109,13 @@ main {
   .topbar {
     overflow-x: auto;
     white-space: nowrap;
-    scrollbar-width: none; /* Firefox */
+    scrollbar-width: none;
   }
-
   .topbar::-webkit-scrollbar {
-    display: none; /* Chrome */
+    display: none;
   }
 
-  /* 顶部水平菜单项 */
+  /* 顶部水平按钮（使用上一版按钮风格） */
   .topbar a {
     display: inline-block;
     padding: 12px 24px;
@@ -108,7 +126,9 @@ main {
 
     background: rgba(255,255,255,0.35);
     backdrop-filter: blur(20px);
-    border-radius: 16px;
+    border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+
     transition: 0.25s;
   }
 
