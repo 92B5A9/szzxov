@@ -121,3 +121,22 @@ a {
   opacity: 1;
   transform: translateY(0) scale(1);
 }
+.input-glass {
+  width: 100%;
+  padding: 12px 16px;
+  margin-top: 12px;
+  font-size: 18px;
+
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(20px);
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+
+  outline: none;
+}
+
+body.dark-mode .input-glass {
+  background: rgba(40,40,60,0.35);
+  color: #f0f0f0;
+}
