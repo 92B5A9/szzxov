@@ -22,61 +22,26 @@ body.dark-mode {
 }
 
 /* =========================================
-   顶部栏
+   顶部栏（移动端导航条容器）
 ========================================= */
 .topbar {
   width: 100%;
   height: 72px;
   display: flex;
   align-items: center;
-  padding: 0 16px;
+  padding: 0 12px;
   background: rgba(255,255,255,0.25);
   backdrop-filter: blur(25px);
   border-bottom: 1px solid rgba(255,255,255,0.4);
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   position: sticky;
   top: 0;
-  z-index: 200;
+  z-index: 300;
   border-radius: 0 0 24px 24px;
 }
 
 /* =========================================
-   汉堡菜单（移动端）
-========================================= */
-.hamburger {
-  width: 72px;
-  height: 56px;
-  padding: 12px;
-  display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  cursor: pointer;
-  background: rgba(255,255,255,0.35);
-  backdrop-filter: blur(20px);
-  border-radius: 16px;
-}
-
-.hamburger div {
-  width: 100%;
-  height: 8px;
-  background: #333;
-  border-radius: 8px;
-  transition: 0.3s;
-}
-
-/* 点击后变成 X */
-.hamburger.active div:nth-child(1) {
-  transform: translateY(12px) rotate(45deg);
-}
-.hamburger.active div:nth-child(2) {
-  opacity: 0;
-}
-.hamburger.active div:nth-child(3) {
-  transform: translateY(-12px) rotate(-45deg);
-}
-
-/* =========================================
-   PC 端侧栏（悬浮 + 缩窄）
+   PC 端侧栏（悬浮）
 ========================================= */
 .sidebar {
   position: fixed;
@@ -85,10 +50,12 @@ body.dark-mode {
   width: 160px;
   height: calc(100% - 20px);
   padding-top: 80px;
+
   background: rgba(255,255,255,0.25);
   backdrop-filter: blur(40px);
   border-radius: 24px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+
   z-index: 300;
 }
 
@@ -110,33 +77,57 @@ main {
 }
 
 /* =========================================
-   移动端：汉堡菜单 + 侧滑菜单
+   移动端：顶部水平导航条（scrollable）
 ========================================= */
 @media (max-width: 899px) {
 
-  .hamburger {
-    display: flex !important;
-  }
-
+  /* PC 侧栏隐藏 */
   .sidebar {
-    position: fixed;
-    top: 0;
-    left: -280px;
-    width: 280px;
-    height: 100%;
-    padding-top: 100px;
-    border-radius: 0 24px 24px 0;
-    transition: left 0.35s cubic-bezier(0.25, 1.3, 0.3, 1);
+    display: none !important;
   }
 
-  .sidebar a {
+  /* 顶部导航条容器 */
+  .topbar {
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .topbar::-webkit-scrollbar {
+    display: none; /* Chrome */
+  }
+
+  /* 顶部水平菜单项 */
+  .topbar a {
+    display: inline-block;
+    padding: 12px 24px;
+    margin-right: 12px;
     font-size: 20px;
-    padding: 16px 0;
-    margin: 12px;
+    text-decoration: none;
+    color: #333;
+
+    background: rgba(255,255,255,0.35);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    transition: 0.25s;
   }
 
+  .topbar a:hover {
+    background: rgba(255,255,255,0.55);
+  }
+
+  body.dark-mode .topbar a {
+    background: rgba(40,40,60,0.35);
+    color: #f0f0f0;
+  }
+
+  body.dark-mode .topbar a:hover {
+    background: rgba(80,80,120,0.55);
+  }
+
+  /* 主体不右移 */
   main {
-    margin-left: 0;
+    margin-left: 0 !important;
     padding: 16px;
   }
 }
