@@ -140,3 +140,25 @@ body.dark-mode .input-glass {
   background: rgba(40,40,60,0.35);
   color: #f0f0f0;
 }
+.form-label {
+  font-size: 22px;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  display: block;
+}
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  font-size: 22px;
+  border-radius: 16px;
+  border: none;
+  background: rgba(255,255,255,0.45);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.submit-btn:hover {
+  background: rgba(255,255,255,0.65);
+}
