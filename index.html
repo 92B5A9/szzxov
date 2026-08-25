@@ -1,32 +1,23 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <link rel="stylesheet" href="/style.css">
 <head>
   <meta charset="UTF-8">
-  <nav class="navbar">
-</nav>
   <title>苏州中学OV广播社</title>
+  <link rel="stylesheet" href="/style.css">
 </head>
-<body>
-  <body>
-    <main>
- <body class="light-mode">
 
-</main>
+<body class="light-mode">
 
-
-
-
+  <!-- 顶部栏（移动端显示汉堡菜单） -->
+  <div class="topbar">
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
   </div>
-    <body>
-        <div class="topbar">
- <div class="hamburger" id="hamburger" onclick="toggleMenu()">
-  <div></div>
-  <div></div>
-  <div></div>
-</div>
 
-  <!-- 侧滑菜单栏（这里插入） -->
+  <!-- 侧栏 -->
   <div class="sidebar" id="sidebar">
     <a href="/">首页</a>
     <a href="/submit">投稿</a>
@@ -34,123 +25,117 @@
     <a href="/help">帮助</a>
     <a href="/settings">设置</a>
     <a href="/url">友情链接</a>
-
   </div>
 
-  <!-- 遮罩层 -->
-  <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+  <!-- 遮罩层（移动端用） -->
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <div style="text-align:center; margin-top:50px;">
-    <p> Our Voice广播社 </p>
-     <div class="glass-card">
-    <main class="home-layout">
-
-<main class="home-layout">
+  <!-- 主体内容 -->
   <main class="home-layout">
 
-  <div class="home-right">
+    <div class="home-right">
 
-    <!-- 第 1 屏：广播社 -->
-    <section class="home-section fade-pair align-center">
-      <div class="glass-card">
-        <h1>广播社</h1>
-        <p>欢迎来到广播社，这里是我们的主页介绍。</p>
-      </div>
-    </section>
+      <!-- 第 1 屏 -->
+      <section class="home-section fade-pair align-center">
+        <div class="glass-card">
+          <h1>广播社</h1>
+          <p>欢迎来到广播社，这里是我们的主页介绍。</p>
+        </div>
+      </section>
 
-    <!-- 第 2 屏 -->
-    <section class="home-section fade-pair align-center">
-      <div class="glass-card">
-      <h2>关于我们</h2>
-        <p>苏州中学Our Voice广播社是在校团委指导下，由学生自主管理、自主制作节目的社团，是学生缓解压力、反映心声的窗口和平台。我们自成立以来便立志成为苏中学生展现自我、培养自信与能力的载体，同时也努力为优秀的播音、主持型人才提供展现才能的舞台。我们从广播艺术出发，融合配音、唱歌、美工、后期、文案、宣传等领域，致力于传播声音文化，推动广播剧及音乐文化在校园的发展。为校园增添活力，成为苏中的一个窗口和亮点。</p>
-      </div>
-    </section>
+      <!-- 第 2 屏 -->
+      <section class="home-section fade-pair align-center">
+        <div class="glass-card">
+          <h2>关于我们</h2>
+          <p>
+            苏州中学Our Voice广播社是在校团委指导下，由学生自主管理、自主制作节目的社团，是学生缓解压力、反映心声的窗口和平台。
+            我们自成立以来便立志成为苏中学生展现自我、培养自信与能力的载体，同时也努力为优秀的播音、主持型人才提供展现才能的舞台。
+            我们从广播艺术出发，融合配音、唱歌、美工、后期、文案、宣传等领域，致力于传播声音文化，推动广播剧及音乐文化在校园的发展。
+          </p>
+        </div>
+      </section>
 
-    <!-- 第 3 屏 -->
-    <section class="home-section fade-pair align-center">
-      <div class="glass-card">
-        <h2>社团组成</h2>
-        <p>我们是一个拥有多个部门的大型学生社团，有着完善的社团管理制度：音乐部负责午间音乐、课间音乐、宿舍音乐的歌单选择和音频制作，技术部负责节目音频剪辑、活动海报设计和视频制作等；以及正在筹建中的播音部，负责广播讲话。</p>
-      </div>
-    </section>
+      <!-- 第 3 屏 -->
+      <section class="home-section fade-pair align-center">
+        <div class="glass-card">
+          <h2>社团组成</h2>
+          <p>
+            我们是一个拥有多个部门的大型学生社团，有着完善的社团管理制度：
+            音乐部负责午间音乐、课间音乐、宿舍音乐的歌单选择和音频制作；
+            技术部负责节目音频剪辑、活动海报设计和视频制作；
+            以及正在筹建中的播音部，负责广播讲话。
+          </p>
+        </div>
+      </section>
 
+    </div>
 
-  </div>
+  </main>
 
-</main>
-<script>
-  const sections = document.querySelectorAll('.fade-pair');
+  <!-- 滚动淡入动画 -->
+  <script>
+    const sections = document.querySelectorAll('.fade-pair');
 
-  function checkSections() {
-    const trigger = window.innerHeight * 0.7;
+    function checkSections() {
+      const trigger = window.innerHeight * 0.7;
 
-    sections.forEach(sec => {
-      const rect = sec.getBoundingClientRect();
-      if (rect.top < trigger) {
-        sec.classList.add('visible');
-      }
-    });
-  }
-
-  document.querySelector('.home-right').addEventListener('scroll', checkSections);
-  window.onload = checkSections;
-</script>
-
-
-  </div>
-
-</main>
-  </div>
-  </div><script>
-function toggleMenu() {
-  const sidebar = document.getElementById("sidebar");
-  const overlay = document.getElementById("overlay");
-  const hamburger = document.getElementById("hamburger");
-
-  // PC端不启用汉堡菜单
-  if (window.innerWidth >= 900) return;
-
-  if (hamburger.classList.contains("active")) {
-    // 关闭
-    hamburger.classList.remove("active");
-    sidebar.style.left = "-300px";
-    overlay.style.display = "none";
-  } else {
-    // 打开
-    hamburger.classList.add("active");
-    sidebar.style.left = "0";
-    overlay.style.display = "block";
-  }
-}
-</script>
-
-
-</script>
-
-</script>
-<script>
-  function setLightMode() {
-    document.body.classList.remove("dark-mode");
-    document.body.classList.add("light-mode");
-    localStorage.setItem("theme", "light");
-  }
-
-  function setDarkMode() {
-    document.body.classList.remove("light-mode");
-    document.body.classList.add("dark-mode");
-    localStorage.setItem("theme", "dark");
-  }
-
-  // 页面加载时自动应用上次选择的主题
-  window.onload = function() {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.add("light-mode");
+      sections.forEach(sec => {
+        const rect = sec.getBoundingClientRect();
+        if (rect.top < trigger) {
+          sec.classList.add('visible');
+        }
+      });
     }
-  }
-</script>
+
+    document.querySelector('.home-right').addEventListener('scroll', checkSections);
+    window.onload = checkSections;
+  </script>
+
+  <!-- 汉堡菜单逻辑（移动端启用，PC端禁用） -->
+  <script>
+    function toggleMenu() {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const hamburger = document.getElementById("hamburger");
+
+      // PC端不启用汉堡菜单
+      if (window.innerWidth >= 900) return;
+
+      if (hamburger.classList.contains("active")) {
+        hamburger.classList.remove("active");
+        sidebar.style.left = "-300px";
+        overlay.style.display = "none";
+      } else {
+        hamburger.classList.add("active");
+        sidebar.style.left = "0";
+        overlay.style.display = "block";
+      }
+    }
+  </script>
+
+  <!-- 深色模式 -->
+  <script>
+    function setLightMode() {
+      document.body.classList.remove("dark-mode");
+      document.body.classList.add("light-mode");
+      localStorage.setItem("theme", "light");
+    }
+
+    function setDarkMode() {
+      document.body.classList.remove("light-mode");
+      document.body.classList.add("dark-mode");
+      localStorage.setItem("theme", "dark");
+    }
+
+    window.onload = function() {
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+      } else {
+        document.body.classList.add("light-mode");
+      }
+    }
+  </script>
 
 </body>
 </html>
