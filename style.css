@@ -26,10 +26,10 @@ body.dark-mode {
 ========================================= */
 .topbar {
   width: 100%;
-  height: 0px; /* 原120 → 缩小，白条消失 */
+  height: 80px;
   display: flex;
   align-items: center;
-  padding-left: 20px; /* 原30 → 缩小 */
+  padding-left: 20px;
   background: rgba(255,255,255,0.25);
   backdrop-filter: blur(25px) saturate(180%);
   border-bottom: 1px solid rgba(255,255,255,0.4);
@@ -88,15 +88,15 @@ body.dark-mode .hamburger div {
 }
 
 /* =========================================
-   侧栏（PC 缩窄 + 按钮整体上移）
+   侧栏（PC 缩窄 + 上移）
 ========================================= */
 .sidebar {
   position: fixed;
-  top: 10px; /* 原20 → 上移一个身位 */
-  left: 10px; /* 原20 → 上移一个身位 */
-  width: 160px; /* PC端缩窄 50% */
+  top: 10px;
+  left: 10px;
+  width: 160px;
   height: calc(100% - 20px);
-  padding-top: 80px; /* 原140 → 上移一个身位 */
+  padding-top: 80px;
 
   background: rgba(255,255,255,0.25);
   backdrop-filter: blur(40px) saturate(180%);
@@ -112,7 +112,7 @@ body.dark-mode .sidebar {
 
 .sidebar a {
   display: block;
-  padding: 14px 0; /* 原16 → 更紧凑 */
+  padding: 14px 0;
   text-align: center;
   font-size: clamp(16px, 1.4vw, 24px);
   text-decoration: none;
@@ -121,7 +121,7 @@ body.dark-mode .sidebar {
   background: rgba(255,255,255,0.35);
   backdrop-filter: blur(20px);
   border-radius: 20px;
-  margin: 10px; /* 原12 → 上移整体按钮 */
+  margin: 10px;
   transition: 0.25s;
 }
 
@@ -142,8 +142,8 @@ body.dark-mode .sidebar a:hover {
    主体内容右移（同步上移）
 ========================================= */
 main {
-  margin-left: 200px; /* 原220 → 上移一个身位 */
-  padding: 20px; /* 原40 → 更紧凑 */
+  margin-left: 200px;
+  padding: 20px;
 }
 
 /* =========================================
@@ -185,25 +185,29 @@ main {
   scroll-snap-type: y mandatory;
 }
 
+/* ⭐ 文本浮窗整体上移（关键修复） */
 .home-section {
   height: 100vh;
   scroll-snap-align: start;
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* 原 center → 上移 */
   justify-content: center;
-  padding: 40px;
+  padding-top: 80px;       /* 上移一个身位 */
+  padding-bottom: 20px;
 }
 
 /* =========================================
-   玻璃卡片 + 3D 效果
+   玻璃卡片（同步上移）
 ========================================= */
 .glass-card {
   background: rgba(255,255,255,0.35);
   backdrop-filter: blur(25px);
   border-radius: 40px;
-  padding: 60px;
-  margin: 40px;
+  padding: 40px; /* 原60 → 上移视觉重心 */
+  margin-top: 20px; /* 上移 */
+  margin-bottom: 20px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+
   transform-style: preserve-3d;
   perspective: 1200px;
 }
