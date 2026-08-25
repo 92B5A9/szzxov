@@ -49,13 +49,57 @@ body.dark-mode .topbar {
 }
 
 /* =========================================
-   悬浮侧栏（VisionOS 风格）
+   汉堡菜单（移动端）
+========================================= */
+.hamburger {
+  width: 100px;        /* 加宽 */
+  height: 100px;
+  padding: 24px;
+  display: none;       /* 默认 PC 不显示 */
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+}
+
+body.dark-mode .hamburger {
+  background: rgba(40,40,60,0.35);
+}
+
+.hamburger div {
+  width: 100%;
+  height: 12px;        /* 加粗 */
+  background: #333;
+  border-radius: 12px;
+  transition: 0.3s;
+}
+
+body.dark-mode .hamburger div {
+  background: #f0f0f0;
+}
+
+/* 点击后变成 X */
+.hamburger.active div:nth-child(1) {
+  transform: translateY(28px) rotate(45deg);
+}
+.hamburger.active div:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active div:nth-child(3) {
+  transform: translateY(-28px) rotate(-45deg);
+}
+
+/* =========================================
+   侧栏（PC 缩窄 50%）
 ========================================= */
 .sidebar {
   position: fixed;
   top: 20px;
   left: 20px;
-  width: 220px; /* PC端缩小 */
+  width: 160px; /* PC端缩窄 50% */
   height: calc(100% - 40px);
   padding-top: 140px;
 
@@ -73,11 +117,11 @@ body.dark-mode .sidebar {
 
 .sidebar a {
   display: block;
-  padding: 20px 0; /* 缩小 */
+  padding: 16px 0; /* 缩小 */
   text-align: center;
 
   /* 链接字号缩小 */
-  font-size: clamp(18px, 1.6vw, 28px);
+  font-size: clamp(16px, 1.4vw, 24px);
 
   text-decoration: none;
   color: #333;
@@ -85,7 +129,7 @@ body.dark-mode .sidebar {
   background: rgba(255,255,255,0.35);
   backdrop-filter: blur(20px);
   border-radius: 20px;
-  margin: 15px;
+  margin: 12px;
   transition: 0.25s;
 }
 
@@ -103,11 +147,35 @@ body.dark-mode .sidebar a:hover {
 }
 
 /* =========================================
-   主体内容右移（因为侧栏悬浮）
+   主体内容右移（PC 缩窄后同步缩小）
 ========================================= */
 main {
-  margin-left: 260px; /* PC端缩小 */
+  margin-left: 220px; /* PC端缩窄后同步缩小 */
   padding: 40px;
+}
+
+/* =========================================
+   移动端：恢复汉堡菜单 + 侧栏滑出
+========================================= */
+@media (max-width: 899px) {
+
+  .hamburger {
+    display: flex !important;
+  }
+
+  .sidebar {
+    left: -260px; /* 移动端默认隐藏 */
+    width: 260px; /* 移动端侧栏更宽 */
+    height: 100%;
+    top: 0;
+    padding-top: 140px;
+    border-radius: 0 30px 30px 0;
+    transition: left 0.35s cubic-bezier(0.25, 1.3, 0.3, 1);
+  }
+
+  main {
+    margin-left: 0;
+  }
 }
 
 /* =========================================
