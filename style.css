@@ -9,6 +9,16 @@ body {
   font-size: 64px; /* 全站字体调到 64px */
   line-height: 1.4;
 }
+/* 投稿页输入框黑边样式 */
+.submit-input {
+  width: 90%;
+  padding: 20px;
+  font-size: 64px;
+  border: 4px solid black;   /* 黑色边框 */
+  border-radius: 12px;
+  margin-bottom: 40px;
+  background: white;
+}
 
 /* 页面主体内容 */
 main {
