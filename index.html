@@ -103,15 +103,25 @@
 </main>
   </div>
   </div><script>
-  function openMenu() {
-    document.getElementById("sidebar").style.left = "0";
-    document.getElementById("overlay").style.display = "block";
-  }
+function toggleMenu() {
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("overlay");
+  const hamburger = document.getElementById("hamburger");
 
-  function closeMenu() {
-    document.getElementById("sidebar").style.left = "-300px"; /* 与宽度一致 */
-    document.getElementById("overlay").style.display = "none";
+  if (hamburger.classList.contains("active")) {
+    // 关闭
+    hamburger.classList.remove("active");
+    sidebar.style.left = "-300px";
+    overlay.style.display = "none";
+  } else {
+    // 打开
+    hamburger.classList.add("active");
+    sidebar.style.left = "0";
+    overlay.style.display = "block";
   }
+}
+</script>
+
 </script>
 
 </script>
