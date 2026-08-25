@@ -92,26 +92,24 @@
   </script>
 
   <!-- 汉堡菜单逻辑（移动端启用，PC端禁用） -->
-  <script>
-    function toggleMenu() {
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("overlay");
-      const hamburger = document.getElementById("hamburger");
+<script>
+function toggleMenu() {
+  const sidebar = document.getElementById("sidebar");
+  const hamburger = document.getElementById("hamburger");
 
-      // PC端不启用汉堡菜单
-      if (window.innerWidth >= 900) return;
+  // PC端不启用汉堡菜单
+  if (window.innerWidth >= 900) return;
 
-      if (hamburger.classList.contains("active")) {
-        hamburger.classList.remove("active");
-        sidebar.style.left = "-300px";
-        overlay.style.display = "none";
-      } else {
-        hamburger.classList.add("active");
-        sidebar.style.left = "0";
-        overlay.style.display = "block";
-      }
-    }
-  </script>
+  if (hamburger.classList.contains("active")) {
+    hamburger.classList.remove("active");
+    sidebar.style.left = "-260px";
+  } else {
+    hamburger.classList.add("active");
+    sidebar.style.left = "0";
+  }
+}
+</script>
+
 
   <!-- 深色模式 -->
   <script>
