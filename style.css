@@ -193,6 +193,28 @@ main {
     height: 10px;
   }
 }
+/* 设置页主题切换按钮 */
+.theme-switch button {
+  font-size: 48px;
+  padding: 20px 40px;
+  margin: 20px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  transition: 0.25s;
+}
+
+.theme-switch button:hover {
+  background: rgba(255,255,255,0.55);
+  transform: scale(1.05);
+}
+
 /* 浅色模式（默认） */
 body.light-mode {
   background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(240,240,255,0.4));
