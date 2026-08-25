@@ -368,3 +368,21 @@ body.dark-mode .topbar {
   transform: translateY(0);
 }
 
+/* 初始状态：透明 + 下移 + 轻微缩小 + 轻微倾斜 */
+.fade-pair {
+  opacity: 0;
+  transform: translateY(40px) scale(0.97) rotateX(4deg);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 出现状态：完全显示 + 回到正常位置 */
+.fade-pair.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1) rotateX(0deg);
+}
+.glass-card {
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
