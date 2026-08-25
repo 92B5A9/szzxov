@@ -3,11 +3,6 @@
   <link rel="stylesheet" href="/style.css">
 <head>
   <meta charset="UTF-8">
-  <nav class="navbar">
-  <a href="/">首页</a>
-  <a href="/help">帮助</a>
-  <a href="/submit">投稿</a>
-  <a href="/archive">往期</a>
 </nav>
   <title>提交投稿</title>
 </head>
@@ -40,5 +35,17 @@
       document.getElementById('result').innerText = "投稿已提交（后端待接入）";
     });
   </script>
+  <script>
+  function openMenu() {
+    document.getElementById("sidebar").style.left = "0";
+    document.getElementById("overlay").style.display = "block";
+  }
+
+  function closeMenu() {
+    document.getElementById("sidebar").style.left = "-300px"; /* 与宽度一致 */
+    document.getElementById("overlay").style.display = "none";
+  }
+</script>
+
 </body>
 </html>
