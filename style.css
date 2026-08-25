@@ -18,7 +18,7 @@ a {
 ========================================= */
 .topbar {
   width: 100%;
-  height: 42px; /* ⭐ 缩小高度，避免压住首页内容 */
+  height: 42px; /* ⭐ 缩小高度，避免压住内容 */
   display: flex;
   align-items: center;
   padding: 0 10px;
@@ -92,29 +92,44 @@ a {
 }
 
 /* =========================================
-   移动端：彻底隐藏侧栏（解决横向竖向并存）
+   移动端：彻底隐藏侧栏 + 居中内容
 ========================================= */
 @media (max-width: 899px) {
+
+  /* ⭐ 移动端彻底隐藏竖向侧栏 */
   .sidebar {
-    display: none !important; /* ⭐ 移动端彻底隐藏侧栏 */
+    display: none !important;
   }
 
+  /* ⭐ 主体不右移 */
   main {
     margin-left: 0 !important;
-    padding: 16px;
+    padding: 0;
+  }
+
+  /* ⭐ 首页内容居中显示 */
+  .home-section {
+    height: calc(100vh - 42px); /* 减去顶部导航条高度 */
+    display: flex;
+    align-items: center; /* ⭐ 居中 */
+    justify-content: center; /* ⭐ 居中 */
+    padding-top: 0;
+  }
+
+  .glass-card {
+    margin-top: 0;
   }
 }
 
 /* =========================================
-   首页文本浮窗（第二第三页消失的修复）
+   首页文本浮窗（PC）
 ========================================= */
 .home-section {
   height: 100vh;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-
-  padding-top: 20px; /* ⭐ 顶部导航条高度缩小后，这里保持即可 */
+  padding-top: 20px;
 }
 
 .glass-card {
