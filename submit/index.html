@@ -7,14 +7,42 @@
   <title>提交投稿</title>
 </head>
 <body>
+  <!-- 顶部汉堡菜单 -->
+<div class="topbar">
+  <div class="hamburger" onclick="openMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
+<!-- 左侧滑出菜单栏 -->
+<div class="sidebar" id="sidebar">
+  <a href="/">首页</a>
+  <a href="/help">帮助</a>
+  <a href="/submit">投稿</a>
+  <a href="/archive">往期</a>
+</div>
+
+<!-- 点击遮罩层关闭菜单 -->
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+<main>
+  <h1>投稿页面</h1>
+
+  <!-- 输入框 1：标题 -->
+ 
+
+  <!-- 输入框 2：正文 -->
+  <textarea class="submit-input" placeholder="请输入正文内容"></textarea>
+</main>
+
   <h1>提交投稿</h1>
 
   <form id="submitForm">
     <label>歌曲名：</label><br>
-    <input type="text" name="title" required><br><br>
+ <input type="text" class="submit-input" placeholder="请输入歌曲名">
 
-    <label>作者：</label><br>
-    <input type="text" name="author" required><br><br>
+    <label>歌手：</label><br>
+     <input type="text" class="submit-input" placeholder="请输入歌手">
 
     <button type="submit">提交</button>
   </form>
