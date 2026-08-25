@@ -44,12 +44,29 @@
   </main>
 
   <!-- 投稿提交逻辑（后端待接入） -->
-  <script>
-    document.getElementById('submitForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      document.getElementById('result').innerText = "投稿已提交（后端待接入）";
+<script>
+  document.getElementById('submitForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const title = e.target.title.value;
+    const author = e.target.author.value;
+
+    const res = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, author })
     });
-  </script>
+
+    const result = await res.json();
+
+    if (result.ok) {
+      document.getElementById('result').innerText = "投稿已提交！";
+    } else {
+      document.getElementById('result').innerText = "提交失败，请稍后再试。";
+    }
+  });
+</script>
+
 
   <!-- 深色模式 -->
   <script>
