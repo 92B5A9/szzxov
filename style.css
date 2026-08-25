@@ -54,14 +54,12 @@ main {
 }
 
 
-/* ================================
-   侧滑菜单栏（同步放大）
-================================ */
+/* 侧滑菜单栏（宽度改成 300px） */
 .sidebar {
   position: fixed;
   top: 0;
-  left: -400px; /* 初始隐藏 */
-  width: 400px;
+  left: -300px; /* 初始隐藏位置与宽度一致 */
+  width: 300px; /* 改成 300px */
   height: 100%;
   background: white;
   box-shadow: 4px 0 20px rgba(0,0,0,0.1);
@@ -70,16 +68,17 @@ main {
   z-index: 300;
 }
 
-/* 菜单按钮样式（同步放大） */
+/* 菜单按钮字体仍然保持 64px */
 .sidebar a {
   display: block;
   padding: 40px 50px;
-  font-size: 64px; /* 菜单按钮字体也调到 64px */
+  font-size: 64px;
   text-decoration: none;
   color: #333;
   border-bottom: 2px solid #eee;
   transition: 0.2s;
 }
+
 
 .sidebar a:hover {
   background: #0078ff;
