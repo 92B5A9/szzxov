@@ -8,65 +8,67 @@
 
 <body class="light-mode">
 
-  <!-- 顶部汉堡菜单 -->
+  <!-- 顶部横向导航条（全站统一） -->
   <div class="topbar">
-    <div class="hamburger" onclick="openMenu()" id="hamburger">
-      <div></div><div></div><div></div>
-    </div>
-  </div>
-
-  <!-- 侧边栏 -->
-  <div class="sidebar" id="sidebar">
     <a href="/">首页</a>
-    <a href="/help">帮助</a>
     <a href="/submit">投稿</a>
     <a href="/archive">往期</a>
+    <a href="/help">帮助</a>
     <a href="/settings">设置</a>
     <a href="/url">友情链接</a>
   </div>
 
-  <div class="overlay" id="overlay" onclick="closeMenu()"></div>
-
   <!-- 主体内容 -->
-  <main class="friend-links fade-pair">
+  <main class="home-layout">
 
-    <h1 class="center-title">友情链接</h1>
+    <div class="home-right">
 
-    <!-- 你已有的链接 -->
-    <a class="friend-card" href="https://szzxshumei.com" target="_blank">
-      苏州中学树莓社
-    </a>
+      <section class="home-section fade-pair">
+        <div class="glass-card">
 
-    <!-- 新增链接示例 -->
-    <a class="friend-card" href="https://game.ion-storm.vip" target="_blank">
-      离子风暴•化学牌
-    </a>
+          <h1 class="center-title">友情链接</h1>
 
+          <!-- 你已有的链接 -->
+          <a class="friend-card" href="https://szzxshumei.com" target="_blank">
+            苏州中学树莓社
+          </a>
 
+          <a class="friend-card" href="https://game.ion-storm.vip" target="_blank">
+            离子风暴•化学牌
+          </a>
+          
+          <a class="friend-card" href="https://szzx1000.cn" target="_blank">
+            江苏省苏州中学
+          </a>
 
-    <!-- 继续添加即可 -->
-    <!--
-    <a class="friend-card" href="https://你的新链接.com" target="_blank">
-      新链接名称
-    </a>
-    -->
+        </div>
+      </section>
+
+    </div>
 
   </main>
 
-  <!-- 全站通用 JS（主题切换 + 菜单 + 动画） -->
+  <!-- 滚动淡入动画 -->
   <script>
-    function openMenu() {
-      document.getElementById("sidebar").style.left = "0";
-      document.getElementById("overlay").style.display = "block";
-      document.getElementById("hamburger").classList.add("active");
+    const sections = document.querySelectorAll('.fade-pair');
+
+    function checkSections() {
+      const trigger = window.innerHeight * 0.7;
+
+      sections.forEach(sec => {
+        const rect = sec.getBoundingClientRect();
+        if (rect.top < trigger) {
+          sec.classList.add('visible');
+        }
+      });
     }
 
-    function closeMenu() {
-      document.getElementById("sidebar").style.left = "-300px";
-      document.getElementById("overlay").style.display = "none";
-      document.getElementById("hamburger").classList.remove("active");
-    }
+    document.querySelector('.home-right').addEventListener('scroll', checkSections);
+    window.onload = checkSections;
+  </script>
 
+  <!-- 深色模式 -->
+  <script>
     function setLightMode() {
       document.body.classList.remove("dark-mode");
       document.body.classList.add("light-mode");
@@ -86,9 +88,6 @@
       } else {
         document.body.classList.add("light-mode");
       }
-
-      // 淡入动画
-      document.querySelector('.fade-pair').classList.add('visible');
     }
   </script>
 
