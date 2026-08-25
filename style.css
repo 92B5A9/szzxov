@@ -14,11 +14,11 @@ a {
 }
 
 /* =========================================
-   顶部水平导航条（移动端）
+   顶部水平导航条（全站统一）
 ========================================= */
 .topbar {
   width: 100%;
-  height: 42px; /* ⭐ 缩小高度，避免压住内容 */
+  height: 48px;
   display: flex;
   align-items: center;
   padding: 0 10px;
@@ -54,76 +54,40 @@ a {
 }
 
 /* =========================================
-   PC 端悬浮侧栏
+   首页布局
 ========================================= */
-.sidebar {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  width: 160px;
-  height: calc(100% - 20px);
-  padding-top: 80px;
-
-  background: rgba(255,255,255,0.25);
-  backdrop-filter: blur(40px);
-  border-radius: 24px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+.home-layout {
+  height: 100vh;
+  overflow: hidden;
 }
 
-.sidebar a {
-  display: block;
-  padding: 12px 0;
-  text-align: center;
-  font-size: 18px;
-  margin: 8px;
-
-  background: rgba(255,255,255,0.35);
-  backdrop-filter: blur(20px);
-  border-radius: 18px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+.home-right {
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
 }
 
-/* PC 主体右移 */
+/* PC 默认布局（不再右移） */
 @media (min-width: 900px) {
   main {
-    margin-left: 200px;
+    margin-left: 0 !important;
     padding: 20px;
   }
 }
 
-/* =========================================
-   移动端：彻底隐藏侧栏 + 居中内容
-========================================= */
+/* 移动端居中内容 */
 @media (max-width: 899px) {
-
-  /* ⭐ 移动端彻底隐藏竖向侧栏 */
-  .sidebar {
-    display: none !important;
-  }
-
-  /* ⭐ 主体不右移 */
-  main {
-    margin-left: 0 !important;
-    padding: 0;
-  }
-
-  /* ⭐ 首页内容居中显示 */
   .home-section {
-    height: calc(100vh - 42px); /* 减去顶部导航条高度 */
+    height: calc(100vh - 48px);
     display: flex;
-    align-items: center; /* ⭐ 居中 */
-    justify-content: center; /* ⭐ 居中 */
+    align-items: center;
+    justify-content: center;
     padding-top: 0;
-  }
-
-  .glass-card {
-    margin-top: 0;
   }
 }
 
-/* =========================================
-   首页文本浮窗（PC）
-========================================= */
+/* PC 内容保持原来的上对齐 */
 .home-section {
   height: 100vh;
   display: flex;
@@ -132,6 +96,9 @@ a {
   padding-top: 20px;
 }
 
+/* =========================================
+   玻璃卡片
+========================================= */
 .glass-card {
   background: rgba(255,255,255,0.35);
   backdrop-filter: blur(25px);
