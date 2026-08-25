@@ -4,10 +4,25 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
-  font-size: 64px;
+  font-size: 32px;
   line-height: 1.4;
   color: #333;
   transition: background 0.6s ease, color 0.6s ease;
+}
+
+/* 平板端字体 */
+@media (max-width: 1200px) {
+  body { font-size: 28px; }
+}
+
+/* 移动端字体 */
+@media (max-width: 899px) {
+  body { font-size: 24px; }
+}
+
+/* 超小屏手机 */
+@media (max-width: 600px) {
+  body { font-size: 20px; }
 }
 
 /* 浅色模式 */
@@ -33,7 +48,6 @@ body.dark-mode {
   padding-left: 30px;
   background: rgba(255,255,255,0.25);
   backdrop-filter: blur(25px) saturate(180%);
-  -webkit-backdrop-filter: blur(25px) saturate(180%);
   border-bottom: 1px solid rgba(255,255,255,0.4);
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   position: sticky;
@@ -47,67 +61,21 @@ body.dark-mode .topbar {
 }
 
 /* =========================================
-   汉堡菜单（移动端）
-========================================= */
-.hamburger {
-  width: 80px;
-  height: 80px;
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  cursor: pointer;
-
-  background: rgba(255,255,255,0.35);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-}
-
-body.dark-mode .hamburger {
-  background: rgba(40,40,60,0.35);
-}
-
-.hamburger div {
-  width: 100%;
-  height: 10px;
-  background: #333;
-  border-radius: 10px;
-  transition: 0.3s;
-}
-
-body.dark-mode .hamburger div {
-  background: #f0f0f0;
-}
-
-/* 点击后变成 X */
-.hamburger.active div:nth-child(1) {
-  transform: translateY(20px) rotate(45deg);
-}
-.hamburger.active div:nth-child(2) {
-  opacity: 0;
-}
-.hamburger.active div:nth-child(3) {
-  transform: translateY(-20px) rotate(-45deg);
-}
-
-/* =========================================
-   侧栏（Liquid Glass）
+   悬浮侧栏（VisionOS 风格）
 ========================================= */
 .sidebar {
   position: fixed;
-  top: 0;
-  left: -300px;
-  width: 300px;
-  height: 100%;
+  top: 40px;
+  left: 40px;
+  width: 280px;
+  height: calc(100% - 80px);
   padding-top: 160px;
 
   background: rgba(255,255,255,0.25);
-  backdrop-filter: blur(30px) saturate(180%);
-  border-right: 1px solid rgba(255,255,255,0.4);
-  box-shadow: 8px 0 30px rgba(0,0,0,0.15);
-  border-radius: 0 40px 40px 0;
+  backdrop-filter: blur(40px) saturate(180%);
+  border-radius: 40px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
 
-  transition: left 0.35s cubic-bezier(0.25, 1.3, 0.3, 1);
   z-index: 300;
 }
 
@@ -117,9 +85,9 @@ body.dark-mode .sidebar {
 
 .sidebar a {
   display: block;
-  padding: 40px 0;
+  padding: 30px 0;
   text-align: center;
-  font-size: 64px;
+  font-size: 40px;
   text-decoration: none;
   color: #333;
 
@@ -144,34 +112,11 @@ body.dark-mode .sidebar a:hover {
 }
 
 /* =========================================
-   遮罩层
+   主体内容右移（因为侧栏悬浮）
 ========================================= */
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  backdrop-filter: blur(6px);
-  background: rgba(0,0,0,0.25);
-  display: none;
-  z-index: 250;
-}
-
-/* =========================================
-   PC / 移动端布局切换
-========================================= */
-@media (max-width: 899px) {
-  .hamburger { display: flex; }
-  .sidebar { left: -300px; }
-  main { margin-left: 0; }
-}
-
-@media (min-width: 900px) {
-  .hamburger { display: none !important; }
-  .sidebar { left: 0 !important; position: fixed; }
-  .overlay { display: none !important; }
-  main { margin-left: 300px; }
+main {
+  margin-left: 360px;
+  padding: 40px;
 }
 
 /* =========================================
