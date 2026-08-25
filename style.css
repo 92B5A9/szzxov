@@ -1,4 +1,6 @@
-/* 全站基础 */
+/* =========================================
+   全站基础样式
+========================================= */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
@@ -11,15 +13,19 @@ a {
   text-decoration: none !important;
 }
 
-/* 顶部水平导航条（移动端） */
+/* =========================================
+   顶部水平导航条（移动端）
+========================================= */
 .topbar {
   width: 100%;
-  height: 48px;
+  height: 42px; /* ⭐ 缩小高度，避免压住首页内容 */
   display: flex;
   align-items: center;
   padding: 0 10px;
+
   overflow-x: auto;
   white-space: nowrap;
+  scrollbar-width: none;
 
   background: rgba(255,255,255,0.25);
   backdrop-filter: blur(25px);
@@ -47,7 +53,9 @@ a {
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
-/* PC 端悬浮侧栏 */
+/* =========================================
+   PC 端悬浮侧栏
+========================================= */
 .sidebar {
   position: fixed;
   top: 10px;
@@ -83,20 +91,30 @@ a {
   }
 }
 
-/* 移动端隐藏侧栏 */
+/* =========================================
+   移动端：彻底隐藏侧栏（解决横向竖向并存）
+========================================= */
 @media (max-width: 899px) {
   .sidebar {
-    display: none !important;
+    display: none !important; /* ⭐ 移动端彻底隐藏侧栏 */
+  }
+
+  main {
+    margin-left: 0 !important;
+    padding: 16px;
   }
 }
 
-/* 首页文本浮窗 */
+/* =========================================
+   首页文本浮窗（第二第三页消失的修复）
+========================================= */
 .home-section {
   height: 100vh;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding-top: 20px;
+
+  padding-top: 20px; /* ⭐ 顶部导航条高度缩小后，这里保持即可 */
 }
 
 .glass-card {
@@ -108,7 +126,9 @@ a {
   box-shadow: 0 8px 30px rgba(0,0,0,0.15);
 }
 
-/* 动画 */
+/* =========================================
+   动画
+========================================= */
 .fade-pair {
   opacity: 0;
   transform: translateY(40px) scale(0.97);
