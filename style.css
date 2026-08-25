@@ -1,3 +1,18 @@
+body {
+  background-image: url("/image/background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+body.dark-mode::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  pointer-events: none;
+  z-index: -1;
+}
 /* =========================================
    全站基础样式
 ========================================= */
