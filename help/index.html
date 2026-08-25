@@ -8,7 +8,7 @@
 
 <body class="light-mode">
 
-  <!-- 顶部横向导航条（与首页一致） -->
+  <!-- 顶部横向导航条（全站统一） -->
   <div class="topbar">
     <a href="/">首页</a>
     <a href="/submit">投稿</a>
@@ -18,49 +18,40 @@
     <a href="/url">友情链接</a>
   </div>
 
-  <!-- 主体内容 -->
-  <main class="home-layout">
+  <!-- 主体内容（正常排版，无滚动动画） -->
+  <main style="padding: 20px;">
 
-    <div class="home-right">
+    <div class="glass-card">
 
-      <section class="home-section fade-pair">
-        <div class="glass-card">
-          <h1>投稿帮助</h1>
+      <h1>投稿帮助</h1>
 
-          <p>
-            在这里你可以查看投稿规则、格式要求、注意事项等内容。
-            所有投稿将由广播社成员进行审核并安排播出。
-          </p>
+      <p>
+        2026广播社投稿细则
+1.投稿途径
+目前仅接受通过网易云音乐账号“苏州中学 OV 广播社”私信转发的方式接收投稿，会安排社员每周值班回复私信，考虑到社员有时比较忙，可能周中无法及时回复，但是在截止时间之前一定会回复，还请大家见谅。
+注：每期接受投稿截止时间一般为每周六中午12:00，在此之后的投稿会被收集在下一期中，时间如有改动会在校墙上公布。
+2.投稿流程
+由于网易云音乐的私信机制，导致大家第一次投稿时无法进行转发，请先关注“苏州中学 OV 广播社”并向我们发送一条消息，我们看到后会尽快回关大家（注意需要互相关注），之后可以正常进行投稿。
+收到的投稿会收录于当期投稿歌单中（无版权歌曲会发在评论区），大家可以通过检视该歌单内是否有自己的歌曲，来判断自己的投稿是否有被遗漏，如有遗漏，在评论区说明即可。
+3.投稿要求
+把你想要投稿的歌曲分享给网易云账号“苏州中学OV广播社”，并注明投稿的是课间/午间/宿舍音乐，其中课间音乐要求是纯音乐（接受部分人声吟唱）。如果投稿歌曲网易云没有版权（比如周董的歌），请使用“歌名+歌手”形式投稿，并注明该曲无版权，将会以评论的形式收录在歌单评论区。其余有版权的音乐务必要以分享形式转发给我们，否则不受理，还请谅解。
+同时考虑到我社工作量及公平性，每人每个投稿周期至多投稿2 首歌，超出部分恕不
+受理。
+4.最终歌单
+午间音乐会在20 分钟以内；宿舍音乐约23 分钟；课间音乐共4首，分别在第一，
+三，五，七课的课间放送。其中午间、宿舍音乐大致有一半中文歌曲。
+歌单时间命名规则如下：宿舍/课间/午间歌单以开始放音日期命名，投稿歌单以投稿截止日期命名（例：20260608投稿歌单）。
+Our Voice广播社
+2026.8.7。
+      </p>
 
-          <p style="margin-top:20px;">
-            如果你有任何疑问，可以通过设置页联系我们。
-          </p>
-
-        </div>
-      </section>
+      <p style="margin-top:20px;">
+        如果你有任何疑问，可以通过网易云音乐私信联系我们。
+      </p>
 
     </div>
 
   </main>
-
-  <!-- 滚动淡入动画 -->
-  <script>
-    const sections = document.querySelectorAll('.fade-pair');
-
-    function checkSections() {
-      const trigger = window.innerHeight * 0.7;
-
-      sections.forEach(sec => {
-        const rect = sec.getBoundingClientRect();
-        if (rect.top < trigger) {
-          sec.classList.add('visible');
-        }
-      });
-    }
-
-    document.querySelector('.home-right').addEventListener('scroll', checkSections);
-    window.onload = checkSections;
-  </script>
 
   <!-- 深色模式 -->
   <script>
