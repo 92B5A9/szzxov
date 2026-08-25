@@ -386,3 +386,40 @@ body.dark-mode .topbar {
   transform-style: preserve-3d;
   perspective: 1200px;
 }
+.friend-links {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 60px;
+}
+
+.friend-card {
+  display: block;
+  padding: 40px;
+  font-size: 48px;
+  text-align: center;
+  border-radius: 30px;
+  text-decoration: none;
+  color: #333;
+
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+
+  transition: 0.25s;
+}
+
+.friend-card:hover {
+  transform: scale(1.05);
+  background: rgba(255,255,255,0.55);
+}
+
+body.dark-mode .friend-card {
+  background: rgba(40,40,60,0.35);
+  color: #f0f0f0;
+}
+
+body.dark-mode .friend-card:hover {
+  background: rgba(80,80,120,0.55);
+}
