@@ -18,55 +18,30 @@
     <a href="/url">友情链接</a>
   </div>
 
-  <!-- 主体内容 -->
-  <main class="home-layout">
+  <!-- 主体内容（正常排版，无滚动动画） -->
+  <main style="padding: 20px;">
 
-    <div class="home-right">
+    <div class="glass-card">
 
-      <section class="home-section fade-pair">
-        <div class="glass-card">
+      <h1>提交投稿</h1>
 
-          <h1>提交投稿</h1>
+      <form id="submitForm" style="margin-top:20px;">
 
-          <form id="submitForm" style="margin-top:20px;">
+        <label class="form-label">歌曲名</label>
+        <input type="text" name="title" class="submit-input input-glass" placeholder="请输入歌曲名">
 
-            <label class="form-label">歌曲名</label>
-            <input type="text" name="title" class="submit-input input-glass" placeholder="请输入歌曲名">
+        <label class="form-label">歌手</label>
+        <input type="text" name="author" class="submit-input input-glass" placeholder="请输入歌手">
 
-            <label class="form-label">歌手</label>
-            <input type="text" name="author" class="submit-input input-glass" placeholder="请输入歌手">
+        <button type="submit" class="submit-btn">提交</button>
 
-            <button type="submit" class="submit-btn">提交</button>
+      </form>
 
-          </form>
-
-          <p id="result"></p>
-
-        </div>
-      </section>
+      <p id="result"></p>
 
     </div>
 
   </main>
-
-  <!-- 滚动淡入动画 -->
-  <script>
-    const sections = document.querySelectorAll('.fade-pair');
-
-    function checkSections() {
-      const trigger = window.innerHeight * 0.7;
-
-      sections.forEach(sec => {
-        const rect = sec.getBoundingClientRect();
-        if (rect.top < trigger) {
-          sec.classList.add('visible');
-        }
-      });
-    }
-
-    document.querySelector('.home-right').addEventListener('scroll', checkSections);
-    window.onload = checkSections;
-  </script>
 
   <!-- 投稿提交逻辑（后端待接入） -->
   <script>
