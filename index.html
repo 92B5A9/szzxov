@@ -8,17 +8,8 @@
 
 <body class="light-mode">
 
-  <!-- 顶部栏（移动端显示汉堡菜单） -->
+  <!-- 顶部水平导航条（移动端用） -->
   <div class="topbar">
-    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-  </div>
-
-  <!-- 侧栏 -->
-  <div class="sidebar" id="sidebar">
     <a href="/">首页</a>
     <a href="/submit">投稿</a>
     <a href="/archive">往期</a>
@@ -27,8 +18,15 @@
     <a href="/url">友情链接</a>
   </div>
 
-  <!-- 遮罩层（移动端用） -->
-  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+  <!-- PC 端悬浮侧栏 -->
+  <div class="sidebar">
+    <a href="/">首页</a>
+    <a href="/submit">投稿</a>
+    <a href="/archive">往期</a>
+    <a href="/help">帮助</a>
+    <a href="/settings">设置</a>
+    <a href="/url">友情链接</a>
+  </div>
 
   <!-- 主体内容 -->
   <main class="home-layout">
@@ -38,8 +36,8 @@
       <!-- 第 1 屏 -->
       <section class="home-section fade-pair align-center">
         <div class="glass-card">
-          <h1>广播社</h1>
-          <p>欢迎来到广播社，这里是我们的主页介绍。</p>
+          <h1>Our Voice广播社</h1>
+          <p>声音，改变世界。</p>
         </div>
       </section>
 
@@ -49,8 +47,6 @@
           <h2>关于我们</h2>
           <p>
             苏州中学Our Voice广播社是在校团委指导下，由学生自主管理、自主制作节目的社团，是学生缓解压力、反映心声的窗口和平台。
-            我们自成立以来便立志成为苏中学生展现自我、培养自信与能力的载体，同时也努力为优秀的播音、主持型人才提供展现才能的舞台。
-            我们从广播艺术出发，融合配音、唱歌、美工、后期、文案、宣传等领域，致力于传播声音文化，推动广播剧及音乐文化在校园的发展。
           </p>
         </div>
       </section>
@@ -60,10 +56,7 @@
         <div class="glass-card">
           <h2>社团组成</h2>
           <p>
-            我们是一个拥有多个部门的大型学生社团，有着完善的社团管理制度：
-            音乐部负责午间音乐、课间音乐、宿舍音乐的歌单选择和音频制作；
-            技术部负责节目音频剪辑、活动海报设计和视频制作；
-            以及正在筹建中的播音部，负责广播讲话。
+            我们是一个拥有多个部门的大型学生社团，有着完善的社团管理制度。
           </p>
         </div>
       </section>
@@ -89,51 +82,6 @@
 
     document.querySelector('.home-right').addEventListener('scroll', checkSections);
     window.onload = checkSections;
-  </script>
-
-  <!-- 汉堡菜单逻辑（移动端启用，PC端禁用） -->
-<script>
-function toggleMenu() {
-  const sidebar = document.getElementById("sidebar");
-  const hamburger = document.getElementById("hamburger");
-
-  // PC 端不启用汉堡
-  if (window.innerWidth >= 900) return;
-
-  if (hamburger.classList.contains("active")) {
-    hamburger.classList.remove("active");
-    sidebar.style.left = "-280px";  // 对应移动端隐藏位置
-  } else {
-    hamburger.classList.add("active");
-    sidebar.style.left = "0";       // 滑出
-  }
-}
-</script>
-
-
-
-  <!-- 深色模式 -->
-  <script>
-    function setLightMode() {
-      document.body.classList.remove("dark-mode");
-      document.body.classList.add("light-mode");
-      localStorage.setItem("theme", "light");
-    }
-
-    function setDarkMode() {
-      document.body.classList.remove("light-mode");
-      document.body.classList.add("dark-mode");
-      localStorage.setItem("theme", "dark");
-    }
-
-    window.onload = function() {
-      const savedTheme = localStorage.getItem("theme");
-      if (savedTheme === "dark") {
-        document.body.classList.add("dark-mode");
-      } else {
-        document.body.classList.add("light-mode");
-      }
-    }
   </script>
 
 </body>
