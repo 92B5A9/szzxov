@@ -39,60 +39,33 @@ main {
 /* ================================
    顶部栏（汉堡按钮所在）
 ================================ */
-/* Liquid Glass 汉堡按钮 */
-.topbar {
+/* Liquid Glass 按钮 */
+.sidebar a {
+  display: block;
   width: 100%;
-  height: 120px;
-  display: flex;
-  align-items: center;
-  padding-left: 30px;
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(25px) saturate(180%);
-  -webkit-backdrop-filter: blur(25px) saturate(180%);
-  border-bottom: 1px solid rgba(255,255,255,0.4);
+  padding: 40px 0;
+  text-align: center;
+  font-size: 64px;
+
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  border-radius: 30px;
+  margin: 20px 0;
+
+  color: #333;
+  text-decoration: none;
+
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  border-radius: 0 0 40px 40px;
+  transition: 0.25s;
 }
 
-.hamburger {
-  width: 80px;
-  height: 60px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  cursor: pointer;
+.sidebar a:hover {
+  background: rgba(255, 255, 255, 0.55);
+  transform: scale(1.03);
 }
 
-.hamburger div {
-  height: 12px;
-  background: rgba(255,255,255,0.9);
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-/* iOS Liquid Glass 侧滑菜单 */
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: -300px;
-  width: 300px;
-  height: 100%;
-  padding-top: 160px;
-
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(30px) saturate(180%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
-
-  border-right: 1px solid rgba(255,255,255,0.4);
-  box-shadow: 8px 0 30px rgba(0, 0, 0, 0.15);
-
-  border-radius: 0 40px 40px 0;
-
-  transition: left 0.35s cubic-bezier(0.25, 1.3, 0.3, 1);
-  z-index: 300;
-}
 /* Liquid Glass 按钮 */
 .sidebar a {
   display: block;
@@ -229,4 +202,14 @@ main {
   .hamburger div {
     height: 10px;
   }
+}
+/* 页面内容玻璃卡片 */
+.glass-card {
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-radius: 40px;
+  padding: 60px;
+  margin: 40px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
 }
