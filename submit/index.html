@@ -1,98 +1,104 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <link rel="stylesheet" href="/style.css">
 <head>
   <meta charset="UTF-8">
-</nav>
   <title>提交投稿</title>
+  <link rel="stylesheet" href="/style.css">
 </head>
-<body>
-  <body class="light-mode">
 
-  <!-- 顶部汉堡菜单 -->
-<div class="topbar">
-  <div class="hamburger" onclick="openMenu()">
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
-</div>
-<!-- 左侧滑出菜单栏 -->
-<div class="sidebar" id="sidebar">
-  <a href="/">首页</a>
+<body class="light-mode">
+
+  <!-- 顶部横向导航条（全站统一） -->
+  <div class="topbar">
+    <a href="/">首页</a>
     <a href="/submit">投稿</a>
     <a href="/archive">往期</a>
     <a href="/help">帮助</a>
     <a href="/settings">设置</a>
     <a href="/url">友情链接</a>
-</div>
+  </div>
 
-<!-- 点击遮罩层关闭菜单 -->
-<div class="overlay" id="overlay" onclick="closeMenu()"></div>
-<main>
+  <!-- 主体内容 -->
+  <main class="home-layout">
 
-  <h1>提交投稿</h1>
+    <div class="home-right">
 
-  <form id="submitForm">
-    <label>歌曲名：</label><br>
- <input type="text" class="submit-input" placeholder="请输入歌曲名">
+      <section class="home-section fade-pair">
+        <div class="glass-card">
 
-    <label>歌手：</label><br>
-     <input type="text" class="submit-input" placeholder="请输入歌手">
+          <h1>提交投稿</h1>
 
-    <button type="submit">提交</button>
-  </form>
+          <form id="submitForm" style="margin-top:20px;">
 
-  <p id="result"></p>
+            <label class="form-label">歌曲名</label>
+            <input type="text" name="title" class="submit-input input-glass" placeholder="请输入歌曲名">
 
+            <label class="form-label">歌手</label>
+            <input type="text" name="author" class="submit-input input-glass" placeholder="请输入歌手">
+
+            <button type="submit" class="submit-btn">提交</button>
+
+          </form>
+
+          <p id="result"></p>
+
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- 滚动淡入动画 -->
   <script>
-    document.getElementById('submitForm').addEventListener('submit', async (e) => {
+    const sections = document.querySelectorAll('.fade-pair');
+
+    function checkSections() {
+      const trigger = window.innerHeight * 0.7;
+
+      sections.forEach(sec => {
+        const rect = sec.getBoundingClientRect();
+        if (rect.top < trigger) {
+          sec.classList.add('visible');
+        }
+      });
+    }
+
+    document.querySelector('.home-right').addEventListener('scroll', checkSections);
+    window.onload = checkSections;
+  </script>
+
+  <!-- 投稿提交逻辑（后端待接入） -->
+  <script>
+    document.getElementById('submitForm').addEventListener('submit', (e) => {
       e.preventDefault();
-
-      const formData = new FormData(e.target);
-      const data = {
-        title: formData.get('title'),
-        author: formData.get('author')
-      };
-
-      // 后端 API 之后再接入，现在先假装成功
       document.getElementById('result').innerText = "投稿已提交（后端待接入）";
     });
   </script>
+
+  <!-- 深色模式 -->
   <script>
-  function openMenu() {
-    document.getElementById("sidebar").style.left = "0";
-    document.getElementById("overlay").style.display = "block";
-  }
-
-  function closeMenu() {
-    document.getElementById("sidebar").style.left = "-300px"; /* 与宽度一致 */
-    document.getElementById("overlay").style.display = "none";
-  }
-</script>
-<script>
-  function setLightMode() {
-    document.body.classList.remove("dark-mode");
-    document.body.classList.add("light-mode");
-    localStorage.setItem("theme", "light");
-  }
-
-  function setDarkMode() {
-    document.body.classList.remove("light-mode");
-    document.body.classList.add("dark-mode");
-    localStorage.setItem("theme", "dark");
-  }
-
-  // 页面加载时自动应用上次选择的主题
-  window.onload = function() {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      document.body.classList.add("dark-mode");
-    } else {
+    function setLightMode() {
+      document.body.classList.remove("dark-mode");
       document.body.classList.add("light-mode");
+      localStorage.setItem("theme", "light");
     }
-  }
-</script>
+
+    function setDarkMode() {
+      document.body.classList.remove("light-mode");
+      document.body.classList.add("dark-mode");
+      localStorage.setItem("theme", "dark");
+    }
+
+    window.onload = function() {
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+      } else {
+        document.body.classList.add("light-mode");
+      }
+    }
+  </script>
 
 </body>
 </html>
