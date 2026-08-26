@@ -1,9 +1,0 @@
-name = "szzxov-backend"
-main = "functions/submit.js"
-compatibility_date = "2026-08-25"
-
-"d1_databases": [{
-    "binding": "DB",
-    "database_name": "song-cache",
-    "database_id": "58d4eecd-5236-4133-9ed1-d8e8bcc011f2"
- }]
