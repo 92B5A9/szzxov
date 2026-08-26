@@ -1,36 +1,4 @@
-body {
-  background-image: url("/image/background.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
-body.dark-mode::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.35);
-  pointer-events: none;
-  z-index: -1;
-}
-/* =========================================
-   全站基础样式
-========================================= */
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
-  font-size: clamp(18px, 2vw, 28px);
-  line-height: 1.4;
-  color: #333;
-}
-
-a {
-  text-decoration: none !important;
-}
-
-/* =========================================
-   顶部水平导航条（全站统一）
-========================================= */
+/* 顶部导航栏基础样式 */
 .topbar {
   width: 100%;
   height: 48px;
@@ -55,25 +23,16 @@ a {
 .topbar::-webkit-scrollbar {
   display: none;
 }
+
+/* 中文主文字 */
 .topbar a {
   color: black;
   font-weight: 600;
   text-decoration: none;
-  margin-right: 24px;
-}
 
-.topbar a .en {
-  font-size: 0.6em;      /* 英文更小：60% 大小 */
-  opacity: 0.65;         /* 英文更淡 */
-  margin-left: 4px;      /* 中文与英文间距 */
-  letter-spacing: 0.5px; /* 英文更精致 */
-}
-
-
-.topbar a {
   display: inline-block;
   padding: 6px 18px;
-  margin-right: 10px;
+  margin-right: 16px;
   font-size: 18px;
 
   background: rgba(255,255,255,0.35);
@@ -82,154 +41,60 @@ a {
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
-/* =========================================
-   首页布局
-========================================= */
-.home-layout {
-  height: 100vh;
-  overflow: hidden;
+/* 英文辅助文字 */
+.topbar a .en {
+  font-size: 0.55em;      /* 再小一点：55% */
+  opacity: 0.6;           /* 更淡一点 */
+  margin-left: 4px;
+  letter-spacing: 0.5px;
 }
-
-.home-right {
+/* 顶部导航栏基础样式 */
+.topbar {
   width: 100%;
-  height: 100%;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
-}
-
-/* PC 默认布局（不再右移） */
-@media (min-width: 900px) {
-  main {
-    margin-left: 0 !important;
-    padding: 20px;
-  }
-}
-
-/* 移动端居中内容 */
-@media (max-width: 899px) {
-  .home-section {
-    height: calc(100vh - 48px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-top: 0;
-  }
-}
-
-/* PC 内容保持原来的上对齐 */
-.home-section {
-  height: 100vh;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: 20px;
-}
-
-/* =========================================
-   玻璃卡片
-========================================= */
-.glass-card {
-  background: rgba(255,255,255,0.35);
-  backdrop-filter: blur(25px);
-  border-radius: 32px;
-  padding: 32px;
-  margin-bottom: 20px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-}
-
-/* =========================================
-   动画
-========================================= */
-.fade-pair {
-  opacity: 0;
-  transform: translateY(40px) scale(0.97);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-.fade-pair.visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-.input-glass {
-  width: 100%;
-  padding: 12px 16px;
-  margin-top: 12px;
-  font-size: 18px;
-
-  background: rgba(255,255,255,0.35);
-  backdrop-filter: blur(20px);
-  border: none;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-
-  outline: none;
-}
-
-body.dark-mode .input-glass {
-  background: rgba(40,40,60,0.35);
-  color: #f0f0f0;
-}
-.form-label {
-  font-size: 22px;
-  margin-top: 20px;
-  margin-bottom: 8px;
-  display: block;
-}
-.submit-btn {
-  width: 100%;
-  padding: 16px;
-  font-size: 22px;
-  border-radius: 16px;
-  border: none;
-  background: rgba(255,255,255,0.45);
-  backdrop-filter: blur(20px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.submit-btn:hover {
-  background: rgba(255,255,255,0.65);
-}
-.friend-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.friend-card {
+  height: 48px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  padding: 0 10px;
 
-  padding: 20px;
-  border-radius: 20px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(25px);
+  border-bottom: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+
+  position: sticky;
+  top: 0;
+  z-index: 300;
+}
+
+.topbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* 中文主文字 */
+.topbar a {
+  color: black;
+  font-weight: 600;
+  text-decoration: none;
+
+  display: inline-block;
+  padding: 6px 18px;
+  margin-right: 16px;
+  font-size: 18px;
 
   background: rgba(255,255,255,0.35);
   backdrop-filter: blur(20px);
+  border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-
-  text-decoration: none;
-  color: #333;
-  font-size: 22px;
 }
 
-.friend-card:hover {
-  background: rgba(255,255,255,0.55);
-}
-
-.favicon {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-}
-
-body.dark-mode .friend-card {
-  background: rgba(40,40,60,0.35);
-  color: #f0f0f0;
-}
-
-body.dark-mode .friend-card:hover {
-  background: rgba(80,80,120,0.55);
+/* 英文辅助文字 */
+.topbar a .en {
+  font-size: 0.55em;      /* 再小一点：55% */
+  opacity: 0.6;           /* 更淡一点 */
+  margin-left: 4px;
+  letter-spacing: 0.5px;
 }
