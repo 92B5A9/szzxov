@@ -248,3 +248,44 @@ body.dark-mode .friend-card {
 body.dark-mode .friend-card:hover {
   background: rgba(80,80,120,0.55);
 }
+/* =========================================
+   底栏（版本号区域）
+========================================= */
+.site-footer {
+  width: 100%;
+  padding: 16px 0;
+  margin-top: 40px;
+
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+}
+
+.footer-inner {
+  display: flex;
+  gap: 12px;
+  font-size: 16px;
+  color: black;
+  opacity: 0.8;
+}
+
+.footer-divider {
+  opacity: 0.5;
+}
+
+body.dark-mode .site-footer {
+  background: rgba(40,40,60,0.35);
+  border-top: 1px solid rgba(80,80,120,0.4);
+}
+
+body.dark-mode .footer-inner {
+  color: #f0f0f0;
+  opacity: 0.85;
+}
