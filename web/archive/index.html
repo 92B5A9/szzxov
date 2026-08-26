@@ -1,56 +1,60 @@
-console.log("archive JS 已加载");
+<script>
+  async function loadList() {
+    const res = await fetch('/archive/archive.json');
+    const data = await res.json();
 
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <title>往期投稿展示</title>
-  <link rel="stylesheet" href="/style.css">
-</head>
+    const list = document.getElementById('list');
+    list.innerHTML = "";
 
-<body class="light-mode">
+    data.results.forEach(item => {
+      const div = document.createElement('div');
+      div.className = "glass-card";
+      div.style.marginTop = "12px";
+      div.innerHTML = `
+        <strong>${item.title}</strong><br>
+        ${item.author}<br>
+        第 ${item.issue} 期<br>
+        <span style="opacity:0.7;">${item.created_at}</span>
+      `;
+      list.appendChild(div);
+    });
+  }
 
-  <!-- 顶部横向导航条（全站统一） -->
-  <div class="topbar">
-    <a href="/">首页</a>
-    <a href="/submit">投稿</a>
-    <a href="/archive">往期</a>
-    <a href="/help">帮助</a>
-    <a href="/settings">设置</a>
-    <a href="/url">友情链接</a>
-  </div>
+  loadList();
 
-  <!-- 主体内容 -->
-  <main style="padding: 20px;">
 
-    <div class="glass-card">
+  async function loadIssues() {
+    const res = await fetch('/archive/archive.json');
+    const data = await res.json();
 
-      <h1>往期投稿展示</h1>
+    const filter = document.getElementById('filter');
+    const issues = new Set();
 
-      <input type="text" id="search" placeholder="搜索歌曲名或作者" class="input-glass">
+    data.results.forEach(item => issues.add(item.issue));
 
-      <select id="filter" class="input-glass" style="margin-top: 12px;">
-        <option value="">全部期数</option>
-      </select>
+    issues.forEach(issue => {
+      const opt = document.createElement('option');
+      opt.value = issue;
+      opt.textContent = `第 ${issue} 期`;
+      filter.appendChild(opt);
+    });
+  }
 
-      <div id="list" class="glass-card" style="margin-top:20px;">
-        投稿列表加载中（后端待接入）
-      </div>
+  loadIssues();
 
-    </div>
 
-  </main>
+  document.getElementById('filter').addEventListener('change', async (e) => {
+    const issue = e.target.value;
 
-  <!-- 后端数据加载脚本（必须放在外面） -->
-  <script>
-    async function loadList() {
-      const res = await fetch('/api/archive');
-      const data = await res.json();
+    const res = await fetch('/archive/archive.json');
+    const data = await res.json();
 
-      const list = document.getElementById('list');
-      list.innerHTML = "";
+    const list = document.getElementById('list');
+    list.innerHTML = "";
 
-      data.results.forEach(item => {
+    data.results
+      .filter(item => !issue || item.issue == issue)
+      .forEach(item => {
         const div = document.createElement('div');
         div.className = "glass-card";
         div.style.marginTop = "12px";
@@ -62,109 +66,34 @@ console.log("archive JS 已加载");
         `;
         list.appendChild(div);
       });
-    }
-
-    loadList();
+  });
 
 
-    async function loadIssues() {
-      const res = await fetch('/api/archive');
-      const data = await res.json();
+  document.getElementById('search').addEventListener('input', async (e) => {
+    const keyword = e.target.value.toLowerCase();
 
-      const filter = document.getElementById('filter');
-      const issues = new Set();
+    const res = await fetch('/archive/archive.json');
+    const data = await res.json();
 
-      data.results.forEach(item => issues.add(item.issue));
+    const list = document.getElementById('list');
+    list.innerHTML = "";
 
-      issues.forEach(issue => {
-        const opt = document.createElement('option');
-        opt.value = issue;
-        opt.textContent = `第 ${issue} 期`;
-        filter.appendChild(opt);
+    data.results
+      .filter(item =>
+        item.title.toLowerCase().includes(keyword) ||
+        item.author.toLowerCase().includes(keyword)
+      )
+      .forEach(item => {
+        const div = document.createElement('div');
+        div.className = "glass-card";
+        div.style.marginTop = "12px";
+        div.innerHTML = `
+          <strong>${item.title}</strong><br>
+          ${item.author}<br>
+          第 ${item.issue} 期<br>
+          <span style="opacity:0.7;">${item.created_at}</span>
+        `;
+        list.appendChild(div);
       });
-    }
-
-    loadIssues();
-
-
-    document.getElementById('filter').addEventListener('change', async (e) => {
-      const issue = e.target.value;
-
-      const res = await fetch('/api/archive');
-      const data = await res.json();
-
-      const list = document.getElementById('list');
-      list.innerHTML = "";
-
-      data.results
-        .filter(item => !issue || item.issue == issue)
-        .forEach(item => {
-          const div = document.createElement('div');
-          div.className = "glass-card";
-          div.style.marginTop = "12px";
-          div.innerHTML = `
-            <strong>${item.title}</strong><br>
-            ${item.author}<br>
-            第 ${item.issue} 期<br>
-            <span style="opacity:0.7;">${item.created_at}</span>
-          `;
-          list.appendChild(div);
-        });
-    });
-
-
-    document.getElementById('search').addEventListener('input', async (e) => {
-      const keyword = e.target.value.toLowerCase();
-
-      const res = await fetch('/api/archive');
-      const data = await res.json();
-
-      const list = document.getElementById('list');
-      list.innerHTML = "";
-
-      data.results
-        .filter(item =>
-          item.title.toLowerCase().includes(keyword) ||
-          item.author.toLowerCase().includes(keyword)
-        )
-        .forEach(item => {
-          const div = document.createElement('div');
-          div.className = "glass-card";
-          div.style.marginTop = "12px";
-          div.innerHTML = `
-            <strong>${item.title}</strong><br>
-            ${item.author}<br>
-            第 ${item.issue} 期<br>
-            <span style="opacity:0.7;">${item.created_at}</span>
-          `;
-          list.appendChild(div);
-        });
-    });
-  </script>
-
-  <!-- 深色模式 -->
-  <script>
-    function setLightMode() {
-      document.body.classList.remove("dark-mode");
-      document.body.classList.add("light-mode");
-      localStorage.setItem("theme", "light");
-    }
-
-    function setDarkMode() {
-      document.body.classList.remove("light-mode");
-      document.body.classList.add("dark-mode");
-      localStorage.setItem("theme", "dark");
-    }
-
-    window.onload = function() {
-      const savedTheme = localStorage.getItem("theme");
-      if (savedTheme === "dark") {
-        document.body.classList.add("dark-mode");
-      } else {
-        document.body.classList.add("light-mode");
-      }
-    }
-  </script>
-
-</body>
-</html>
+  });
+</script>
