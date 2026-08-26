@@ -1,60 +1,54 @@
-<script>
-  async function loadList() {
-    const res = await fetch('/archive/archive.json');
-    const data = await res.json();
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>往期投稿展示</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
 
-    const list = document.getElementById('list');
-    list.innerHTML = "";
+<body class="light-mode">
 
-    data.results.forEach(item => {
-      const div = document.createElement('div');
-      div.className = "glass-card";
-      div.style.marginTop = "12px";
-      div.innerHTML = `
-        <strong>${item.title}</strong><br>
-        ${item.author}<br>
-        第 ${item.issue} 期<br>
-        <span style="opacity:0.7;">${item.created_at}</span>
-      `;
-      list.appendChild(div);
-    });
-  }
+  <!-- 顶部横向导航条 -->
+  <div class="topbar">
+    <a href="/">首页</a>
+    <a href="/submit">投稿</a>
+    <a href="/archive">往期</a>
+    <a href="/help">帮助</a>
+    <a href="/settings">设置</a>
+    <a href="/url">友情链接</a>
+  </div>
 
-  loadList();
+  <main style="padding: 20px;">
+    <div class="glass-card">
 
+      <h1>往期投稿展示</h1>
 
-  async function loadIssues() {
-    const res = await fetch('/archive/archive.json');
-    const data = await res.json();
+      <input type="text" id="search" placeholder="搜索歌曲名或作者" class="input-glass">
 
-    const filter = document.getElementById('filter');
-    const issues = new Set();
+      <select id="filter" class="input-glass" style="margin-top: 12px;">
+        <option value="">全部期数</option>
+      </select>
 
-    data.results.forEach(item => issues.add(item.issue));
+      <div id="list" class="glass-card" style="margin-top:20px;">
+        投稿列表加载中…
+      </div>
 
-    issues.forEach(issue => {
-      const opt = document.createElement('option');
-      opt.value = issue;
-      opt.textContent = `第 ${issue} 期`;
-      filter.appendChild(opt);
-    });
-  }
+    </div>
+  </main>
 
-  loadIssues();
+  <!-- 静态 JSON 加载 -->
+  <script>
+    async function loadData() {
+      const res = await fetch('/archive/archive.json');
+      const data = await res.json();
+      return data.results;
+    }
 
+    async function renderList(items) {
+      const list = document.getElementById('list');
+      list.innerHTML = "";
 
-  document.getElementById('filter').addEventListener('change', async (e) => {
-    const issue = e.target.value;
-
-    const res = await fetch('/archive/archive.json');
-    const data = await res.json();
-
-    const list = document.getElementById('list');
-    list.innerHTML = "";
-
-    data.results
-      .filter(item => !issue || item.issue == issue)
-      .forEach(item => {
+      items.forEach(item => {
         const div = document.createElement('div');
         div.className = "glass-card";
         div.style.marginTop = "12px";
@@ -66,34 +60,43 @@
         `;
         list.appendChild(div);
       });
-  });
+    }
 
+    // 初始化加载
+    loadData().then(renderList);
 
-  document.getElementById('search').addEventListener('input', async (e) => {
-    const keyword = e.target.value.toLowerCase();
+    // 加载期数
+    loadData().then(data => {
+      const filter = document.getElementById('filter');
+      const issues = new Set(data.map(i => i.issue));
 
-    const res = await fetch('/archive/archive.json');
-    const data = await res.json();
+      issues.forEach(issue => {
+        const opt = document.createElement('option');
+        opt.value = issue;
+        opt.textContent = `第 ${issue} 期`;
+        filter.appendChild(opt);
+      });
+    });
 
-    const list = document.getElementById('list');
-    list.innerHTML = "";
+    // 筛选
+    document.getElementById('filter').addEventListener('change', async (e) => {
+      const issue = e.target.value;
+      const data = await loadData();
+      const filtered = data.filter(item => !issue || item.issue == issue);
+      renderList(filtered);
+    });
 
-    data.results
-      .filter(item =>
+    // 搜索
+    document.getElementById('search').addEventListener('input', async (e) => {
+      const keyword = e.target.value.toLowerCase();
+      const data = await loadData();
+      const filtered = data.filter(item =>
         item.title.toLowerCase().includes(keyword) ||
         item.author.toLowerCase().includes(keyword)
-      )
-      .forEach(item => {
-        const div = document.createElement('div');
-        div.className = "glass-card";
-        div.style.marginTop = "12px";
-        div.innerHTML = `
-          <strong>${item.title}</strong><br>
-          ${item.author}<br>
-          第 ${item.issue} 期<br>
-          <span style="opacity:0.7;">${item.created_at}</span>
-        `;
-        list.appendChild(div);
-      });
-  });
-</script>
+      );
+      renderList(filtered);
+    });
+  </script>
+
+</body>
+</html>
