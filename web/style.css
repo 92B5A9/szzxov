@@ -55,6 +55,18 @@ a {
 .topbar::-webkit-scrollbar {
   display: none;
 }
+.topbar a {
+  color: black;              /* 中文黑色 */
+  font-weight: 600;
+  text-decoration: none;
+  margin-right: 24px;
+}
+
+.topbar a .en {
+  font-size: 0.75em;         /* 英文更小 */
+  opacity: 0.7;              /* 英文稍淡 */
+  margin-left: 4px;          /* 中文与英文之间的间距 */
+}
 
 .topbar a {
   display: inline-block;
