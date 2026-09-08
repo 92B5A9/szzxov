@@ -8,7 +8,7 @@
 
 <body class="light-mode">
 
-  <!-- 顶部横向导航条 -->
+  <!-- 顶部横向导航条（保持你原来的纯中文版本） -->
   <div class="topbar">
     <a href="/">首页</a>
     <a href="/submit">投稿</a>
@@ -23,12 +23,15 @@
 
       <h1>往期投稿展示（暂不开放）</h1>
 
+      <!-- 搜索框 -->
       <input type="text" id="search" placeholder="搜索歌曲名或作者" class="input-glass">
 
+      <!-- 期数筛选 -->
       <select id="filter" class="input-glass" style="margin-top: 12px;">
         <option value="">全部期数</option>
       </select>
 
+      <!-- 列表 -->
       <div id="list" class="glass-card" style="margin-top:20px;">
         投稿列表加载中…
       </div>
@@ -36,17 +39,37 @@
     </div>
   </main>
 
-  <!-- 静态 JSON 加载 -->
+  <!-- 按期分组 JSON 适配的 JS -->
   <script>
     async function loadData() {
       const res = await fetch('/archive/archive.json');
       const data = await res.json();
-      return data.results;
+
+      // 展开成统一列表，方便搜索和筛选
+      const flat = [];
+
+      data.issues.forEach(group => {
+        group.songs.forEach(song => {
+          flat.push({
+            title: song.title,
+            author: song.author,
+            created_at: song.created_at,
+            issue: group.issue
+          });
+        });
+      });
+
+      return { raw: data.issues, flat };
     }
 
     async function renderList(items) {
       const list = document.getElementById('list');
       list.innerHTML = "";
+
+      if (items.length === 0) {
+        list.innerHTML = "<div class='glass-card'>没有找到匹配的结果。</div>";
+        return;
+      }
 
       items.forEach(item => {
         const div = document.createElement('div');
@@ -63,17 +86,15 @@
     }
 
     // 初始化加载
-    loadData().then(renderList);
+    loadData().then(({ raw, flat }) => {
+      renderList(flat);
 
-    // 加载期数
-    loadData().then(data => {
+      // 加载期数
       const filter = document.getElementById('filter');
-      const issues = new Set(data.map(i => i.issue));
-
-      issues.forEach(issue => {
+      raw.forEach(group => {
         const opt = document.createElement('option');
-        opt.value = issue;
-        opt.textContent = `第 ${issue} 期`;
+        opt.value = group.issue;
+        opt.textContent = `第 ${group.issue} 期`;
         filter.appendChild(opt);
       });
     });
@@ -81,16 +102,16 @@
     // 筛选
     document.getElementById('filter').addEventListener('change', async (e) => {
       const issue = e.target.value;
-      const data = await loadData();
-      const filtered = data.filter(item => !issue || item.issue == issue);
+      const { flat } = await loadData();
+      const filtered = flat.filter(item => !issue || item.issue == issue);
       renderList(filtered);
     });
 
     // 搜索
     document.getElementById('search').addEventListener('input', async (e) => {
       const keyword = e.target.value.toLowerCase();
-      const data = await loadData();
-      const filtered = data.filter(item =>
+      const { flat } = await loadData();
+      const filtered = flat.filter(item =>
         item.title.toLowerCase().includes(keyword) ||
         item.author.toLowerCase().includes(keyword)
       );
