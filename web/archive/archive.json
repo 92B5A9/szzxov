@@ -5,7 +5,7 @@
       "songs": [
         {
           "title": "Shelter (Piano version)",
-          "author": "Porter Robinson / Madeon",
+          "author": "Porter Robinso/Madeon",
           "created_at": "2026-09-01"
         },
         {
@@ -27,7 +27,7 @@
     },
 
     {
-      "issue": "20260901-午间",
+      "issue": "20260901午间",
       "songs": [
         {
           "title": "kiss me",
@@ -58,11 +58,11 @@
     },
 
     {
-      "issue": "20260901-宿舍",
+      "issue": "20260901宿舍",
       "songs": [
         {
           "title": "真心英雄",
-          "author": "成龙 / 周华健 / 李宗盛",
+          "author": "成龙/周华健/李宗盛",
           "created_at": "2026-09-01"
         },
         {
@@ -77,13 +77,18 @@
         },
         {
           "title": "小尖尖",
-          "author": "薛之谦 / 韩红",
+          "author": "薛之谦/韩红",
           "created_at": "2026-09-01"
         },
         {
           "title": "I Love You So (Acoustic)",
           "author": "The Walters",
           "created_at": "2026-09-01"
+        },
+        {
+          "title": "乐园游梦记",
+          "author": "三Z-STUDIO/HOYO-MiX/于梓贝",
+          "created_at": "2026-09-03"
         }
       ]
     }
