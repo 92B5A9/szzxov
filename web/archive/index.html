@@ -78,7 +78,7 @@
         div.innerHTML = `
           <strong>${item.title}</strong><br>
           ${item.author}<br>
-           ${item.issue} <br>
+          ${item.issue}<br>
           <span style="opacity:0.7;">${item.created_at}</span>
         `;
         list.appendChild(div);
@@ -94,7 +94,7 @@
       raw.forEach(group => {
         const opt = document.createElement('option');
         opt.value = group.issue;
-        opt.textContent = `第 ${group.issue} 期`;
+        opt.textContent = `${group.issue}`;
         filter.appendChild(opt);
       });
     });
