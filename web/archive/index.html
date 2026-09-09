@@ -21,7 +21,7 @@
   <main style="padding: 20px;">
     <div class="glass-card">
 
-      <h1>往期投稿展示（暂不开放）</h1>
+      <h1>往期投稿展示</h1>
 
       <!-- 搜索框 -->
       <input type="text" id="search" placeholder="搜索歌曲名或作者" class="input-glass">
@@ -78,7 +78,7 @@
         div.innerHTML = `
           <strong>${item.title}</strong><br>
           ${item.author}<br>
-          第 ${item.issue} 期<br>
+           ${item.issue} <br>
           <span style="opacity:0.7;">${item.created_at}</span>
         `;
         list.appendChild(div);
