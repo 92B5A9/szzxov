@@ -5,7 +5,7 @@
       "songs": [
         {
           "title": "Shelter (Piano version)",
-          "author": "Porter Robinso/Madeon",
+          "author": "Porter Robinson/Madeon",
           "created_at": "2026-09-01"
         },
         {
@@ -25,7 +25,6 @@
         }
       ]
     },
-
     {
       "issue": "20260901午间",
       "songs": [
@@ -56,7 +55,6 @@
         }
       ]
     },
-
     {
       "issue": "20260901宿舍",
       "songs": [
@@ -117,7 +115,7 @@
         }
       ]
     },
-      {
+    {
       "issue": "20260907午间",
       "songs": [
         {
@@ -134,9 +132,9 @@
           "title": "世末歌者",
           "author": "乐正绫/COP",
           "created_at": "2026-09-07"
-        },
-      ]},
-    
+        }
+      ]
+    },
     {
       "issue": "20260914宿舍",
       "songs": [
@@ -167,7 +165,6 @@
         }
       ]
     },
-    
     {
       "issue": "20260914午间",
       "songs": [
@@ -198,7 +195,7 @@
         }
       ]
     },
-      {
+    {
       "issue": "20260914课间",
       "songs": [
         {
@@ -220,6 +217,8 @@
           "title": "英雄主义",
           "author": "在虚无中永存",
           "created_at": "2026-09-14"
-        }]}
+        }
+      ]
+    }
   ]
 }
