@@ -6,28 +6,52 @@
   <title>身份验证丨苏州</title>
   <link rel="stylesheet" href="/style.css">
   <style>
-    /* 移除本页面的背景图片，改用简洁纯色背景 */
+    /* 覆盖默认样式：无背景图，默认黑色/深色主题 */
     body {
       background-image: none !important;
-      background-color: #eef2f5;
+      background-color: #0f0f14 !important; /* 深黑底色 */
+      color: #f0f0f0 !important;
     }
-    body.dark-mode {
-      background-image: none !important;
-      background-color: #1a1a24;
+
+    /* 适配深色下的毛玻璃卡片与输入框视觉 */
+    .glass-card {
+      background: rgba(30, 30, 45, 0.65) !important;
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+    }
+
+    .input-glass {
+      background: rgba(255, 255, 255, 0.08) !important;
+      color: #ffffff !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    }
+
+    .input-glass::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .submit-btn {
+      background: rgba(255, 255, 255, 0.18) !important;
+      color: #ffffff !important;
+      border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    }
+
+    .submit-btn:hover {
+      background: rgba(255, 255, 255, 0.3) !important;
     }
   </style>
 </head>
 
-<body class="light-mode">
-
-
+<body class="dark-mode">
 
   <!-- 主体内容 -->
-  <main style="padding: 20px;">
+  <main style="padding: 40px 20px;">
 
     <div class="glass-card fade-pair">
 
-      <h1 class="center-title" style="text-align: center; margin-top: 0;">身份验证</h1>
+      <h1 class="center-title" style="text-align: center; margin-top: 0; color: #ffffff;">身份验证</h1>
 
       <!-- 表单区域：包含三个输入框与一个确认按键 -->
       <form onsubmit="handleSubmit(event)">
@@ -51,24 +75,16 @@
 
   </main>
 
-  <!-- 交互逻辑 + 动画 + 深色模式 -->
+  <!-- 交互逻辑 + 渐显动画 -->
   <script>
-    // 拦截提交逻辑：无论输入什么内容，均弹窗提示“账号或密码错误”
+    // 拦截提交逻辑：包含账号、手机号与密码的统一错误提示
     function handleSubmit(event) {
       event.preventDefault(); // 阻止表单默认提交刷新
       alert("账号或密码错误");
     }
 
-    // 页面加载完毕后执行动画与主题检查
+    // 页面加载完毕后触发渐显动画
     window.onload = function() {
-      const savedTheme = localStorage.getItem("theme");
-      if (savedTheme === "dark") {
-        document.body.classList.add("dark-mode");
-      } else {
-        document.body.classList.add("light-mode");
-      }
-
-      // 触发渐显动画
       const fadeElement = document.querySelector('.fade-pair');
       if (fadeElement) {
         fadeElement.classList.add('visible');
