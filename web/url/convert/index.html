@@ -1,76 +1,73 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>登录验证</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .login-container {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-        }
-        .input-group {
-            margin-bottom: 15px;
-        }
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-        }
-        .input-group input {
-            width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .login-btn {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .login-btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>身份验证丨苏州中学OV广播社</title>
+  <link rel="stylesheet" href="/style.css">
 </head>
-<body>
 
-<div class="login-container">
-    <h2>系统登录</h2>
-    <div class="input-group">
-        <label for="username">账号</label>
-        <input type="text" id="username" placeholder="请输入账号">
-    </div>
-    <div class="input-group">
-        <label for="password">密码</label>
-        <input type="password" id="password" placeholder="请输入密码">
-    </div>
-    <button class="login-btn" onclick="handleClick()">确认</button>
-</div>
+<body class="light-mode">
 
-<script>
-    function handleClick() {
-        alert("账号ID错误");
+  <!-- 顶部横向导航条 -->
+  <div class="topbar">
+    <a href="/">首页<span class="en">HOME</span></a>
+    <a href="/submit">投稿<span class="en">SUBMIT</span></a>
+    <a href="/archive">往期<span class="en">ARCHIVE</span></a>
+    <a href="/help">帮助<span class="en">HELP</span></a>
+    <a href="/settings">设置<span class="en">SETTINGS</span></a>
+    <a href="/url">友情链接<span class="en">FRIENDS</span></a>
+  </div>
+
+  <!-- 主体内容 -->
+  <main style="padding: 20px;">
+
+    <div class="glass-card fade-pair">
+
+      <h1 class="center-title" style="text-align: center; margin-top: 0;">身份验证</h1>
+
+      <!-- 表单区域：包含两个输入框与一个确认按键 -->
+      <form onsubmit="handleSubmit(event)">
+        <!-- 输入框 1 -->
+        <label class="form-label" for="account-id">账号 ID</label>
+        <input type="text" id="account-id" class="input-glass" placeholder="请输入账号 ID" required>
+
+        <!-- 输入框 2 -->
+        <label class="form-label" for="account-key">验证密码</label>
+        <input type="password" id="account-key" class="input-glass" placeholder="请输入验证密码" required>
+
+        <!-- 确认按键 -->
+        <button type="submit" class="submit-btn">确 认</button>
+      </form>
+
+    </div>
+
+  </main>
+
+  <!-- 交互逻辑 + 动画 + 深色模式 -->
+  <script>
+    // 拦截提交逻辑：无论输入什么内容，均弹窗提示“账号ID错误”
+    function handleSubmit(event) {
+      event.preventDefault(); // 阻止表单默认提交刷新
+      alert("账号ID错误");
     }
-</script>
+
+    // 页面加载完毕后执行动画与主题检查
+    window.onload = function() {
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+      } else {
+        document.body.classList.add("light-mode");
+      }
+
+      // 触发渐显动画
+      const fadeElement = document.querySelector('.fade-pair');
+      if (fadeElement) {
+        fadeElement.classList.add('visible');
+      }
+    }
+  </script>
 
 </body>
 </html>
