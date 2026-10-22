@@ -2,87 +2,85 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
   <title>苏州中学OV广播社</title>
   <link rel="stylesheet" href="/style.css">
+  <!-- 全站公共功能 -->
+  <script src="/auth.js" defer></script>
+  <script src="/nav.js" defer></script>
 </head>
 <body class="light-mode">
-  <!-- 顶部水平导航条（全站统一） -->
-<div class="topbar">
-  <a href="/">
-    首页 <span class="en">Home</span>
-  </a>
-  <a href="/submit">
-    投稿 <span class="en">Submit</span>
-  </a>
-  <a href="/archive">
-    往期 <span class="en">Archive</span>
-  </a>
-  <a href="/help">
-    帮助 <span class="en">Help</span>
-  </a>
-  <a href="/settings">
-    设置 <span class="en">Settings</span>
-  </a>
-  <a href="/url">
-    友情链接 <span class="en">Links</span>
-  </a>
-</div>
-
-
-  <!-- 主体内容 -->
+  <!-- 全站统一导航 -->
+  <div id="site-nav"></div>
+  <!-- =========================
+       首页主体
+       ========================= -->
   <main class="home-layout">
-
     <div class="home-right">
-
       <!-- 第 1 屏 -->
       <section class="home-section fade-pair">
         <div class="glass-card">
           <h1>Our Voice广播社</h1>
-          <p>欢迎来到苏州中学OV广播社，这里是我们的官方网页。</p>
+          <p>
+            欢迎来到苏州中学OV广播社，这里是我们的官方网页。
+          </p>
         </div>
       </section>
-
       <!-- 第 2 屏 -->
       <section class="home-section fade-pair">
         <div class="glass-card">
           <h2>关于我们</h2>
           <p>
-            苏州中学Our Voice广播社是在校团委指导下，由学生自主管理、自主制作节目的社团，是学生缓解压力、反映心声的窗口和平台。
+            苏州中学Our Voice广播社是在校团委指导下，
+            由学生自主管理、自主制作节目的社团，
+            是学生缓解压力、反映心声的窗口和平台。
           </p>
         </div>
       </section>
-
       <!-- 第 3 屏 -->
       <section class="home-section fade-pair">
         <div class="glass-card">
           <h2>社团组成</h2>
           <p>
-            我们是一个拥有多个部门的大型学生社团，有着完善的社团管理制度。
+            我们是一个拥有多个部门的大型学生社团，
+            有着完善的社团管理制度。
           </p>
         </div>
       </section>
-
     </div>
-
   </main>
-
-  <!-- 滚动淡入动画 -->
+  <!-- =========================
+       首页滚动淡入动画
+       ========================= -->
   <script>
-    const sections = document.querySelectorAll('.fade-pair');
-
+    const sections =
+      document.querySelectorAll(".fade-pair");
     function checkSections() {
-      const trigger = window.innerHeight * 0.7;
-
+      const trigger =
+        window.innerHeight * 0.7;
       sections.forEach(sec => {
-        const rect = sec.getBoundingClientRect();
+        const rect =
+          sec.getBoundingClientRect();
         if (rect.top < trigger) {
-          sec.classList.add('visible');
+          sec.classList.add("visible");
         }
       });
     }
-
-    document.querySelector('.home-right').addEventListener('scroll', checkSections);
-    window.onload = checkSections;
+    const homeRight =
+      document.querySelector(".home-right");
+    if (homeRight) {
+      homeRight.addEventListener(
+        "scroll",
+        checkSections
+      );
+    }
+    window.addEventListener(
+      "load",
+      checkSections
+    );
   </script>
 </body>
 </html>
