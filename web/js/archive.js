@@ -11,54 +11,32 @@
     const response =
       await fetch("/archive/archive.json");
     if (!response.ok) {
-      throw new Error(
-        "往期投稿数据加载失败"
-      );
+      throw new Error("往期投稿数据加载失败");
     }
     const data =
       await response.json();
-    // JSON：
-    //
-    // {
-    //   "issues": [
-    //     {
-    //       "issue": 1,
-    //       "songs": [...]
-    //     }
-    //   ]
-    // }
     const flat = [];
     if (
       !data ||
       !Array.isArray(data.issues)
     ) {
-      throw new Error(
-        "archive.json 格式错误"
-      );
+      throw new Error("archive.json 格式错误");
     }
-    data.issues.forEach(
-      function (group) {
-        if (
-          !Array.isArray(group.songs)
-        ) {
-          return;
-        }
-        group.songs.forEach(
-          function (song) {
-            flat.push({
-              title:
-                song.title || "",
-              author:
-                song.author || "",
-              created_at:
-                song.created_at || "",
-              issue:
-                group.issue
-            });
-          }
-        );
+    data.issues.forEach(function (group) {
+      if (!Array.isArray(group.songs)) {
+        return;
       }
-    );
+      group.songs.forEach(function (song) {
+        flat.push({
+          title:
+            song.title || "",
+          author:
+            song.author || "",
+          issue:
+            group.issue || ""
+        });
+      });
+    });
     return {
       raw: data.issues,
       flat: flat
@@ -66,7 +44,6 @@
   }
   // ========================================
   // HTML 转义
-  // 防止投稿内容直接插入 HTML
   // ========================================
   function escapeHTML(value) {
     return String(value)
@@ -86,7 +63,6 @@
       return;
     }
     list.innerHTML = "";
-    // 没有结果
     if (items.length === 0) {
       list.innerHTML = `
         <div class="glass-card">
@@ -95,35 +71,31 @@
       `;
       return;
     }
-    // 渲染结果
-    items.forEach(
-      function (item) {
-        const div =
-          document.createElement("div");
-        div.className =
-          "glass-card";
-        div.style.marginTop =
-          "12px";
-        div.innerHTML = `
-          <strong>
-            ${escapeHTML(item.title)}
-          </strong>
-          <br>
+    items.forEach(function (item) {
+      const div =
+        document.createElement("div");
+      div.className =
+        "glass-card";
+      div.style.marginTop =
+        "12px";
+      div.innerHTML = `
+        <strong>
+          ${escapeHTML(item.title)}
+        </strong>
+        <br>
+        <span>
           ${escapeHTML(item.author)}
-          <br>
-          ${escapeHTML(item.issue)}
-          歌单
-          <br>
-          <span style="opacity:0.7;">
-            ${escapeHTML(item.created_at)}
-          </span>
-        `;
-        list.appendChild(div);
-      }
-    );
+        </span>
+        <br>
+        <span style="opacity:0.7;">
+          ${escapeHTML(item.issue)}歌单
+        </span>
+      `;
+      list.appendChild(div);
+    });
   }
   // ========================================
-  // 筛选 + 搜索
+  // 搜索 + 筛选
   // ========================================
   function updateList() {
     const search =
@@ -141,31 +113,29 @@
         ? filter.value
         : "";
     const filtered =
-      allItems.filter(
-        function (item) {
-          const title =
-            String(item.title)
-              .toLowerCase();
-          const author =
-            String(item.author)
-              .toLowerCase();
-          const matchesSearch =
-            !keyword ||
-            title.includes(keyword) ||
-            author.includes(keyword);
-          const matchesIssue =
-            !issue ||
-            String(item.issue) === issue;
-          return (
-            matchesSearch &&
-            matchesIssue
-          );
-        }
-      );
+      allItems.filter(function (item) {
+        const title =
+          String(item.title)
+            .toLowerCase();
+        const author =
+          String(item.author)
+            .toLowerCase();
+        const matchesSearch =
+          !keyword ||
+          title.includes(keyword) ||
+          author.includes(keyword);
+        const matchesIssue =
+          !issue ||
+          String(item.issue) === issue;
+        return (
+          matchesSearch &&
+          matchesIssue
+        );
+      });
     renderList(filtered);
   }
   // ========================================
-  // 初始化期数
+  // 加载期数选项
   // ========================================
   function loadIssueOptions(raw) {
     const filter =
@@ -173,17 +143,15 @@
     if (!filter) {
       return;
     }
-    raw.forEach(
-      function (group) {
-        const option =
-          document.createElement("option");
-        option.value =
-          group.issue;
-        option.textContent =
-          `${group.issue}歌单`;
-        filter.appendChild(option);
-      }
-    );
+    raw.forEach(function (group) {
+      const option =
+        document.createElement("option");
+      option.value =
+        group.issue;
+      option.textContent =
+        `${group.issue}歌单`;
+      filter.appendChild(option);
+    });
   }
   // ========================================
   // 页面初始化
@@ -191,22 +159,17 @@
   async function initArchive() {
     const list =
       document.getElementById("list");
-    // 不是往期页面
     if (!list) {
       return;
     }
     try {
       const data =
         await loadData();
-      // 保存数据
-      // 后续搜索不再重复请求服务器
       allItems =
         data.flat;
-      // 创建期数选项
       loadIssueOptions(
         data.raw
       );
-      // 第一次渲染
       renderList(
         allItems
       );
@@ -221,7 +184,6 @@
         </div>
       `;
     }
-    // 搜索
     const search =
       document.getElementById("search");
     if (search) {
@@ -230,7 +192,6 @@
         updateList
       );
     }
-    // 期数
     const filter =
       document.getElementById("filter");
     if (filter) {
@@ -244,8 +205,7 @@
   // 启动
   // ========================================
   if (
-    document.readyState ===
-    "loading"
+    document.readyState === "loading"
   ) {
     document.addEventListener(
       "DOMContentLoaded",
