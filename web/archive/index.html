@@ -2,122 +2,66 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <meta
+    name="theme-color"
+    content="#dfe7ef"
+  >
   <title>往期投稿丨苏州中学OV广播社</title>
-  <link rel="stylesheet" href="/style.css">
+  <link
+    rel="stylesheet"
+    href="/style.css"
+  >
 </head>
-
 <body class="light-mode">
-
-  <!-- 顶部横向导航条（保持你原来的纯中文版本） -->
-  <div class="topbar">
-    <a href="/">首页</a>
-    <a href="/submit">投稿</a>
-    <a href="/archive">往期</a>
-    <a href="/help">帮助</a>
-    <a href="/settings">设置</a>
-    <a href="/url">友情链接</a>
-  </div>
-
+  <!-- =================================
+       全站统一导航
+  ================================== -->
+  <div id="site-nav"></div>
+  <!-- =================================
+       往期投稿
+  ================================== -->
   <main style="padding: 20px;">
     <div class="glass-card">
-
       <h1>往期投稿展示</h1>
-
-      <!-- 搜索框 -->
-      <input type="text" id="search" placeholder="搜索歌曲名或作者" class="input-glass">
-
+      <!-- 搜索 -->
+      <input
+        type="text"
+        id="search"
+        placeholder="搜索歌曲名或作者"
+        class="input-glass"
+      >
       <!-- 期数筛选 -->
-      <select id="filter" class="input-glass" style="margin-top: 12px;">
-        <option value="">全部期数</option>
+      <select
+        id="filter"
+        class="input-glass"
+        style="margin-top: 12px;"
+      >
+        <option value="">
+          全部期数
+        </option>
       </select>
-
-      <!-- 列表 -->
-      <div id="list" class="glass-card" style="margin-top:20px;">
+      <!-- 投稿列表 -->
+      <div
+        id="list"
+        class="glass-card"
+        style="margin-top: 20px;"
+      >
         投稿列表加载中…
       </div>
-
     </div>
   </main>
-
-  <!-- 按期分组 JSON 适配的 JS -->
-  <script>
-    async function loadData() {
-      const res = await fetch('/archive/archive.json');
-      const data = await res.json();
-
-      // 展开成统一列表，方便搜索和筛选
-      const flat = [];
-
-      data.issues.forEach(group => {
-        group.songs.forEach(song => {
-          flat.push({
-            title: song.title,
-            author: song.author,
-            created_at: song.created_at,
-            issue: group.issue
-          });
-        });
-      });
-
-      return { raw: data.issues, flat };
-    }
-
-    async function renderList(items) {
-      const list = document.getElementById('list');
-      list.innerHTML = "";
-
-      if (items.length === 0) {
-        list.innerHTML = "<div class='glass-card'>没有找到匹配的结果。</div>";
-        return;
-      }
-
-      items.forEach(item => {
-        const div = document.createElement('div');
-        div.className = "glass-card";
-        div.style.marginTop = "12px";
-        div.innerHTML = `
-          <strong>${item.title}</strong><br>
-          ${item.author}<br>
-          ${item.issue}歌单<br>
-          <span style="opacity:0.7;">${item.created_at}</span>
-        `;
-        list.appendChild(div);
-      });
-    }
-
-    // 初始化加载
-    loadData().then(({ raw, flat }) => {
-      renderList(flat);
-
-      // 加载期数
-      const filter = document.getElementById('filter');
-      raw.forEach(group => {
-        const opt = document.createElement('option');
-        opt.value = group.issue;
-        opt.textContent = `${group.issue}歌单`;
-        filter.appendChild(opt);
-      });
-    });
-
-    // 筛选
-    document.getElementById('filter').addEventListener('change', async (e) => {
-      const issue = e.target.value;
-      const { flat } = await loadData();
-      const filtered = flat.filter(item => !issue || item.issue == issue);
-      renderList(filtered);
-    });
-
-    // 搜索
-    document.getElementById('search').addEventListener('input', async (e) => {
-      const keyword = e.target.value.toLowerCase();
-      const { flat } = await loadData();
-      const filtered = flat.filter(item =>
-        item.title.toLowerCase().includes(keyword) ||
-        item.author.toLowerCase().includes(keyword)
-      );
-      renderList(filtered);
-    });
-  </script>
-
+  <!-- =================================
+       全站公共 JS
+  ================================== -->
+  <script src="/js/navbar.js"></script>
+  <script src="/js/theme.js"></script>
+  <!-- =================================
+       往期页面 JS
+  ================================== -->
+  <script src="/js/archive.js"></script>
 </body>
 </html>
