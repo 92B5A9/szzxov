@@ -2,66 +2,27 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-  <meta
-    name="theme-color"
-    content="#dfe7ef"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#dfe7ef">
   <title>往期投稿丨苏州中学OV广播社</title>
-  <link
-    rel="stylesheet"
-    href="/style.css"
-  >
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body class="light-mode">
-  <!-- =================================
-       全站统一导航
-  ================================== -->
   <div id="site-nav"></div>
-  <!-- =================================
-       往期投稿
-  ================================== -->
-  <main style="padding: 20px;">
+  <main style="padding:20px;">
     <div class="glass-card">
       <h1>往期投稿展示</h1>
-      <!-- 搜索 -->
-      <input
-        type="text"
-        id="search"
-        placeholder="搜索歌曲名或作者"
-        class="input-glass"
-      >
-      <!-- 期数筛选 -->
-      <select
-        id="filter"
-        class="input-glass"
-        style="margin-top: 12px;"
-      >
-        <option value="">
-          全部期数
-        </option>
+      <input type="text" id="search" placeholder="搜索歌曲名或作者" class="input-glass">
+      <select id="filter" class="input-glass" style="margin-top:12px;">
+        <option value="">全部期数</option>
       </select>
-      <!-- 投稿列表 -->
-      <div
-        id="list"
-        class="glass-card"
-        style="margin-top: 20px;"
-      >
-        投稿列表加载中…
-      </div>
+      <div id="list" class="glass-card" style="margin-top:20px;">投稿列表加载中…</div>
     </div>
   </main>
-  <!-- =================================
-       全站公共 JS
-  ================================== -->
+  <script src="/js/config.js"></script>
+  <script src="/js/auth.js"></script>
   <script src="/js/navbar.js"></script>
   <script src="/js/theme.js"></script>
-  <!-- =================================
-       往期页面 JS
-  ================================== -->
   <script src="/js/archive.js"></script>
 </body>
 </html>
