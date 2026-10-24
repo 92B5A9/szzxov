@@ -1,26 +1,100 @@
 <div class="topbar">
-  <a href="/">首页<span class="en">Home</span></a>
-  <a href="/submit">投稿<span class="en">Submit</span></a>
-  <a href="/archive">往期<span class="en">Archive</span></a>
-  <a href="/help">帮助<span class="en">Help</span></a>
-  <a href="/settings">设置<span class="en">Settings</span></a>
-  <a href="/url">友情链接<span class="en">Links</span></a>
+  <div class="topbar-nav">
+    <a href="/">首页<span class="en">Home</span></a>
+    <a href="/submit">投稿<span class="en">Submit</span></a>
+    <a href="/archive">往期<span class="en">Archive</span></a>
+    <a href="/help">帮助<span class="en">Help</span></a>
+    <a href="/settings">设置<span class="en">Settings</span></a>
+    <a href="/url">友情链接<span class="en">Links</span></a>
+  </div>
   <div id="authArea"></div>
 </div>
 <style>
-#authArea { position: relative; flex-shrink: 0; margin-left: auto; }
+.topbar {
+  overflow: visible !important;
+  position: sticky;
+  isolation: isolate;
+}
+.topbar-nav {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  overflow-y: visible;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.topbar-nav::-webkit-scrollbar { display: none; }
+.topbar-nav a { flex: 0 0 auto; }
+#authArea {
+  position: relative;
+  z-index: 10001;
+  flex: 0 0 auto;
+  margin-left: 8px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
 #authArea > a, #authArea > button { color: inherit; font: inherit; }
-.account-button { display:flex; align-items:center; gap:7px; padding:7px 12px; border:1px solid rgba(255,255,255,.15); border-radius:15px; background:rgba(255,255,255,.18); backdrop-filter:blur(15px); -webkit-backdrop-filter:blur(15px); box-shadow:0 3px 12px rgba(0,0,0,.12); cursor:pointer; }
+.account-button {
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:7px 12px;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:15px;
+  background:rgba(255,255,255,.18);
+  backdrop-filter:blur(15px);
+  -webkit-backdrop-filter:blur(15px);
+  box-shadow:0 3px 12px rgba(0,0,0,.12);
+  cursor:pointer;
+}
 .account-icon { font-size:20px; line-height:1; }
 .account-text { display:flex; flex-direction:column; line-height:1.05; }
 .account-name { font-size:15px; font-weight:600; }
+.account-arrow { margin-left:2px; font-size:14px; }
 .account-text small, .auth-menu .en { font-size:8px; opacity:.6; letter-spacing:.3px; }
-.auth-menu { position:absolute; top:calc(100% + 8px); right:0; min-width:150px; padding:8px; border-radius:16px; background:rgba(255,255,255,.82); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:0 8px 28px rgba(0,0,0,.16); border:1px solid rgba(255,255,255,.35); z-index:10000; }
+.auth-menu {
+  position:absolute;
+  top:calc(100% + 8px);
+  right:0;
+  min-width:160px;
+  padding:8px;
+  border-radius:16px;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  box-shadow:0 8px 28px rgba(0,0,0,.16);
+  border:1px solid rgba(255,255,255,.35);
+  z-index:10002;
+}
 .auth-menu[hidden] { display:none; }
-.auth-menu a, .auth-menu button { display:block; width:100%; padding:9px 10px; border:0; border-radius:10px; background:transparent; color:#222; text-align:left; font:inherit; cursor:pointer; text-decoration:none; }
-.auth-menu a:hover, .auth-menu button:hover { background:rgba(255,255,255,.5); }
-body.dark-mode .auth-menu { background:rgba(30,30,45,.9); border-color:rgba(255,255,255,.15); }
+.auth-menu a, .auth-menu button {
+  display:block;
+  width:100%;
+  padding:10px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:#222;
+  text-align:left;
+  font:inherit;
+  cursor:pointer;
+  text-decoration:none;
+}
+.auth-menu a:hover, .auth-menu button:hover { background:rgba(127,127,127,.12); }
+body.dark-mode .auth-menu { background:rgba(30,30,45,.96); border-color:rgba(255,255,255,.15); }
 body.dark-mode .auth-menu a, body.dark-mode .auth-menu button { color:#fff; }
-@media (max-width:600px) { .account-button { padding:7px 9px; border-radius:14px; } .account-icon { font-size:18px; } .account-name { font-size:14px; } }
-@media (max-width:380px) { .account-text { display:none; } }
+@media (max-width:600px) {
+  #authArea { margin-left:6px; }
+  .account-button { padding:7px 9px; border-radius:14px; }
+  .account-icon { font-size:18px; }
+  .account-name { font-size:14px; }
+}
+@media (max-width:380px) {
+  .account-text { display:none; }
+}
 </style>
