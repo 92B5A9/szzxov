@@ -2,79 +2,28 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#dfe7ef">
   <title>友情链接丨苏州中学OV广播社</title>
   <link rel="stylesheet" href="/style.css">
 </head>
-
 <body class="light-mode">
-
-  <!-- 顶部横向导航条 -->
-  <!-- 顶部横向导航条 -->
-  <div class="topbar">
-    <a href="/">首页<span class="en">HOME</span></a>
-    <a href="/submit">投稿<span class="en">SUBMIT</span></a>
-    <a href="/archive">往期<span class="en">ARCHIVE</span></a>
-    <a href="/help">帮助<span class="en">HELP</span></a>
-    <a href="/settings">设置<span class="en">SETTINGS</span></a>
-    <a href="/url">友情链接<span class="en">FRIENDS</span></a>
-  </div>
-  <!-- 主体内容 -->
-  <main style="padding: 20px;">
-
+  <div id="site-nav"></div>
+  <main style="padding:20px;">
     <div class="glass-card fade-pair">
-
       <h1 class="center-title">友情链接</h1>
-
-      <!-- 友情链接列表 -->
       <div class="friend-list">
-      <a class="friend-card" href="https://www.szzx1000.cn" target="_blank">
- 			江苏省苏州中学<br>
- 			<span class="friend-url">https://www.szzx1000.cn</span>
-			</a>
-		        <a class="friend-card" href="https://szzxclubunion.cn" target="_blank">
- 			苏州中学社团联盟<br>
- 			<span class="friend-url">https://szzxclubunion.cn</span>
-			</a>
-   	  <a class="friend-card" href="https://szzxshumei.com" target="_blank">
-  		苏州中学树莓社<br>
- 	    <span class="friend-url">https://szzxshumei.com</span>
-			</a>
-
-			<a class="friend-card" href="https://game.ion-storm.vip" target="_blank">
- 			离子风暴·化学牌<br>
- 			<span class="friend-url">https://game.ion-storm.vip</span>
-			</a>
-      
-
-
-        <!-- 新增链接示例 -->
-        <!--
-        <a class="friend-card" href="https://你的链接.com" target="_blank">
-          <img class="favicon" src="https://你的链接.com/favicon.ico"
-               onerror="this.src='https://www.google.com/s2/favicons?domain=你的链接.com';">
-          <span>你的名称</span>
-        </a>
-        -->
-
+        <a class="friend-card" href="https://www.szzx1000.cn" target="_blank" rel="noopener">江苏省苏州中学<br><span class="friend-url">https://www.szzx1000.cn</span></a>
+        <a class="friend-card" href="https://szzxclubunion.cn" target="_blank" rel="noopener">苏州中学社团联盟<br><span class="friend-url">https://szzxclubunion.cn</span></a>
+        <a class="friend-card" href="https://szzxshumei.com" target="_blank" rel="noopener">苏州中学树莓社<br><span class="friend-url">https://szzxshumei.com</span></a>
+        <a class="friend-card" href="https://game.ion-storm.vip" target="_blank" rel="noopener">离子风暴·化学牌<br><span class="friend-url">https://game.ion-storm.vip</span></a>
       </div>
-
     </div>
-
   </main>
-
-  <!-- 动画 + 深色模式 -->
-  <script>
-    window.onload = function() {
-      const savedTheme = localStorage.getItem("theme");
-      if (savedTheme === "dark") {
-        document.body.classList.add("dark-mode");
-      } else {
-        document.body.classList.add("light-mode");
-      }
-
-      document.querySelector('.fade-pair').classList.add('visible');
-    }
-  </script>
-
+  <script src="/js/config.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/home.js"></script>
 </body>
 </html>
