@@ -2,234 +2,32 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#dfe7ef">
   <title>投稿丨苏州中学OV广播社</title>
   <link rel="stylesheet" href="/style.css">
-  <!-- 全站公共功能 -->
-  <script src="/auth.js" defer></script>
-  <script src="/nav.js" defer></script>
 </head>
 <body class="light-mode">
-  <!-- =========================
-       全站统一导航
-       ========================= -->
   <div id="site-nav"></div>
-  <!-- =========================
-       投稿主体
-       ========================= -->
-  <main style="padding: 20px;">
+  <main style="padding:20px;">
     <div class="glass-card">
       <h1>提交投稿</h1>
-      <form
-        id="submitForm"
-        style="margin-top:20px;"
-      >
-        <!-- 歌曲名 -->
-        <label class="form-label">
-          歌曲名
-        </label>
-        <input
-          type="text"
-          name="title"
-          class="submit-input input-glass"
-          placeholder="请输入歌曲名"
-          required
-        >
-        <!-- 歌手 -->
-        <label class="form-label">
-          歌手
-        </label>
-        <input
-          type="text"
-          name="author"
-          class="submit-input input-glass"
-          placeholder="请输入歌手"
-          required
-        >
-        <!-- 期数 -->
-        <label class="form-label">
-          期数
-        </label>
-        <input
-          type="number"
-          name="issue"
-          class="submit-input input-glass"
-          placeholder="请输入期数"
-          min="1"
-          required
-        >
-        <!-- 提交按钮 -->
-        <button
-          type="submit"
-          class="submit-btn"
-          id="submitButton"
-        >
-          提交
-        </button>
+      <form id="submitForm" style="margin-top:20px;">
+        <label class="form-label" for="title">歌曲名</label>
+        <input type="text" id="title" name="title" class="input-glass" placeholder="请输入歌曲名" required>
+        <label class="form-label" for="author">歌手</label>
+        <input type="text" id="author" name="author" class="input-glass" placeholder="请输入歌手" required>
+        <label class="form-label" for="issue">期数</label>
+        <input type="number" id="issue" name="issue" class="input-glass" placeholder="请输入期数" min="1" required>
+        <button type="submit" class="submit-btn" id="submitButton">提交</button>
       </form>
-      <!-- 提交结果 -->
       <p id="result"></p>
     </div>
   </main>
-  <!-- =========================
-       投稿提交逻辑
-       ========================= -->
-  <script>
-    console.log(
-      "投稿页 JS 已加载"
-    );
-    const form =
-      document.getElementById(
-        "submitForm"
-      );
-    const resultText =
-      document.getElementById(
-        "result"
-      );
-    const submitButton =
-      document.getElementById(
-        "submitButton"
-      );
-    form.addEventListener(
-      "submit",
-      async (e) => {
-        e.preventDefault();
-        const title =
-          e.target.title.value.trim();
-        const author =
-          e.target.author.value.trim();
-        const issue =
-          Number(
-            e.target.issue.value
-          );
-        // =========================
-        // 表单检查
-        // =========================
-        if (
-          !title ||
-          !author ||
-          !issue
-        ) {
-          resultText.innerText =
-            "请完整填写投稿信息。";
-          return;
-        }
-        // =========================
-        // 提交中
-        // =========================
-        submitButton.disabled = true;
-        submitButton.innerText =
-          "提交中...";
-        resultText.innerText = "";
-        try {
-          const res =
-            await fetch(
-              "https://api.szzxov.com/api/submit",
-              {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                  "Content-Type":
-                    "application/json"
-                },
-                body: JSON.stringify({
-                  title: title,
-                  author: author,
-                  issue: issue
-                })
-              }
-            );
-          const result =
-            await res.json();
-          // =========================
-          // 提交成功
-          // =========================
-          if (
-            res.ok &&
-            result.ok
-          ) {
-            resultText.innerText =
-              "投稿已提交！感谢你的投稿。";
-            form.reset();
-          } else {
-            resultText.innerText =
-              result.message ||
-              "提交失败，请稍后再试。";
-          }
-        } catch (error) {
-          console.error(
-            "投稿请求失败：",
-            error
-          );
-          resultText.innerText =
-            "无法连接服务器，请检查网络后重试。";
-        }
-        // =========================
-        // 恢复按钮
-        // =========================
-        submitButton.disabled = false;
-        submitButton.innerText =
-          "提交";
-      }
-    );
-  </script>
-  <!-- =========================
-       深色模式
-       ========================= -->
-  <script>
-    function setLightMode() {
-      document.body.classList.remove(
-        "dark-mode"
-      );
-      document.body.classList.add(
-        "light-mode"
-      );
-      localStorage.setItem(
-        "theme",
-        "light"
-      );
-    }
-    function setDarkMode() {
-      document.body.classList.remove(
-        "light-mode"
-      );
-      document.body.classList.add(
-        "dark-mode"
-      );
-      localStorage.setItem(
-        "theme",
-        "dark"
-      );
-    }
-    window.addEventListener(
-      "load",
-      () => {
-        const savedTheme =
-          localStorage.getItem(
-            "theme"
-          );
-        if (
-          savedTheme === "dark"
-        ) {
-          document.body.classList.remove(
-            "light-mode"
-          );
-          document.body.classList.add(
-            "dark-mode"
-          );
-        } else {
-          document.body.classList.remove(
-            "dark-mode"
-          );
-          document.body.classList.add(
-            "light-mode"
-          );
-        }
-      }
-    );
-  </script>
+  <script src="/js/config.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/submit.js"></script>
 </body>
 </html>
