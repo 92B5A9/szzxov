@@ -2,88 +2,33 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  >
-  <meta
-    name="theme-color"
-    content="#dfe7ef"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#dfe7ef">
   <title>注册丨苏州中学OV广播社</title>
-  <link
-    rel="stylesheet"
-    href="/style.css"
-  >
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body class="light-mode">
-  <!-- 全站统一导航 -->
   <div id="site-nav"></div>
-  <!-- 注册页面 -->
-  <main style="padding: 20px;">
+  <main style="padding:20px;">
     <div class="glass-card">
       <h1>注册账号</h1>
-      <form
-        id="registerForm"
-        style="margin-top: 20px;"
-      >
-        <label class="form-label">
-          用户名
-        </label>
-        <input
-          type="text"
-          id="username"
-          class="submit-input input-glass"
-          placeholder="请输入用户名"
-          autocomplete="username"
-          maxlength="32"
-          required
-        >
-        <label class="form-label">
-          密码
-        </label>
-        <input
-          type="password"
-          id="password"
-          class="submit-input input-glass"
-          placeholder="请输入密码"
-          autocomplete="new-password"
-          minlength="6"
-          required
-        >
-        <label class="form-label">
-          确认密码
-        </label>
-        <input
-          type="password"
-          id="confirmPassword"
-          class="submit-input input-glass"
-          placeholder="请再次输入密码"
-          autocomplete="new-password"
-          minlength="6"
-          required
-        >
-        <button
-          type="submit"
-          class="submit-btn"
-          id="registerButton"
-        >
-          注册
-        </button>
+      <form id="registerForm" style="margin-top:20px;">
+        <label class="form-label" for="username">用户名</label>
+        <input type="text" id="username" class="input-glass" placeholder="请输入用户名" autocomplete="username" maxlength="32" required>
+        <label class="form-label" for="password">密码</label>
+        <input type="password" id="password" class="input-glass" placeholder="请输入密码" autocomplete="new-password" minlength="6" required>
+        <label class="form-label" for="confirmPassword">确认密码</label>
+        <input type="password" id="confirmPassword" class="input-glass" placeholder="请再次输入密码" autocomplete="new-password" minlength="6" required>
+        <button type="submit" class="submit-btn" id="registerButton">注册</button>
       </form>
       <p id="result"></p>
-      <p style="margin-top: 15px;">
-        已经有账号？
-        <a href="/login/">
-          立即登录
-        </a>
-      </p>
+      <p>已经有账号？ <a href="/login/">立即登录</a></p>
     </div>
   </main>
-  <!-- 全站公共 JS -->
+  <script src="/js/config.js"></script>
+  <script src="/js/auth.js"></script>
   <script src="/js/navbar.js"></script>
   <script src="/js/theme.js"></script>
-  <!-- 注册页面 JS -->
   <script src="/js/register.js"></script>
 </body>
 </html>
