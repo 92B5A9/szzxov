@@ -2,87 +2,31 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  >
-  <meta
-    name="theme-color"
-    content="#dfe7ef"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#dfe7ef">
   <title>登录丨苏州中学OV广播社</title>
-  <link
-    rel="stylesheet"
-    href="/style.css"
-  >
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body class="light-mode">
-  <!-- =================================
-       全站统一导航
-  ================================== -->
   <div id="site-nav"></div>
-  <!-- =================================
-       登录页面
-  ================================== -->
-  <main style="padding: 20px;">
+  <main style="padding:20px;">
     <div class="glass-card">
       <h1>登录</h1>
-      <form
-        id="loginForm"
-        style="margin-top: 20px;"
-      >
-        <!-- 用户名 -->
-        <label class="form-label">
-          用户名
-        </label>
-        <input
-          type="text"
-          id="username"
-          class="submit-input input-glass"
-          placeholder="请输入用户名"
-          autocomplete="username"
-          required
-        >
-        <!-- 密码 -->
-        <label class="form-label">
-          密码
-        </label>
-        <input
-          type="password"
-          id="password"
-          class="submit-input input-glass"
-          placeholder="请输入密码"
-          autocomplete="current-password"
-          required
-        >
-        <!-- 登录 -->
-        <button
-          type="submit"
-          class="submit-btn"
-          id="loginButton"
-        >
-          登录
-        </button>
+      <form id="loginForm" style="margin-top:20px;">
+        <label class="form-label" for="username">用户名</label>
+        <input type="text" id="username" class="input-glass" placeholder="请输入用户名" autocomplete="username" required>
+        <label class="form-label" for="password">密码</label>
+        <input type="password" id="password" class="input-glass" placeholder="请输入密码" autocomplete="current-password" required>
+        <button type="submit" class="submit-btn" id="loginButton">登录</button>
       </form>
-      <!-- 登录结果 -->
       <p id="result"></p>
-      <!-- 注册 -->
-      <p style="margin-top: 15px;">
-        还没有账号？
-        <a href="/register/">
-          立即注册
-        </a>
-      </p>
+      <p>还没有账号？ <a href="/register/">立即注册</a></p>
     </div>
   </main>
-  <!-- =================================
-       全站公共 JS
-  ================================== -->
+  <script src="/js/config.js"></script>
+  <script src="/js/auth.js"></script>
   <script src="/js/navbar.js"></script>
   <script src="/js/theme.js"></script>
-  <!-- =================================
-       登录页面 JS
-  ================================== -->
   <script src="/js/login.js"></script>
 </body>
 </html>
