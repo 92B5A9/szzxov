@@ -15,43 +15,46 @@ async function setupAuthUI() {
   area.replaceChildren();
 
   const user = await getCurrentUser();
-  if (!user) {
-    area.innerHTML = '<a class="account-button" href="/login/"><span class="account-icon">♙</span><span class="account-text"><span class="account-name">登录</span><small>Login</small></span></a>';
-    return;
-  }
-
   const button = document.createElement("button");
-  button.className = "account-button auth-user-button";
   button.type = "button";
-  button.textContent = `${user.username} ▼`;
+  button.className = "account-button auth-user-button";
+  button.innerHTML = `<span class="account-icon">♙</span><span class="account-text"><span class="account-name">${user?.username || "账号"}</span><small>${user ? "Account" : "Login"}</small></span><span class="account-arrow">⌄</span>`;
 
   const menu = document.createElement("div");
   menu.className = "auth-menu";
   menu.hidden = true;
-  menu.innerHTML = '<a href="/my/">我的投稿 <span class="en">My Posts</span></a>';
-  if (user.role === "admin") menu.innerHTML += '<a href="/admin/">管理后台 <span class="en">Admin</span></a>';
+  menu.innerHTML = user
+    ? `<a href="/my/">我的投稿 <span class="en">My Posts</span></a>${user.role === "admin" ? '<a href="/admin/">管理后台 <span class="en">Admin</span></a>' : ""}`
+    : '<a href="/login/">登录 <span class="en">Login</span></a><a href="/register/">注册 <span class="en">Register</span></a>';
 
-  const logout = document.createElement("button");
-  logout.type = "button";
-  logout.innerHTML = '退出登录 <span class="en">Logout</span>';
-  logout.addEventListener("click", async () => {
-    logout.disabled = true;
-    logout.textContent = "退出中...";
-    try {
-      const { response } = await requestJSON("/api/auth/logout", { method: "POST" });
-      if (response.ok) location.reload();
-      else throw new Error("logout failed");
-    } catch {
-      logout.textContent = "退出失败";
-      logout.disabled = false;
-    }
-  });
-  menu.appendChild(logout);
+  if (user) {
+    const logout = document.createElement("button");
+    logout.type = "button";
+    logout.innerHTML = '退出登录 <span class="en">Logout</span>';
+    logout.addEventListener("click", async () => {
+      logout.disabled = true;
+      logout.textContent = "退出中…";
+      try {
+        const { response } = await requestJSON("/api/auth/logout", { method: "POST" });
+        if (!response.ok) throw new Error("logout failed");
+        location.reload();
+      } catch {
+        logout.textContent = "退出失败";
+        logout.disabled = false;
+      }
+    });
+    menu.appendChild(logout);
+  }
+
   area.append(button, menu);
-
   button.addEventListener("click", event => {
     event.stopPropagation();
     menu.hidden = !menu.hidden;
+    button.setAttribute("aria-expanded", String(!menu.hidden));
   });
-  document.addEventListener("click", () => { menu.hidden = true; }, { once: false });
+  menu.addEventListener("click", event => event.stopPropagation());
+  document.addEventListener("click", () => {
+    menu.hidden = true;
+    button.setAttribute("aria-expanded", "false");
+  });
 }
