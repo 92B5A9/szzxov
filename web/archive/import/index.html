@@ -30,7 +30,7 @@
   <main class="playlist-import">
     <section class="playlist-panel">
       <h1>歌单智能导入</h1>
-      <p>上传 XLSX、Markdown 或 TXT 歌单，或粘贴网易云音乐歌单链接。识别后可修改歌曲信息和顺序，再保存为草稿。</p>
+      <p>支持 XLSX、Markdown、TXT 和网易云歌单链接。对于“# 日期歌单 / ## 时段 / ### 序号. 歌名 / 下一行歌手”的 Markdown 模板，会自动按时段拆分为独立歌单。</p>
       <p class="playlist-muted">仅管理员可导入；本页面不会自动发布歌单。网易云读取需要后端解析服务已配置。</p>
     </section>
 
@@ -50,13 +50,14 @@
 
     <section class="playlist-panel">
       <h2>2. 歌单信息</h2>
-      <label class="playlist-field" for="playlist-issue">期数（必填）
-        <input id="playlist-issue" type="text" maxlength="100" placeholder="例如：20260901课间" required>
+      <label class="playlist-field" for="playlist-issue">日期或基础期数（必填）
+        <input id="playlist-issue" type="text" maxlength="100" placeholder="例如：20261026" required>
       </label>
       <label class="playlist-field" for="playlist-slot">播放时段
         <select id="playlist-slot">
           <option value="课间">课间</option>
           <option value="午间">午间</option>
+          <option value="宿舍">宿舍</option>
           <option value="晚间">晚间</option>
           <option value="未分类">未分类</option>
         </select>
@@ -68,7 +69,7 @@
       <p id="playlist-count" aria-live="polite">尚未识别歌曲</p>
       <div class="playlist-table-wrap">
         <table id="playlist-track-table">
-          <thead><tr><th>顺序</th><th>歌名</th><th>歌手</th><th>操作</th></tr></thead>
+          <thead><tr><th>时段</th><th>顺序</th><th>歌名</th><th>歌手</th><th>操作</th></tr></thead>
           <tbody id="playlist-track-rows"></tbody>
         </table>
       </div>
@@ -88,12 +89,20 @@
     (() => {
       "use strict";
       const $ = id => document.getElementById(id);
-      const state = { tracks: [] };
+      const state = { tracks: [], templateMode: false };
       const setStatus = (message, error = false) => {
         $("playlist-status").textContent = message;
         $("playlist-status").classList.toggle("playlist-error", error);
       };
       const clean = value => String(value ?? "").trim();
+      const normalizeSlot = value => {
+        const slot = clean(value).replace(/^\s*#+\s*/, "");
+        if (/课间/.test(slot)) return "课间";
+        if (/午间/.test(slot)) return "午间";
+        if (/宿舍/.test(slot)) return "宿舍";
+        if (/晚间|晚上/.test(slot)) return "晚间";
+        return slot || "未分类";
+      };
 
       function splitTrackLine(line) {
         const match = line.match(/^(.+?)\s+(?:-|—|–|\/|｜)\s+(.+)$/);
@@ -103,12 +112,69 @@
       }
 
       function parseText(text) {
-        const result = [];
-        let headers = null;
         const lines = String(text).replace(/^\uFEFF/, "").split(/\r?\n/);
+        const templateTracks = [];
+        let baseIssue = "";
+        let currentSlot = "";
+        let pendingTrack = null;
+        let sawSongHeading = false;
+        let sawSections = false;
+
+        // First parse the user's Markdown template: # issue, ## time slot,
+        // ### number. title, followed by an artist line.
         for (const raw of lines) {
           const line = raw.trim();
-          if (!line || /^[-*_]{3,}$/.test(line)) continue;
+          if (!line) continue;
+          let match = line.match(/^#\s+(.+?)\s*#*$/);
+          if (match) {
+            if (pendingTrack) { templateTracks.push(pendingTrack); pendingTrack = null; }
+            baseIssue = match[1].trim().replace(/歌单$/, "").trim();
+            continue;
+          }
+          match = line.match(/^##\s+(.+?)\s*#*$/);
+          if (match) {
+            if (pendingTrack) { templateTracks.push(pendingTrack); pendingTrack = null; }
+            currentSlot = normalizeSlot(match[1]);
+            sawSections = true;
+            continue;
+          }
+          match = line.match(/^###\s*(?:\d+\s*[.、)）．]\s*)?(.+?)\s*#*$/);
+          if (match && currentSlot) {
+            if (pendingTrack) templateTracks.push(pendingTrack);
+            pendingTrack = {
+              title: match[1].trim(),
+              artist: "",
+              time_slot: currentSlot
+            };
+            sawSongHeading = true;
+            continue;
+          }
+          if (pendingTrack && !line.startsWith("#")) {
+            const artist = line.replace(/^[-*+]\s+/, "").trim();
+            if (artist && !/^(删除|移除|delete|remove)$/i.test(artist)) {
+              pendingTrack.artist = artist;
+              templateTracks.push(pendingTrack);
+              pendingTrack = null;
+            }
+          }
+        }
+        if (pendingTrack) templateTracks.push(pendingTrack);
+
+        if (sawSections && sawSongHeading && templateTracks.length) {
+          return {
+            tracks: templateTracks.filter(track => track.title),
+            baseIssue,
+            templateMode: true
+          };
+        }
+
+        // Generic Markdown/TXT parser fallback (tables, "title - artist", numbered lists).
+        const result = [];
+        let headers = null;
+        let slot = normalizeSlot($("playlist-slot").value);
+        for (const raw of lines) {
+          const line = raw.trim();
+          if (!line || /^[-*_]{3,}$/.test(line) || /^#{1,2}\s+/.test(line)) continue;
           if (line.startsWith("|") && line.endsWith("|")) {
             const cells = line.slice(1, -1).split("|").map(s => s.trim().replace(/\\\|/g, "|"));
             if (cells.every(s => /^:?-{3,}:?$/.test(s))) continue;
@@ -121,7 +187,7 @@
               const ti = headers.findIndex(s => /^(歌名|歌曲|title|song)$/.test(s));
               const ai = headers.findIndex(s => /^(歌手|作者|artist|singer)$/.test(s));
               if (ti >= 0 && cells[ti]) {
-                result.push({ title: cells[ti], artist: ai >= 0 ? cells[ai] || "" : "" });
+                result.push({ title: cells[ti], artist: ai >= 0 ? cells[ai] || "" : "", time_slot: slot });
                 continue;
               }
             }
@@ -132,14 +198,16 @@
             .replace(/^\[[ xX]\]\s*/, "").trim();
           if (!cleaned || /^(期数|日期|播放时段|歌单|歌曲列表)\s*[:：]/.test(cleaned)) continue;
           if (/^(歌名|歌曲|title|song)\s*[,，|\t]/i.test(cleaned)) continue;
-          result.push(splitTrackLine(cleaned));
+          result.push({ ...splitTrackLine(cleaned), time_slot: slot });
         }
-        return result.filter(track => track.title);
+        return { tracks: result.filter(track => track.title), baseIssue: "", templateMode: false };
       }
 
       function parseXlsx(buffer) {
         if (!window.XLSX) throw new Error("Excel 解析库未加载，请检查网络后刷新页面。");
         const workbook = XLSX.read(buffer, { type: "array" });
+        const result = [];
+        const defaultSlot = normalizeSlot($("playlist-slot").value);
         for (const sheetName of workbook.SheetNames) {
           const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
             header: 1, defval: "", blankrows: false
@@ -154,15 +222,13 @@
             : [];
           const ti = headers.findIndex(s => /^(歌名|歌曲|title|song)$/.test(s));
           const ai = headers.findIndex(s => /^(歌手|作者|artist|singer)$/.test(s));
-          const result = [];
           for (const row of rows.slice(start)) {
             const title = clean(ti >= 0 ? row[ti] : row[0]);
             const artist = clean(ai >= 0 ? row[ai] : row[1]);
-            if (title) result.push({ title, artist });
+            if (title) result.push({ title, artist, time_slot: defaultSlot });
           }
-          if (result.length) return result;
         }
-        return [];
+        return result;
       }
 
       function render() {
@@ -170,6 +236,23 @@
         tbody.replaceChildren();
         state.tracks.forEach((track, index) => {
           const tr = document.createElement("tr");
+          const slotCell = document.createElement("td");
+          const slotSelect = document.createElement("select");
+          ["课间", "午间", "宿舍", "晚间", "未分类"].forEach(slot => {
+            const option = document.createElement("option");
+            option.value = slot;
+            option.textContent = slot;
+            slotSelect.appendChild(option);
+          });
+          slotSelect.value = normalizeSlot(track.time_slot || $("playlist-slot").value);
+          slotSelect.setAttribute("aria-label", "第 " + (index + 1) + " 首歌曲的时段");
+          slotSelect.addEventListener("change", () => {
+            state.tracks[index].time_slot = slotSelect.value;
+            updateCount();
+          });
+          slotCell.appendChild(slotSelect);
+          tr.appendChild(slotCell);
+
           const num = document.createElement("td");
           num.textContent = String(index + 1);
           tr.appendChild(num);
@@ -206,7 +289,17 @@
           tr.appendChild(actions);
           tbody.appendChild(tr);
         });
-        $("playlist-count").textContent = "共 " + state.tracks.length + " 首歌曲";
+        updateCount();
+      }
+
+      function updateCount() {
+        const counts = {};
+        for (const track of state.tracks) {
+          const slot = normalizeSlot(track.time_slot || $("playlist-slot").value);
+          counts[slot] = (counts[slot] || 0) + 1;
+        }
+        const summary = Object.entries(counts).map(([slot, count]) => slot + " " + count + " 首").join("；");
+        $("playlist-count").textContent = "共 " + state.tracks.length + " 首歌曲" + (summary ? "（" + summary + "）" : "");
       }
 
       $("parse-file-button").addEventListener("click", async () => {
@@ -216,11 +309,19 @@
         try {
           setStatus("正在解析文件……");
           const ext = file.name.split(".").pop().toLowerCase();
-          if (ext === "xlsx") state.tracks = parseXlsx(await file.arrayBuffer());
-          else if (ext === "md" || ext === "txt") state.tracks = parseText(await file.text());
-          else throw new Error("文件格式不支持。");
+          if (ext === "xlsx") {
+            state.tracks = parseXlsx(await file.arrayBuffer());
+            state.templateMode = false;
+          } else if (ext === "md" || ext === "txt") {
+            const parsed = parseText(await file.text());
+            state.tracks = parsed.tracks;
+            state.templateMode = parsed.templateMode;
+            if (parsed.baseIssue) $("playlist-issue").value = parsed.baseIssue;
+          } else throw new Error("文件格式不支持。");
           render();
-          setStatus(state.tracks.length ? "解析完成，请校对歌曲名称、歌手和顺序。" : "没有识别到歌曲，请检查文件格式。", !state.tracks.length);
+          setStatus(state.tracks.length
+            ? (state.templateMode ? "模板解析完成：已按 Markdown 时段识别歌曲。导入时将自动拆分为多个独立歌单。" : "解析完成，请校对歌曲名称、歌手、时段和顺序。")
+            : "没有识别到歌曲，请检查文件格式。", !state.tracks.length);
         } catch (error) {
           setStatus("解析失败：" + error.message, true);
         }
@@ -240,9 +341,11 @@
           });
           if (!response.ok) throw new Error(data?.error || "读取失败（HTTP " + response.status + "）");
           if (!Array.isArray(data?.tracks)) throw new Error("解析服务返回的数据格式不正确。");
+          const slot = normalizeSlot($("playlist-slot").value);
           state.tracks = data.tracks.map(item => ({
-            title: clean(item.title), artist: clean(item.artist)
+            title: clean(item.title), artist: clean(item.artist), time_slot: slot
           })).filter(item => item.title);
+          state.templateMode = false;
           render();
           setStatus("已读取 " + state.tracks.length + " 首歌曲，请校对后导入。", !state.tracks.length);
         } catch (error) {
@@ -251,24 +354,18 @@
       });
 
       $("add-track-button").addEventListener("click", () => {
-        state.tracks.push({ title: "", artist: "" });
+        state.tracks.push({ title: "", artist: "", time_slot: normalizeSlot($("playlist-slot").value) });
         render();
       });
 
-      async function submitImport(overwrite) {
-        const issue = $("playlist-issue").value.trim();
-        if (!issue) throw new Error("请填写期数。");
-        if (!state.tracks.length) throw new Error("请先解析或添加歌曲。");
-        if (state.tracks.some(track => !track.title.trim())) throw new Error("每首歌曲都必须填写歌名。");
+      async function postPlaylist(issue, slot, tracks, overwrite) {
         return window.requestJSON("/api/admin/playlists/import", {
           method: "POST",
           body: JSON.stringify({
             issue,
-            time_slot: $("playlist-slot").value,
+            time_slot: slot,
             overwrite,
-            tracks: state.tracks.map(track => ({
-              title: track.title.trim(), artist: (track.artist || "").trim()
-            }))
+            tracks: tracks.map(track => ({ title: track.title.trim(), artist: (track.artist || "").trim() }))
           })
         });
       }
@@ -277,19 +374,42 @@
         const button = $("save-playlist-button");
         button.disabled = true;
         try {
-          setStatus("正在保存草稿……");
-          let result = await submitImport(false);
-          if (result.response.status === 409 && result.data?.code === "ISSUE_EXISTS") {
-            if (!confirm("该期数已存在。确定覆盖并重置为草稿吗？")) {
-              setStatus("已取消导入。");
-              return;
-            }
-            result = await submitImport(true);
+          const base = $("playlist-issue").value.trim();
+          if (!base) throw new Error("请填写日期或基础期数。");
+          if (!state.tracks.length) throw new Error("请先解析或添加歌曲。");
+          if (state.tracks.some(track => !track.title.trim())) throw new Error("每首歌曲都必须填写歌名。");
+
+          const groups = new Map();
+          for (const track of state.tracks) {
+            const slot = normalizeSlot(track.time_slot || $("playlist-slot").value);
+            if (!groups.has(slot)) groups.set(slot, []);
+            groups.get(slot).push(track);
           }
-          if (!result.response.ok) throw new Error(result.data?.error || "保存失败（HTTP " + result.response.status + "）");
-          setStatus("导入成功：" + result.data.count + " 首歌曲已保存为草稿。");
+          const baseDate = state.templateMode ? base.replace(/歌单$/, "").trim() : base;
+          const plans = [...groups.entries()].map(([slot, tracks]) => ({
+            slot,
+            issue: state.templateMode ? baseDate + slot : (groups.size === 1 ? base : base + slot),
+            tracks
+          }));
+          const summary = plans.map(plan => plan.issue + "（" + plan.tracks.length + " 首）").join("\n");
+          if (!confirm("即将分别保存以下草稿：\n" + summary + "\n\n继续吗？")) return;
+
+          const completed = [];
+          for (const plan of plans) {
+            setStatus("正在保存 " + plan.issue + "……");
+            let result = await postPlaylist(plan.issue, plan.slot, plan.tracks, false);
+            if (result.response.status === 409 && result.data?.code === "ISSUE_EXISTS") {
+              if (!confirm("期数 " + plan.issue + " 已存在。是否覆盖该期歌单并重置为草稿？")) {
+                throw new Error("已取消。已完成的歌单：" + (completed.join("、") || "无") + "。");
+              }
+              result = await postPlaylist(plan.issue, plan.slot, plan.tracks, true);
+            }
+            if (!result.response.ok) throw new Error(plan.issue + " 保存失败：" + (result.data?.error || "HTTP " + result.response.status));
+            completed.push(plan.issue + "（" + result.data.count + " 首）");
+          }
+          setStatus("全部导入成功：\n" + completed.join("\n"));
         } catch (error) {
-          setStatus("导入失败：" + error.message, true);
+          setStatus("导入结果：\n" + error.message, true);
         } finally {
           button.disabled = false;
         }
