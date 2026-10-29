@@ -20,7 +20,7 @@
 <main class="recovery">
 <section class="glass-card">
 <h1>Root 密码恢复</h1>
-<p>恢复现有的 Gaoeaten root 账号。此页面需要配合已部署的 Worker 恢复接口。</p>
+<p>恢复现有的账号。此页面需要配合已部署的 Worker 恢复接口。</p>
 <p class="notice">请勿将启动密钥写入网页代码。只在下方临时输入；重置完成后，建议立即轮换 BOOTSTRAP_SECRET 并移除临时恢复接口。</p>
 <form id="recoveryForm">
 <label for="secret">Bootstrap Secret</label>
@@ -49,7 +49,7 @@
   const secret=document.getElementById("secret").value;
   const password=document.getElementById("password").value;
   const confirm=document.getElementById("confirm").value;
-  if(password.length<12){result.textContent="新密码至少需要 12 位。";return;}
+  if(password.length<8){result.textContent="新密码至少需要 8 位。";return;}
   if(password!==confirm){result.textContent="两次输入的密码不一致。";return;}
   button.disabled=true;button.textContent="正在重置…";result.textContent="";
   try{
@@ -65,7 +65,7 @@
     result.textContent=(data&&data.message)||("重置失败（HTTP "+response.status+"）。");
    }
   }catch(e){result.textContent="无法连接 API。请检查网络、CORS 与 Worker 部署。";}
-  finally{button.disabled=false;button.textContent="重置 Gaoeaten 密码";}
+  finally{button.disabled=false;button.textContent="重置密码";}
  });
 })();
 </script>
