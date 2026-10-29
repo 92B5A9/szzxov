@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#dfe7ef">
+  <title>歌单智能导入丨苏州中学 OV 广播社</title>
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <style>
+    .playlist-import{max-width:1050px;margin:0 auto;padding:20px}
+    .playlist-panel{margin:16px 0;padding:18px;border:1px solid #8885;border-radius:16px}
+    .playlist-panel h2{margin-top:0}
+    .playlist-field{display:block;margin:10px 0}
+    .playlist-field input,.playlist-field select{display:block;box-sizing:border-box;width:100%;padding:11px 12px;margin-top:6px}
+    .playlist-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .playlist-actions button{padding:10px 14px}
+    .playlist-muted{opacity:.75;font-size:.92em}
+    .playlist-status{min-height:1.5em;white-space:pre-wrap;overflow-wrap:anywhere}
+    .playlist-error{color:#c43b3b}
+    .playlist-table-wrap{overflow-x:auto}
+    #playlist-track-table{width:100%;border-collapse:collapse}
+    #playlist-track-table th,#playlist-track-table td{padding:9px;border-bottom:1px solid #8885;text-align:left}
+    #playlist-track-table input{box-sizing:border-box;width:100%;min-width:110px;padding:8px}
+    @media(max-width:600px){.playlist-import{padding:12px}.playlist-panel{padding:13px}#playlist-track-table th,#playlist-track-table td{padding:6px}}
+  </style>
+</head>
+<body class="light-mode">
+  <div id="site-nav"></div>
+  <main class="playlist-import">
+    <section class="playlist-panel">
+      <h1>歌单智能导入</h1>
+      <p>上传 XLSX、Markdown 或 TXT 歌单，或粘贴网易云音乐歌单链接。识别后可修改歌曲信息和顺序，再保存为草稿。</p>
+      <p class="playlist-muted">仅管理员可导入；本页面不会自动发布歌单。网易云读取需要后端解析服务已配置。</p>
+    </section>
+
+    <section class="playlist-panel">
+      <h2>1. 选择来源</h2>
+      <label class="playlist-field" for="playlist-file">歌单文件（.xlsx / .md / .txt）
+        <input id="playlist-file" type="file" accept=".xlsx,.md,.txt,text/plain,text/markdown">
+      </label>
+      <div class="playlist-actions"><button id="parse-file-button" type="button">解析文件</button></div>
+      <hr>
+      <label class="playlist-field" for="netease-url">网易云音乐歌单链接
+        <input id="netease-url" type="url" placeholder="粘贴 music.163.com 歌单链接">
+      </label>
+      <div class="playlist-actions"><button id="parse-netease-button" type="button">读取网易云歌单</button></div>
+      <p class="playlist-muted">只接受 music.163.com 或 163cn.tv 域名。私密或需登录的歌单可能无法读取。</p>
+    </section>
+
+    <section class="playlist-panel">
+      <h2>2. 歌单信息</h2>
+      <label class="playlist-field" for="playlist-issue">期数（必填）
+        <input id="playlist-issue" type="text" maxlength="100" placeholder="例如：20260901课间" required>
+      </label>
+      <label class="playlist-field" for="playlist-slot">播放时段
+        <select id="playlist-slot">
+          <option value="课间">课间</option>
+          <option value="午间">午间</option>
+          <option value="晚间">晚间</option>
+          <option value="未分类">未分类</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="playlist-panel">
+      <h2>3. 校对歌曲信息</h2>
+      <p id="playlist-count" aria-live="polite">尚未识别歌曲</p>
+      <div class="playlist-table-wrap">
+        <table id="playlist-track-table">
+          <thead><tr><th>顺序</th><th>歌名</th><th>歌手</th><th>操作</th></tr></thead>
+          <tbody id="playlist-track-rows"></tbody>
+        </table>
+      </div>
+      <div class="playlist-actions">
+        <button id="add-track-button" type="button">添加歌曲</button>
+        <button id="save-playlist-button" type="button">确认导入（保存为草稿）</button>
+      </div>
+      <p id="playlist-status" class="playlist-status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/theme.js"></script>
+  <script>
+    (() => {
+      "use strict";
+      const $ = id => document.getElementById(id);
+      const state = { tracks: [] };
+      const setStatus = (message, error = false) => {
+        $("playlist-status").textContent = message;
+        $("playlist-status").classList.toggle("playlist-error", error);
+      };
+      const clean = value => String(value ?? "").trim();
+
+      function splitTrackLine(line) {
+        const match = line.match(/^(.+?)\s+(?:-|—|–|\/|｜)\s+(.+)$/);
+        return match
+          ? { title: match[1].trim(), artist: match[2].trim() }
+          : { title: line.trim(), artist: "" };
+      }
+
+      function parseText(text) {
+        const result = [];
+        let headers = null;
+        const lines = String(text).replace(/^\uFEFF/, "").split(/\r?\n/);
+        for (const raw of lines) {
+          const line = raw.trim();
+          if (!line || /^[-*_]{3,}$/.test(line)) continue;
+          if (line.startsWith("|") && line.endsWith("|")) {
+            const cells = line.slice(1, -1).split("|").map(s => s.trim().replace(/\\\|/g, "|"));
+            if (cells.every(s => /^:?-{3,}:?$/.test(s))) continue;
+            const normalized = cells.map(s => s.toLowerCase().replace(/\s+/g, ""));
+            if (normalized.some(s => /^(歌名|歌曲|title|song)$/.test(s))) {
+              headers = normalized;
+              continue;
+            }
+            if (headers) {
+              const ti = headers.findIndex(s => /^(歌名|歌曲|title|song)$/.test(s));
+              const ai = headers.findIndex(s => /^(歌手|作者|artist|singer)$/.test(s));
+              if (ti >= 0 && cells[ti]) {
+                result.push({ title: cells[ti], artist: ai >= 0 ? cells[ai] || "" : "" });
+                continue;
+              }
+            }
+          }
+          const cleaned = line.replace(/^#{1,6}\s+/, "")
+            .replace(/^[-*+]\s+/, "")
+            .replace(/^\d+[.、)]\s*/, "")
+            .replace(/^\[[ xX]\]\s*/, "").trim();
+          if (!cleaned || /^(期数|日期|播放时段|歌单|歌曲列表)\s*[:：]/.test(cleaned)) continue;
+          if (/^(歌名|歌曲|title|song)\s*[,，|\t]/i.test(cleaned)) continue;
+          result.push(splitTrackLine(cleaned));
+        }
+        return result.filter(track => track.title);
+      }
+
+      function parseXlsx(buffer) {
+        if (!window.XLSX) throw new Error("Excel 解析库未加载，请检查网络后刷新页面。");
+        const workbook = XLSX.read(buffer, { type: "array" });
+        for (const sheetName of workbook.SheetNames) {
+          const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
+            header: 1, defval: "", blankrows: false
+          });
+          if (!rows.length) continue;
+          const headerIndex = rows.findIndex(row =>
+            row.some(cell => /^(歌名|歌曲|title|song)$/i.test(clean(cell)))
+          );
+          const start = headerIndex >= 0 ? headerIndex + 1 : 0;
+          const headers = headerIndex >= 0
+            ? rows[headerIndex].map(cell => clean(cell).toLowerCase().replace(/\s+/g, ""))
+            : [];
+          const ti = headers.findIndex(s => /^(歌名|歌曲|title|song)$/.test(s));
+          const ai = headers.findIndex(s => /^(歌手|作者|artist|singer)$/.test(s));
+          const result = [];
+          for (const row of rows.slice(start)) {
+            const title = clean(ti >= 0 ? row[ti] : row[0]);
+            const artist = clean(ai >= 0 ? row[ai] : row[1]);
+            if (title) result.push({ title, artist });
+          }
+          if (result.length) return result;
+        }
+        return [];
+      }
+
+      function render() {
+        const tbody = $("playlist-track-rows");
+        tbody.replaceChildren();
+        state.tracks.forEach((track, index) => {
+          const tr = document.createElement("tr");
+          const num = document.createElement("td");
+          num.textContent = String(index + 1);
+          tr.appendChild(num);
+          for (const field of ["title", "artist"]) {
+            const td = document.createElement("td");
+            const input = document.createElement("input");
+            input.type = "text";
+            input.maxLength = 300;
+            input.value = track[field] || "";
+            input.setAttribute("aria-label", (field === "title" ? "歌名" : "歌手") + "，第 " + (index + 1) + " 首");
+            input.addEventListener("input", () => { state.tracks[index][field] = input.value; });
+            td.appendChild(input);
+            tr.appendChild(td);
+          }
+          const actions = document.createElement("td");
+          const up = document.createElement("button");
+          up.type = "button"; up.textContent = "↑"; up.disabled = index === 0;
+          up.setAttribute("aria-label", "上移歌曲");
+          up.addEventListener("click", () => {
+            [state.tracks[index - 1], state.tracks[index]] = [state.tracks[index], state.tracks[index - 1]];
+            render();
+          });
+          const down = document.createElement("button");
+          down.type = "button"; down.textContent = "↓"; down.disabled = index === state.tracks.length - 1;
+          down.setAttribute("aria-label", "下移歌曲");
+          down.addEventListener("click", () => {
+            [state.tracks[index + 1], state.tracks[index]] = [state.tracks[index], state.tracks[index + 1]];
+            render();
+          });
+          const remove = document.createElement("button");
+          remove.type = "button"; remove.textContent = "删除";
+          remove.addEventListener("click", () => { state.tracks.splice(index, 1); render(); });
+          actions.append(up, down, remove);
+          tr.appendChild(actions);
+          tbody.appendChild(tr);
+        });
+        $("playlist-count").textContent = "共 " + state.tracks.length + " 首歌曲";
+      }
+
+      $("parse-file-button").addEventListener("click", async () => {
+        const file = $("playlist-file").files[0];
+        if (!file) return setStatus("请先选择 XLSX、MD 或 TXT 文件。", true);
+        if (file.size > 10 * 1024 * 1024) return setStatus("文件不能超过 10 MB。", true);
+        try {
+          setStatus("正在解析文件……");
+          const ext = file.name.split(".").pop().toLowerCase();
+          if (ext === "xlsx") state.tracks = parseXlsx(await file.arrayBuffer());
+          else if (ext === "md" || ext === "txt") state.tracks = parseText(await file.text());
+          else throw new Error("文件格式不支持。");
+          render();
+          setStatus(state.tracks.length ? "解析完成，请校对歌曲名称、歌手和顺序。" : "没有识别到歌曲，请检查文件格式。", !state.tracks.length);
+        } catch (error) {
+          setStatus("解析失败：" + error.message, true);
+        }
+      });
+
+      $("parse-netease-button").addEventListener("click", async () => {
+        let url;
+        try { url = new URL($("netease-url").value.trim()); }
+        catch { return setStatus("请粘贴有效的网易云歌单链接。", true); }
+        if (!["music.163.com", "163cn.tv"].includes(url.hostname)) {
+          return setStatus("仅支持 music.163.com 或 163cn.tv 链接。", true);
+        }
+        try {
+          setStatus("正在读取网易云歌单……");
+          const { response, data } = await window.requestJSON("/api/admin/playlists/netease", {
+            method: "POST", body: JSON.stringify({ url: url.href })
+          });
+          if (!response.ok) throw new Error(data?.error || "读取失败（HTTP " + response.status + "）");
+          if (!Array.isArray(data?.tracks)) throw new Error("解析服务返回的数据格式不正确。");
+          state.tracks = data.tracks.map(item => ({
+            title: clean(item.title), artist: clean(item.artist)
+          })).filter(item => item.title);
+          render();
+          setStatus("已读取 " + state.tracks.length + " 首歌曲，请校对后导入。", !state.tracks.length);
+        } catch (error) {
+          setStatus("网易云读取失败：" + error.message + "。请确认后端解析接口已部署。", true);
+        }
+      });
+
+      $("add-track-button").addEventListener("click", () => {
+        state.tracks.push({ title: "", artist: "" });
+        render();
+      });
+
+      async function submitImport(overwrite) {
+        const issue = $("playlist-issue").value.trim();
+        if (!issue) throw new Error("请填写期数。");
+        if (!state.tracks.length) throw new Error("请先解析或添加歌曲。");
+        if (state.tracks.some(track => !track.title.trim())) throw new Error("每首歌曲都必须填写歌名。");
+        return window.requestJSON("/api/admin/playlists/import", {
+          method: "POST",
+          body: JSON.stringify({
+            issue,
+            time_slot: $("playlist-slot").value,
+            overwrite,
+            tracks: state.tracks.map(track => ({
+              title: track.title.trim(), artist: (track.artist || "").trim()
+            }))
+          })
+        });
+      }
+
+      $("save-playlist-button").addEventListener("click", async () => {
+        const button = $("save-playlist-button");
+        button.disabled = true;
+        try {
+          setStatus("正在保存草稿……");
+          let result = await submitImport(false);
+          if (result.response.status === 409 && result.data?.code === "ISSUE_EXISTS") {
+            if (!confirm("该期数已存在。确定覆盖并重置为草稿吗？")) {
+              setStatus("已取消导入。");
+              return;
+            }
+            result = await submitImport(true);
+          }
+          if (!result.response.ok) throw new Error(result.data?.error || "保存失败（HTTP " + result.response.status + "）");
+          setStatus("导入成功：" + result.data.count + " 首歌曲已保存为草稿。");
+        } catch (error) {
+          setStatus("导入失败：" + error.message, true);
+        } finally {
+          button.disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
