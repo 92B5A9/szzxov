@@ -50,8 +50,8 @@
 
     <section class="playlist-panel">
       <h2>2. 歌单信息</h2>
-      <label class="playlist-field" for="playlist-issue">日期或基础期数（必填）
-        <input id="playlist-issue" type="text" maxlength="100" placeholder="例如：20261026" required>
+      <label class="playlist-field" for="playlist-issue">歌单名称（必填，原样保存）
+        <input id="playlist-issue" type="text" maxlength="200" placeholder="例如：2026 09 29运动会特辑" required>
       </label>
       <label class="playlist-field" for="playlist-slot">播放时段
         <select id="playlist-slot">
@@ -387,7 +387,7 @@
         button.disabled = true;
         try {
           const base = $("playlist-issue").value.trim();
-          if (!base) throw new Error("请填写日期或基础期数。");
+          if (!base) throw new Error("请填写歌单名称。");
           if (!state.tracks.length) throw new Error("请先解析或添加歌曲。");
           if (state.tracks.some(track => !track.title.trim())) throw new Error("每首歌曲都必须填写歌名。");
 
@@ -397,10 +397,10 @@
             if (!groups.has(slot)) groups.set(slot, []);
             groups.get(slot).push(track);
           }
-          const baseDate = state.templateMode ? base.replace(/歌单$/, "").trim() : base;
           const plans = [...groups.entries()].map(([slot, tracks]) => ({
             slot,
-            issue: state.templateMode ? baseDate + slot : (base.endsWith(slot) ? base : base + slot),
+            // 普通歌单名称始终原样保存；模板按时段拆分时，沿用模板约定的“基础名称+时段”命名。
+            issue: state.templateMode ? (base.replace(/歌单$/, "").trim() + slot) : base,
             tracks
           }));
           const summary = plans.map(plan => plan.issue + "（" + plan.tracks.length + " 首）").join("\n");
