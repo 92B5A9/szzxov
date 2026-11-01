@@ -48,10 +48,38 @@
         return;
       }
       try {
-        const response = await fetch("/archive/archive.json", { cache: "no-store" });
-        if (!response.ok) throw new Error("档案读取失败");
-        const data = await response.json();
-        const playlist = Array.isArray(data.issues) ? data.issues.find(item => item.issue === issue) : null;
+        let playlist = null;
+
+        // 先尝试静态档案，确保旧歌单仍可正常打开。
+        try {
+          const response = await fetch("/archive/archive.json", { cache: "no-store" });
+          if (response.ok) {
+            const text = await response.text();
+            if (!/^\\s*<!doctype html/i.test(text) && !/^\\s*<html/i.test(text)) {
+              const data = JSON.parse(text);
+              playlist = Array.isArray(data.issues)
+                ? data.issues.find(item => item.issue === issue)
+                : null;
+            }
+          }
+        } catch (staticError) {
+          console.warn("静态档案读取失败，继续查询数据库：", staticError);
+        }
+
+        // 新导入的歌单保存在 D1，需要通过 Worker API 读取。
+        if (!playlist) {
+          const apiBase = (window.SZZXOV && window.SZZXOV.API) || "https://api.szzxov.com";
+          const response = await fetch(apiBase.replace(/\\/$/, "") + "/api/archive/playlists", {
+            cache: "no-store",
+            credentials: "include"
+          });
+          if (!response.ok) throw new Error("数据库档案读取失败（HTTP " + response.status + "）");
+          const data = await response.json();
+          playlist = Array.isArray(data.playlists)
+            ? data.playlists.find(item => item.issue === issue)
+            : null;
+        }
+
         if (!playlist) throw new Error("没有找到这份歌单");
         const match = String(playlist.issue).match(/^(\d{4})(\d{2})(\d{2})(.*)$/);
         const period = match ? (match[4] || "未分类") : "未分类";
