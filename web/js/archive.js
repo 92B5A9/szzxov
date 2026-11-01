@@ -1,6 +1,6 @@
 // ========================================
 // SZZXOV 音乐档案馆
-// 按月份、日期分组展示歌单卡片
+// 静态档案优先；数据库歌单独立加载，任一来源失败不影响另一来源
 // ========================================
 (function () {
   "use strict";
@@ -22,28 +22,70 @@
     return { dateKey: match[1] + match[2] + match[3], monthKey, monthLabel: monthKey + "月", period };
   }
 
-  async function loadData() {
-    const response = await fetch("/archive/archive.json", { cache: "no-store" });
-    if (!response.ok) throw new Error("往期档案加载失败（HTTP " + response.status + "）");
-    const data = await response.json();
-    if (!data || !Array.isArray(data.issues)) throw new Error("archive.json 格式错误");
-    const publishedResponse = await fetch("/api/archive/playlists", { cache: "no-store", credentials: "include" });
-    if (publishedResponse.ok) {
-      const publishedData = await publishedResponse.json();
-      if (Array.isArray(publishedData.playlists)) {
-        const known = new Set(data.issues.map(item => String(item.issue || "")));
-        for (const item of publishedData.playlists) {
-          if (!known.has(String(item.issue || ""))) data.issues.push(item);
-        }
+  function normalizeGroup(group) {
+    const issue = String(group && group.issue || "").trim();
+    let songs = group && Array.isArray(group.songs) ? group.songs : [];
+    if (!songs.length && group && typeof group.songs_json === "string") {
+      try { songs = JSON.parse(group.songs_json); } catch (error) {
+        console.warn("歌单歌曲 JSON 解析失败：", issue, error);
       }
     }
-    return data.issues.map(group => {
-      const issue = String(group.issue || "").trim();
-      const songs = Array.isArray(group.songs) ? group.songs.map(song => ({
-        title: String(song.title || ""), author: String(song.author || "")
-      })) : [];
-      return { issue, ...classifyIssue(issue), songs };
-    }).sort((a, b) => b.dateKey.localeCompare(a.dateKey) || a.issue.localeCompare(b.issue, "zh-CN"));
+    return {
+      issue,
+      ...classifyIssue(issue),
+      songs: songs.map(song => ({
+        title: String(song && song.title || ""),
+        author: String(song && (song.author || song.artist) || "")
+      }))
+    };
+  }
+
+  async function loadData() {
+    // 静态档案读取失败时使用空数组，不能阻断数据库歌单读取。
+    let issues = [];
+    try {
+      const response = await fetch("/archive/archive.json", { cache: "no-store" });
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      const contentType = response.headers.get("content-type") || "";
+      const text = await response.text();
+      if (contentType.includes("text/html") || /^\s*<!doctype html/i.test(text) || /^\s*<html/i.test(text)) {
+        throw new Error("请求返回了 HTML 首页，而不是 JSON 文件");
+      }
+      const data = JSON.parse(text);
+      if (!data || !Array.isArray(data.issues)) throw new Error("archive.json 缺少 issues 数组");
+      issues = data.issues;
+    } catch (error) {
+      console.error("静态 archive.json 读取失败，将继续尝试数据库：", error);
+    }
+
+    // API 使用 config.js 中配置的独立 Worker 域名，不能请求 Pages 自身的 /api。
+    try {
+      const apiBase = (window.SZZXOV && window.SZZXOV.API) || "https://api.szzxov.com";
+      const response = await fetch(apiBase.replace(/\/$/, "") + "/api/archive/playlists", {
+        cache: "no-store",
+        credentials: "include"
+      });
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      const publishedData = await response.json();
+      if (publishedData && Array.isArray(publishedData.playlists)) {
+        const known = new Set(issues.map(item => String(item.issue || "")));
+        for (const item of publishedData.playlists) {
+          const issue = String(item.issue || "");
+          if (issue && !known.has(issue)) {
+            issues.push(item);
+            known.add(issue);
+          }
+        }
+      } else {
+        console.warn("数据库歌单接口返回格式异常：", publishedData);
+      }
+    } catch (error) {
+      console.error("数据库歌单读取失败，保留静态档案：", error);
+    }
+
+    return issues.map(normalizeGroup)
+      .filter(group => group.issue)
+      .sort((a, b) => b.dateKey.localeCompare(a.dateKey) || a.issue.localeCompare(b.issue, "zh-CN"));
   }
 
   function populateFilters() {
@@ -102,12 +144,11 @@
     if (!filtered.length) {
       const empty = document.createElement("div");
       empty.className = "archive-empty";
-      empty.textContent = "没有找到符合条件的歌单。";
+      empty.textContent = "暂时没有歌单数据。";
       container.appendChild(empty);
       return;
     }
 
-    // 先按月份分组，再按日期分组；待分类歌单单独放在最后。
     const monthGroups = new Map();
     filtered.forEach(p => {
       const monthKey = p.monthKey || "待分类";
@@ -118,7 +159,7 @@
     [...monthGroups.entries()].sort((a, b) => b[0].localeCompare(a[0])).forEach(([monthKey, monthItems]) => {
       const monthSection = document.createElement("details");
       monthSection.className = "archive-month-group";
-      if (monthGroups.size && monthKey === [...monthGroups.keys()].sort().reverse()[0]) monthSection.open = true;
+      if (monthKey === [...monthGroups.keys()].sort().reverse()[0]) monthSection.open = true;
       const monthHeading = document.createElement("summary");
       monthHeading.className = "archive-month-heading";
       monthHeading.textContent = monthKey === "待分类" ? "待分类歌单" : monthKey.slice(0, 4) + "年" + Number(monthKey.slice(4, 6)) + "月";
