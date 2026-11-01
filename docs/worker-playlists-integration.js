@@ -42,9 +42,9 @@ async function importPublishedPlaylist(request, env) {
   const issue = String(body.issue || "").trim();
   const timeSlot = String(body.time_slot || "").trim();
   const overwrite = body.overwrite === true;
-  const allowedSlots = ["课间", "午间", "宿舍", "晚间", "未分类"];
+  const allowedSlots = ["课间", "午间", "宿舍", "晚间", "其他", "未分类"];
 
-  if (!/^\\d{8}(课间|午间|宿舍|晚间|未分类)$/.test(issue)) {
+  if (!/^\\d{8}(课间|午间|宿舍|晚间|其他|未分类)$/.test(issue)) {
     return json({ ok: false, error: "期数格式应为 YYYYMMDD 加时段" }, 400, request);
   }
   if (!allowedSlots.includes(timeSlot) || !issue.endsWith(timeSlot)) {
