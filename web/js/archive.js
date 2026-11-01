@@ -106,9 +106,10 @@
     });
 
     [...monthGroups.entries()].sort((a, b) => b[0].localeCompare(a[0])).forEach(([monthKey, monthItems]) => {
-      const monthSection = document.createElement("section");
+      const monthSection = document.createElement("details");
       monthSection.className = "archive-month-group";
-      const monthHeading = document.createElement("h2");
+      if (monthGroups.size && monthKey === [...monthGroups.keys()].sort().reverse()[0]) monthSection.open = true;
+      const monthHeading = document.createElement("summary");
       monthHeading.className = "archive-month-heading";
       monthHeading.textContent = monthKey === "待分类" ? "待分类歌单" : monthKey.slice(0, 4) + "年" + Number(monthKey.slice(4, 6)) + "月";
       monthSection.appendChild(monthHeading);
@@ -121,9 +122,10 @@
       });
 
       [...dateGroups.entries()].sort((a, b) => b[0].localeCompare(a[0])).forEach(([dateKey, dateItems]) => {
-        const dateSection = document.createElement("section");
+        const dateSection = document.createElement("details");
         dateSection.className = "archive-date-group";
-        const dateHeading = document.createElement("h3");
+        if (dateKey === [...dateGroups.keys()].sort().reverse()[0]) dateSection.open = true;
+        const dateHeading = document.createElement("summary");
         dateHeading.className = "archive-date-heading";
         if (dateKey === "待分类") {
           dateHeading.textContent = "日期待确认";
