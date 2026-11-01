@@ -31,7 +31,7 @@
     <section class="playlist-panel">
       <h1>歌单智能导入</h1>
       <p>支持 XLSX、Markdown、TXT 和网易云歌单链接。对于“# 日期歌单 / ## 时段 / ### 序号. 歌名 / 下一行歌手”的 Markdown 模板，会自动按时段拆分为独立歌单。</p>
-      <p class="playlist-muted">仅管理员可导入；本页面不会自动发布歌单。网易云读取需要后端解析服务已配置。</p>
+      <p class="playlist-muted">仅管理员可导入；解析并校对成功后可直接发布至正式档案，无需审核。网易云读取需要后端解析服务已配置。</p>
     </section>
 
     <section class="playlist-panel">
@@ -75,7 +75,7 @@
       </div>
       <div class="playlist-actions">
         <button id="add-track-button" type="button">添加歌曲</button>
-        <button id="save-playlist-button" type="button">确认导入（保存为草稿）</button>
+        <button id="save-playlist-button" type="button">确认导入并发布</button>
       </div>
       <p id="playlist-status" class="playlist-status" role="status" aria-live="polite"></p>
     </section>
@@ -90,6 +90,18 @@
       "use strict";
       const $ = id => document.getElementById(id);
       const state = { tracks: [], templateMode: false };
+      async function requireAdmin() {
+        if (typeof getCurrentUser !== "function") throw new Error("账号模块未加载");
+        const user = await getCurrentUser();
+        if (!user || !["admin", "root"].includes(user.role)) {
+          document.querySelector("main").replaceChildren();
+          const message = document.createElement("section");
+          message.className = "playlist-panel";
+          message.textContent = "此功能仅对管理员开放。请使用 admin 或 root 账号登录。";
+          document.querySelector("main").appendChild(message);
+          throw new Error("权限不足");
+        }
+      }
       const setStatus = (message, error = false) => {
         $("playlist-status").textContent = message;
         $("playlist-status").classList.toggle("playlist-error", error);
@@ -302,6 +314,8 @@
         $("playlist-count").textContent = "共 " + state.tracks.length + " 首歌曲" + (summary ? "（" + summary + "）" : "");
       }
 
+      requireAdmin().catch(() => { document.querySelectorAll("main button, main input, main select").forEach(el => el.disabled = true); });
+
       $("parse-file-button").addEventListener("click", async () => {
         const file = $("playlist-file").files[0];
         if (!file) return setStatus("请先选择 XLSX、MD 或 TXT 文件。", true);
@@ -392,14 +406,14 @@
             tracks
           }));
           const summary = plans.map(plan => plan.issue + "（" + plan.tracks.length + " 首）").join("\n");
-          if (!confirm("即将分别保存以下草稿：\n" + summary + "\n\n继续吗？")) return;
+          if (!confirm("即将直接发布以下正式歌单：\n" + summary + "\n\n继续吗？")) return;
 
           const completed = [];
           for (const plan of plans) {
             setStatus("正在保存 " + plan.issue + "……");
             let result = await postPlaylist(plan.issue, plan.slot, plan.tracks, false);
             if (result.response.status === 409 && result.data?.code === "ISSUE_EXISTS") {
-              if (!confirm("期数 " + plan.issue + " 已存在。是否覆盖该期歌单并重置为草稿？")) {
+              if (!confirm("期数 " + plan.issue + " 已存在。是否覆盖该期正式歌单？")) {
                 throw new Error("已取消。已完成的歌单：" + (completed.join("、") || "无") + "。");
               }
               result = await postPlaylist(plan.issue, plan.slot, plan.tracks, true);
@@ -407,7 +421,7 @@
             if (!result.response.ok) throw new Error(plan.issue + " 保存失败：" + (result.data?.error || "HTTP " + result.response.status));
             completed.push(plan.issue + "（" + result.data.count + " 首）");
           }
-          setStatus("全部导入成功：\n" + completed.join("\n"));
+          setStatus("全部发布成功：\n" + completed.join("\n"));
         } catch (error) {
           setStatus("导入结果：\n" + error.message, true);
         } finally {
