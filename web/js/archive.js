@@ -9,7 +9,7 @@
 
   function classifyIssue(issue) {
     const title = String(issue || "").trim();
-    const match = title.match(/^(\d{4})[-年/]?(\d{2})[-月/]?(\d{2})日?\s*[-_— ]?\s*(.*)$/);
+    const match = title.match(/^(\d{4})\s*[-年/]?\s*(\d{2})\s*[-月/]?\s*(\d{2})\s*日?\s*[-_— ]?\s*(.*)$/);
     if (!match) return { dateKey: "", monthKey: "", monthLabel: "待分类", period: "待分类" };
     const year = Number(match[1]), month = Number(match[2]), day = Number(match[3]);
     if (month < 1 || month > 12 || day < 1 || day > new Date(year, month, 0).getDate()) {
@@ -30,9 +30,15 @@
         console.warn("歌单歌曲 JSON 解析失败：", issue, error);
       }
     }
+    const classified = classifyIssue(issue);
+    const explicitSlot = String(group && group.time_slot || "").trim();
+    const period = ["课间", "午间", "宿舍"].includes(explicitSlot)
+      ? explicitSlot
+      : (explicitSlot ? "其他" : classified.period);
     return {
       issue,
-      ...classifyIssue(issue),
+      ...classified,
+      period,
       songs: songs.map(song => ({
         title: String(song && song.title || ""),
         author: String(song && (song.author || song.artist) || "")
