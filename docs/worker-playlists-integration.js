@@ -82,7 +82,7 @@ async function importPublishedPlaylist(request, env) {
       UPDATE playlists
       SET time_slot = ?, songs_json = ?, created_by = ?, updated_at = CURRENT_TIMESTAMP
       WHERE issue = ?
-    `).bind(timeSlot, auth.user.id, songsJson, issue).run();
+    `).bind(timeSlot, songsJson, auth.user.id, issue).run();
   } else {
     await env.DB.prepare(`
       INSERT INTO playlists (issue, time_slot, songs_json, created_by)
