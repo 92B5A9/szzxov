@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#dfe7ef">
   <title>歌单详情丨苏州中学OV广播社</title>
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/style.css?v=20261102-1">
   <style>
     .playlist-page{max-width:900px;margin:0 auto;padding:20px}
     .playlist-panel{padding:22px;border:1px solid #8885;border-radius:18px;margin:16px 0}
@@ -32,78 +32,106 @@
       <div id="playlist-tracks"></div>
     </section>
   </main>
-  <script src="/js/config.js"></script>
-  <script src="/js/auth.js"></script>
-  <script src="/js/navbar.js"></script>
-  <script src="/js/theme.js"></script>
+  <script src="/js/config.js?v=20261102-1"></script>
+  <script src="/js/auth.js?v=20261102-1"></script>
+  <script src="/js/navbar.js?v=20261102-1"></script>
+  <script src="/js/theme.js?v=20261102-1"></script>
   <script>
+    // 歌单详情页版本：20261102-1
     (async function () {
       const titleEl = document.getElementById("playlist-title");
       const metaEl = document.getElementById("playlist-meta");
       const tracksEl = document.getElementById("playlist-tracks");
       const issue = new URLSearchParams(location.search).get("issue");
+
       if (!issue) {
         titleEl.textContent = "没有指定歌单";
         metaEl.textContent = "请从音乐档案馆选择一份歌单。";
         return;
       }
+
       try {
+        const apiBase = ((window.SZZXOV && window.SZZXOV.API) || "https://api.szzxov.com").replace(/\\/$/, "");
         let playlist = null;
 
-        // 先尝试静态档案，确保旧歌单仍可正常打开。
-        try {
-          const response = await fetch("/archive/archive.json", { cache: "no-store" });
-          if (response.ok) {
-            const text = await response.text();
-            if (!/^\\s*<!doctype html/i.test(text) && !/^\\s*<html/i.test(text)) {
-              const data = JSON.parse(text);
-              playlist = Array.isArray(data.issues)
-                ? data.issues.find(item => item.issue === issue)
-                : null;
-            }
-          }
-        } catch (staticError) {
-          console.warn("静态档案读取失败，继续查询数据库：", staticError);
+        // 优先按名称精确读取数据库中的单份歌单，避免下载全部歌单。
+        const detailUrl = apiBase + "/api/archive/playlists/detail?issue=" + encodeURIComponent(issue);
+        const detailResponse = await fetch(detailUrl, {
+          cache: "no-store",
+          credentials: "include"
+        });
+
+        if (detailResponse.ok) {
+          const detailData = await detailResponse.json();
+          playlist = detailData.playlist || null;
+        } else if (detailResponse.status !== 404) {
+          throw new Error("歌单读取失败（HTTP " + detailResponse.status + "）");
         }
 
-        // 新导入的歌单保存在 D1，需要通过 Worker API 读取。
+        // 兼容旧静态歌单；只在数据库中没有该歌单时才读取静态档案。
         if (!playlist) {
-          const apiBase = (window.SZZXOV && window.SZZXOV.API) || "https://api.szzxov.com";
-          const response = await fetch(apiBase.replace(/\\/$/, "") + "/api/archive/playlists", {
+          const staticResponse = await fetch("/archive/archive.json", { cache: "force-cache" });
+          if (staticResponse.ok) {
+            const data = await staticResponse.json();
+            playlist = Array.isArray(data.issues)
+              ? data.issues.find(item => item.issue === issue)
+              : null;
+          }
+        }
+
+        // 兼容新接口尚未部署时的过渡状态。部署 Worker 后正常不会执行此分支。
+        if (!playlist && detailResponse.status === 404) {
+          const listResponse = await fetch(apiBase + "/api/archive/playlists", {
             cache: "no-store",
             credentials: "include"
           });
-          if (!response.ok) throw new Error("数据库档案读取失败（HTTP " + response.status + "）");
-          const data = await response.json();
-          playlist = Array.isArray(data.playlists)
-            ? data.playlists.find(item => item.issue === issue)
-            : null;
+          if (listResponse.ok) {
+            const data = await listResponse.json();
+            playlist = Array.isArray(data.playlists)
+              ? data.playlists.find(item => item.issue === issue)
+              : null;
+          }
         }
 
         if (!playlist) throw new Error("没有找到这份歌单");
-        const match = String(playlist.issue).match(/^(\d{4})(\d{2})(\d{2})(.*)$/);
-        const period = match ? (match[4] || "未分类") : "未分类";
-        const dateText = match ? match[1] + "年" + Number(match[2]) + "月" + Number(match[3]) + "日" : "日期待确认";
+
+        const songs = Array.isArray(playlist.songs) ? playlist.songs : [];
+        const dateMatch = String(playlist.issue).match(/^(\\d{4})[\\s年-]?(\\d{2})[\\s月-]?(\\d{2})/);
+        const dateText = dateMatch
+          ? dateMatch[1] + "年" + Number(dateMatch[2]) + "月" + Number(dateMatch[3]) + "日"
+          : "日期待确认";
+        const slot = ["课间", "午间", "宿舍", "其他"].includes(playlist.time_slot)
+          ? playlist.time_slot
+          : "其他";
+
         titleEl.textContent = playlist.issue;
-        metaEl.textContent = dateText + " · " + period + " · " + (Array.isArray(playlist.songs) ? playlist.songs.length : 0) + " 首歌曲";
-        (Array.isArray(playlist.songs) ? playlist.songs : []).forEach((song, index) => {
+        metaEl.textContent = dateText + " · " + slot + " · " + songs.length + " 首歌曲";
+
+        const fragment = document.createDocumentFragment();
+        songs.forEach((song, index) => {
           const row = document.createElement("div");
           row.className = "playlist-track";
+
           const number = document.createElement("span");
           number.className = "track-number";
           number.textContent = String(index + 1).padStart(2, "0");
+
           const info = document.createElement("div");
           info.className = "track-info";
+
           const title = document.createElement("div");
           title.className = "track-title";
           title.textContent = song.title || "未命名歌曲";
+
           const artist = document.createElement("div");
           artist.className = "track-artist";
           artist.textContent = song.author || "艺术家未知";
+
           info.append(title, artist);
           row.append(number, info);
-          tracksEl.appendChild(row);
+          fragment.appendChild(row);
         });
+        tracksEl.replaceChildren(fragment);
       } catch (error) {
         titleEl.textContent = "歌单暂时无法打开";
         metaEl.textContent = error.message || "请稍后重试。";
