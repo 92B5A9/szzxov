@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#dfe7ef">
+  <title>歌单详情丨苏州中学OV广播社</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .playlist-page{max-width:900px;margin:0 auto;padding:20px}
+    .playlist-panel{padding:22px;border:1px solid #8885;border-radius:18px;margin:16px 0}
+    .playlist-meta{opacity:.7;font-size:.92em}
+    .playlist-track{display:flex;align-items:flex-start;gap:14px;padding:14px 4px;border-bottom:1px solid #8883}
+    .playlist-track:last-child{border-bottom:0}
+    .track-number{min-width:28px;opacity:.55;font-variant-numeric:tabular-nums}
+    .track-info{min-width:0;flex:1}
+    .track-title{font-weight:650;overflow-wrap:anywhere}
+    .track-artist{opacity:.7;font-size:.94em;margin-top:4px;overflow-wrap:anywhere}
+    .playlist-back{display:inline-flex;margin:8px 0 16px}
+    .playlist-error{padding:22px;text-align:center}
+    @media(max-width:650px){.playlist-page{padding:12px}.playlist-panel{padding:16px}}
+  </style>
+</head>
+<body class="light-mode">
+  <div id="site-nav"></div>
+  <main class="playlist-page">
+    <a class="playlist-back" href="/archive/">← 返回音乐档案馆</a>
+    <section class="playlist-panel">
+      <p class="playlist-meta">OUR VOICE · PLAYLIST ARCHIVE</p>
+      <h1 id="playlist-title">正在读取歌单……</h1>
+      <p id="playlist-meta" class="playlist-meta"></p>
+      <div id="playlist-tracks"></div>
+    </section>
+  </main>
+  <script src="/js/config.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/theme.js"></script>
+  <script>
+    (async function () {
+      const titleEl = document.getElementById("playlist-title");
+      const metaEl = document.getElementById("playlist-meta");
+      const tracksEl = document.getElementById("playlist-tracks");
+      const issue = new URLSearchParams(location.search).get("issue");
+      if (!issue) {
+        titleEl.textContent = "没有指定歌单";
+        metaEl.textContent = "请从音乐档案馆选择一份歌单。";
+        return;
+      }
+      try {
+        const response = await fetch("/archive/archive.json", { cache: "no-store" });
+        if (!response.ok) throw new Error("档案读取失败");
+        const data = await response.json();
+        const playlist = Array.isArray(data.issues) ? data.issues.find(item => item.issue === issue) : null;
+        if (!playlist) throw new Error("没有找到这份歌单");
+        const match = String(playlist.issue).match(/^(\d{4})(\d{2})(\d{2})(.*)$/);
+        const period = match ? (match[4] || "未分类") : "未分类";
+        const dateText = match ? match[1] + "年" + Number(match[2]) + "月" + Number(match[3]) + "日" : "日期待确认";
+        titleEl.textContent = playlist.issue;
+        metaEl.textContent = dateText + " · " + period + " · " + (Array.isArray(playlist.songs) ? playlist.songs.length : 0) + " 首歌曲";
+        (Array.isArray(playlist.songs) ? playlist.songs : []).forEach((song, index) => {
+          const row = document.createElement("div");
+          row.className = "playlist-track";
+          const number = document.createElement("span");
+          number.className = "track-number";
+          number.textContent = String(index + 1).padStart(2, "0");
+          const info = document.createElement("div");
+          info.className = "track-info";
+          const title = document.createElement("div");
+          title.className = "track-title";
+          title.textContent = song.title || "未命名歌曲";
+          const artist = document.createElement("div");
+          artist.className = "track-artist";
+          artist.textContent = song.author || "艺术家未知";
+          info.append(title, artist);
+          row.append(number, info);
+          tracksEl.appendChild(row);
+        });
+      } catch (error) {
+        titleEl.textContent = "歌单暂时无法打开";
+        metaEl.textContent = error.message || "请稍后重试。";
+        tracksEl.textContent = "";
+      }
+    })();
+  </script>
+</body>
+</html>
