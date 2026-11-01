@@ -59,6 +59,7 @@
           <option value="午间">午间</option>
           <option value="宿舍">宿舍</option>
           <option value="晚间">晚间</option>
+          <option value="其他">其他</option>
           <option value="未分类">未分类</option>
         </select>
       </label>
@@ -250,7 +251,7 @@
           const tr = document.createElement("tr");
           const slotCell = document.createElement("td");
           const slotSelect = document.createElement("select");
-          ["课间", "午间", "宿舍", "晚间", "未分类"].forEach(slot => {
+          ["课间", "午间", "宿舍", "晚间", "其他", "未分类"].forEach(slot => {
             const option = document.createElement("option");
             option.value = slot;
             option.textContent = slot;
