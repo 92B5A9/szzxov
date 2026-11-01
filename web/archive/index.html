@@ -58,7 +58,7 @@
     <section class="archive-panel">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
         <h2 style="margin:0">全部歌单</h2>
-        <a href="/archive/import/">智能导入</a>
+        <a id="smart-import-link" href="/archive/import/" hidden>智能导入</a>
       </div>
       <div id="list" aria-live="polite">档案加载中……</div>
     </section>
@@ -67,6 +67,14 @@
   <script src="/js/auth.js"></script>
   <script src="/js/navbar.js"></script>
   <script src="/js/theme.js"></script>
-  <script src="/js/archive.js?v=20261101-2"></script>
+  <script src="/js/archive.js?v=20261101-3"></script>
+  <script>
+    (async () => {
+      const link = document.getElementById("smart-import-link");
+      if (!link || typeof getCurrentUser !== "function") return;
+      const user = await getCurrentUser();
+      link.hidden = !(user && ["admin", "root"].includes(user.role));
+    })();
+  </script>
 </body>
 </html>
