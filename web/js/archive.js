@@ -1,6 +1,6 @@
 // ========================================
 // SZZXOV 音乐档案馆
-// 首页展示歌单卡片；点击进入独立歌单详情
+// 按月份、日期分组展示歌单卡片
 // ========================================
 (function () {
   "use strict";
@@ -11,12 +11,10 @@
     const title = String(issue || "").trim();
     const match = title.match(/^(\d{4})[-年/]?(\d{2})[-月/]?(\d{2})日?\s*[-_— ]?\s*(.*)$/);
     if (!match) return { dateKey: "", monthKey: "", monthLabel: "待分类", period: "待分类" };
-
     const year = Number(match[1]), month = Number(match[2]), day = Number(match[3]);
     if (month < 1 || month > 12 || day < 1 || day > new Date(year, month, 0).getDate()) {
       return { dateKey: "", monthKey: "", monthLabel: "待分类", period: "待分类" };
     }
-
     const suffix = String(match[4] || "").trim();
     const knownPeriods = ["课间", "午间", "宿舍", "晚间"];
     const period = knownPeriods.find(item => suffix.includes(item)) || suffix || "待分类";
@@ -54,6 +52,29 @@
     if (periods.includes(selectedPeriod)) periodSelect.value = selectedPeriod;
   }
 
+  function makePlaylistCard(p) {
+    const card = document.createElement("a");
+    card.className = "archive-playlist archive-playlist-link";
+    card.href = "/archive/playlist/?issue=" + encodeURIComponent(p.issue);
+    card.setAttribute("aria-label", "查看 " + p.issue + " 歌单详情");
+    const top = document.createElement("div");
+    top.className = "archive-card-top";
+    const heading = document.createElement("h3");
+    heading.textContent = p.issue || "未命名歌单";
+    const arrow = document.createElement("span");
+    arrow.className = "archive-card-arrow";
+    arrow.textContent = "↗";
+    top.append(heading, arrow);
+    const meta = document.createElement("div");
+    meta.className = "archive-meta";
+    meta.textContent = p.period;
+    const count = document.createElement("div");
+    count.className = "archive-song-count";
+    count.textContent = p.songs.length + " 首歌曲 · 查看歌单";
+    card.append(top, meta, count);
+    return card;
+  }
+
   function renderList() {
     const container = $("list");
     const keyword = $("search").value.trim().toLocaleLowerCase();
@@ -76,30 +97,52 @@
       return;
     }
 
+    // 先按月份分组，再按日期分组；待分类歌单单独放在最后。
+    const monthGroups = new Map();
     filtered.forEach(p => {
-      const card = document.createElement("a");
-      card.className = "archive-playlist archive-playlist-link";
-      card.href = "/archive/playlist/?issue=" + encodeURIComponent(p.issue);
-      card.setAttribute("aria-label", "查看 " + p.issue + " 歌单详情");
+      const monthKey = p.monthKey || "待分类";
+      if (!monthGroups.has(monthKey)) monthGroups.set(monthKey, []);
+      monthGroups.get(monthKey).push(p);
+    });
 
-      const top = document.createElement("div");
-      top.className = "archive-card-top";
-      const heading = document.createElement("h3");
-      heading.textContent = p.issue || "未命名歌单";
-      const arrow = document.createElement("span");
-      arrow.className = "archive-card-arrow";
-      arrow.textContent = "↗";
-      top.append(heading, arrow);
+    [...monthGroups.entries()].sort((a, b) => b[0].localeCompare(a[0])).forEach(([monthKey, monthItems]) => {
+      const monthSection = document.createElement("section");
+      monthSection.className = "archive-month-group";
+      const monthHeading = document.createElement("h2");
+      monthHeading.className = "archive-month-heading";
+      monthHeading.textContent = monthKey === "待分类" ? "待分类歌单" : monthKey.slice(0, 4) + "年" + Number(monthKey.slice(4, 6)) + "月";
+      monthSection.appendChild(monthHeading);
 
-      const meta = document.createElement("div");
-      meta.className = "archive-meta";
-      meta.textContent = p.monthLabel + " · " + p.period;
-      const count = document.createElement("div");
-      count.className = "archive-song-count";
-      count.textContent = p.songs.length + " 首歌曲 · 查看歌单";
+      const dateGroups = new Map();
+      monthItems.forEach(p => {
+        const dateKey = p.dateKey || "待分类";
+        if (!dateGroups.has(dateKey)) dateGroups.set(dateKey, []);
+        dateGroups.get(dateKey).push(p);
+      });
 
-      card.append(top, meta, count);
-      container.appendChild(card);
+      [...dateGroups.entries()].sort((a, b) => b[0].localeCompare(a[0])).forEach(([dateKey, dateItems]) => {
+        const dateSection = document.createElement("section");
+        dateSection.className = "archive-date-group";
+        const dateHeading = document.createElement("h3");
+        dateHeading.className = "archive-date-heading";
+        if (dateKey === "待分类") {
+          dateHeading.textContent = "日期待确认";
+        } else {
+          const year = Number(dateKey.slice(0, 4)), month = Number(dateKey.slice(4, 6)), day = Number(dateKey.slice(6, 8));
+          const weekday = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"][new Date(year, month - 1, day).getDay()];
+          dateHeading.textContent = month + "月" + day + "日 · " + weekday;
+        }
+        const cards = document.createElement("div");
+        cards.className = "archive-grid";
+        dateItems.sort((a, b) => {
+          const order = ["课间", "午间", "宿舍", "晚间"];
+          return (order.indexOf(a.period) < 0 ? 99 : order.indexOf(a.period)) -
+            (order.indexOf(b.period) < 0 ? 99 : order.indexOf(b.period));
+        }).forEach(p => cards.appendChild(makePlaylistCard(p)));
+        dateSection.append(dateHeading, cards);
+        monthSection.appendChild(dateSection);
+      });
+      container.appendChild(monthSection);
     });
   }
 
