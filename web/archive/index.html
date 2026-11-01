@@ -22,9 +22,12 @@
     .archive-song-artist{display:block;opacity:.7;font-size:.9em;margin-top:2px}
     .archive-empty{padding:24px;text-align:center;opacity:.75}
 .archive-month-group{margin-top:24px}
-.archive-month-heading{font-size:1.35rem;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid #8885}
+.archive-month-heading{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:1.35rem;margin:0 0 18px;padding:0 0 10px;border-bottom:1px solid #8885;list-style:none}
+.archive-month-heading::-webkit-details-marker,.archive-date-heading::-webkit-details-marker{display:none}
+.archive-month-heading::before,.archive-date-heading::before{content:"▸";display:inline-block;transition:transform .18s;opacity:.65}
+.archive-month-group[open]>.archive-month-heading::before,.archive-date-group[open]>.archive-date-heading::before{transform:rotate(90deg)}
 .archive-date-group{margin:18px 0 26px}
-.archive-date-heading{font-size:1.05rem;margin:0 0 10px;opacity:.88}
+.archive-date-heading{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:1.05rem;margin:0 0 10px;opacity:.88;list-style:none}
 .archive-playlist-link{display:block;color:inherit;text-decoration:none;transition:transform .18s,border-color .18s}
 .archive-playlist-link:hover{transform:translateY(-2px);border-color:currentColor}
 .archive-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
@@ -64,6 +67,6 @@
   <script src="/js/auth.js"></script>
   <script src="/js/navbar.js"></script>
   <script src="/js/theme.js"></script>
-  <script src="/js/archive.js?v=20261101"></script>
+  <script src="/js/archive.js?v=20261101-2"></script>
 </body>
 </html>
