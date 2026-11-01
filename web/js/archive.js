@@ -16,7 +16,7 @@
       return { dateKey: "", monthKey: "", monthLabel: "待分类", period: "待分类" };
     }
     const suffix = String(match[4] || "").trim();
-    const knownPeriods = ["课间", "午间", "宿舍", "晚间"];
+    const knownPeriods = ["课间", "午间", "宿舍", "晚间", "其他"];
     const period = knownPeriods.find(item => suffix.includes(item)) || suffix || "待分类";
     const monthKey = match[1] + match[2];
     return { dateKey: match[1] + match[2] + match[3], monthKey, monthLabel: monthKey + "月", period };
@@ -93,7 +93,7 @@
     const selectedMonth = monthSelect.value, selectedPeriod = periodSelect.value;
     const months = [...new Set(allPlaylists.map(p => p.monthKey).filter(Boolean))].sort().reverse();
     const periods = [...new Set(allPlaylists.map(p => p.period))].sort((a, b) => {
-      const order = ["课间", "午间", "宿舍", "晚间", "待分类"];
+      const order = ["课间", "午间", "宿舍", "晚间", "其他", "待分类"];
       return (order.indexOf(a) < 0 ? 99 : order.indexOf(a)) - (order.indexOf(b) < 0 ? 99 : order.indexOf(b));
     });
     monthSelect.replaceChildren(new Option("全部月份", ""));
@@ -188,7 +188,7 @@
         const cards = document.createElement("div");
         cards.className = "archive-grid";
         dateItems.sort((a, b) => {
-          const order = ["课间", "午间", "宿舍", "晚间"];
+          const order = ["课间", "午间", "宿舍", "晚间", "其他"];
           return (order.indexOf(a.period) < 0 ? 99 : order.indexOf(a.period)) -
             (order.indexOf(b.period) < 0 ? 99 : order.indexOf(b.period));
         }).forEach(p => cards.appendChild(makePlaylistCard(p)));
