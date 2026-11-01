@@ -27,6 +27,16 @@
     if (!response.ok) throw new Error("往期档案加载失败（HTTP " + response.status + "）");
     const data = await response.json();
     if (!data || !Array.isArray(data.issues)) throw new Error("archive.json 格式错误");
+    const publishedResponse = await fetch("/api/archive/playlists", { cache: "no-store", credentials: "include" });
+    if (publishedResponse.ok) {
+      const publishedData = await publishedResponse.json();
+      if (Array.isArray(publishedData.playlists)) {
+        const known = new Set(data.issues.map(item => String(item.issue || "")));
+        for (const item of publishedData.playlists) {
+          if (!known.has(String(item.issue || ""))) data.issues.push(item);
+        }
+      }
+    }
     return data.issues.map(group => {
       const issue = String(group.issue || "").trim();
       const songs = Array.isArray(group.songs) ? group.songs.map(song => ({
