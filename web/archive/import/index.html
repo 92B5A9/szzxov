@@ -402,7 +402,7 @@
           const baseDate = state.templateMode ? base.replace(/歌单$/, "").trim() : base;
           const plans = [...groups.entries()].map(([slot, tracks]) => ({
             slot,
-            issue: state.templateMode ? baseDate + slot : (groups.size === 1 ? base : base + slot),
+            issue: state.templateMode ? baseDate + slot : (base.endsWith(slot) ? base : base + slot),
             tracks
           }));
           const summary = plans.map(plan => plan.issue + "（" + plan.tracks.length + " 首）").join("\n");
