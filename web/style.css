@@ -131,3 +131,59 @@ body.dark-mode .friend-card:hover { background: rgba(255,255,255,.09); }
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
   .fade-pair { opacity: 1; transform: none; }
 }
+
+/* 新版共享导航：菜单区域独立滚动，账号入口固定在右侧 */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: visible;
+}
+.topbar-nav {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.topbar-nav a {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 7px 13px;
+  border-radius: 14px;
+  color: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .2s ease, color .2s ease;
+}
+.topbar-nav a:hover {
+  background: rgba(0,0,0,.06);
+}
+.topbar-nav a.active {
+  background: rgba(70,110,160,.14);
+  color: #315f91;
+}
+#authArea {
+  flex: 0 0 auto;
+  margin-left: 8px;
+}
+#authArea .account-link {
+  color: inherit;
+  white-space: nowrap;
+}
+body.dark-mode .topbar-nav a:hover {
+  background: rgba(255,255,255,.08);
+}
+body.dark-mode .topbar-nav a.active {
+  background: rgba(130,170,220,.2);
+  color: #b9d8ff;
+}
+body.dark-mode #authArea .account-link {
+  border-color: rgba(255,255,255,.15);
+  background: rgba(255,255,255,.08);
+}
+@media (max-width: 899px) {
+  .topbar-nav a {
+    padding: 7px 10px;
+    font-size: 14px;
+  }
+}
