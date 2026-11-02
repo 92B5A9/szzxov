@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#dfe7ef">
+  <title>页面维护中丨苏州中学OV广播社</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .maintenance-wrap {
+      min-height: calc(100vh - 100px);
+      display: grid;
+      place-items: center;
+      padding: 28px 18px;
+    }
+    .maintenance-card {
+      width: min(100%, 620px);
+      padding: clamp(28px, 6vw, 52px);
+      text-align: center;
+    }
+    .maintenance-icon {
+      width: 76px;
+      height: 76px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 22px;
+      border-radius: 24px;
+      background: rgba(110, 145, 180, .14);
+      font-size: 38px;
+    }
+    .maintenance-card h1 { margin: 0 0 14px; }
+    .maintenance-card p { line-height: 1.8; opacity: .78; }
+    .maintenance-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 26px;
+    }
+    .maintenance-actions a {
+      display: inline-block;
+      padding: 10px 18px;
+      border-radius: 12px;
+      text-decoration: none;
+      border: 1px solid rgba(120, 140, 160, .28);
+    }
+  </style>
+</head>
+<body class="light-mode">
+  <div id="site-nav"></div>
+  <main class="maintenance-wrap">
+    <section class="glass-card maintenance-card">
+      <div class="maintenance-icon" aria-hidden="true">🛠️</div>
+      <h1>页面维护中</h1>
+      <p>投稿功能正在进行维护与调整，暂时无法使用。</p>
+      <p>给你带来不便，敬请谅解。维护完成后将重新开放。</p>
+      <div class="maintenance-actions">
+        <a href="/">返回首页</a>
+        <a href="/help/">查看投稿说明</a>
+      </div>
+    </section>
+  </main>
+  <script src="/js/config.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/theme.js"></script>
+</body>
+</html>
