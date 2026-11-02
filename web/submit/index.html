@@ -9,7 +9,7 @@
 </head>
 <body class="light-mode">
   <div id="site-nav"></div>
-  <main style="padding:20px;">
+  <main id="submitPage" style="padding:20px; display:none;">
     <div class="glass-card">
       <h1>提交投稿</h1>
       <form id="submitForm" style="margin-top:20px;">
@@ -26,6 +26,17 @@
   </main>
   <script src="/js/config.js"></script>
   <script src="/js/auth.js"></script>
+  <script>
+    (async function () {
+      const user = await getCurrentUser();
+      const role = String(user?.role || "").toLowerCase();
+      if (!user || !["admin", "root"].includes(role)) {
+        window.location.replace("/error/");
+        return;
+      }
+      document.getElementById("submitPage").style.display = "";
+    })();
+  </script>
   <script src="/js/navbar.js"></script>
   <script src="/js/theme.js"></script>
   <script src="/js/submit.js"></script>
