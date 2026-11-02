@@ -1,10 +1,10 @@
 // 全站导航加载与当前页面状态
 function markActiveNavigation(container) {
-  const currentPath = window.location.pathname.replace(/\\/+$/, "") || "/";
+  const currentPath = window.location.pathname.replace(/\/+$/, "") || "/";
   const links = container.querySelectorAll(".topbar-nav a");
 
   links.forEach(link => {
-    const target = new URL(link.href, window.location.origin).pathname.replace(/\\/+$/, "") || "/";
+    const target = new URL(link.href, window.location.origin).pathname.replace(/\/+$/, "") || "/";
     const active = target === "/"
       ? currentPath === "/"
       : currentPath === target || currentPath.startsWith(target + "/");
