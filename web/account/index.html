@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#dfe7ef">
+  <title>个人中心丨苏州中学OV广播社</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .account-layout {
+      display:grid;
+      grid-template-columns:minmax(220px, .8fr) minmax(0, 1.7fr);
+      gap:20px;
+      align-items:start;
+    }
+    .profile-card { text-align:center; }
+    .profile-avatar {
+      width:76px;height:76px;margin:8px auto 14px;border-radius:50%;
+      display:grid;place-items:center;font-size:34px;font-weight:700;
+      background:rgba(128,145,170,.2);border:1px solid rgba(255,255,255,.35);
+    }
+    .profile-name { margin:0;font-size:1.45rem;overflow-wrap:anywhere; }
+    .profile-role { display:inline-block;margin-top:8px;padding:5px 12px;border-radius:20px;background:rgba(128,145,170,.18);font-size:.85rem; }
+    .info-list { display:grid;gap:0;margin-top:12px; }
+    .info-row { display:flex;justify-content:space-between;gap:16px;padding:14px 2px;border-bottom:1px solid #8884; }
+    .info-row:last-child { border-bottom:0; }
+    .info-label { opacity:.7; }
+    .info-value { text-align:right;overflow-wrap:anywhere; }
+    .account-actions { display:grid;gap:10px;margin-top:18px; }
+    .account-actions a,.account-actions button {
+      display:block;width:100%;box-sizing:border-box;padding:12px 15px;border-radius:12px;
+      border:1px solid #8885;background:rgba(255,255,255,.16);color:inherit;
+      text-align:center;text-decoration:none;font:inherit;cursor:pointer;
+    }
+    .account-actions a:hover,.account-actions button:hover { background:rgba(128,145,170,.2); }
+    .account-message { padding:12px;border-radius:12px;background:rgba(128,145,170,.12);line-height:1.7; }
+    @media(max-width:700px) {
+      .account-layout { grid-template-columns:1fr; }
+      .profile-card { text-align:left; }
+      .profile-heading { display:flex;align-items:center;gap:14px; }
+      .profile-avatar { width:58px;height:58px;margin:0;flex:0 0 auto; }
+    }
+  </style>
+</head>
+<body class="light-mode">
+  <div id="site-nav"></div>
+  <main style="padding:20px;">
+    <div class="glass-card">
+      <h1>个人中心</h1>
+      <p style="opacity:.7;margin-top:-6px;">Account Center</p>
+      <div id="account-loading" class="account-message">正在读取账号信息…</div>
+      <div id="account-guest" class="account-message" hidden>
+        你尚未登录。登录后即可查看个人资料与账号信息。
+        <div class="account-actions">
+          <a href="/login/">登录</a>
+          <a href="/register/">注册账号</a>
+        </div>
+      </div>
+      <div id="account-content" class="account-layout" hidden>
+        <section class="glass-card profile-card">
+          <div class="profile-heading">
+            <div class="profile-avatar" id="profile-avatar">♙</div>
+            <div>
+              <h2 class="profile-name" id="profile-name">—</h2>
+              <span class="profile-role" id="profile-role">普通用户</span>
+            </div>
+          </div>
+          <div class="account-actions">
+            <a href="/my/">我的投稿</a>
+            <a href="/settings/">网站设置</a>
+            <a href="/admin/" id="admin-link" hidden>管理后台</a>
+            <button type="button" id="logout-button">退出登录</button>
+          </div>
+        </section>
+        <section class="glass-card">
+          <h2>账号信息</h2>
+          <div class="info-list">
+            <div class="info-row"><span class="info-label">用户名</span><strong class="info-value" id="info-username">—</strong></div>
+            <div class="info-row" id="user-id-row" hidden><span class="info-label">用户 ID</span><span class="info-value" id="info-id">—</span></div>
+            <div class="info-row"><span class="info-label">账号角色</span><span class="info-value" id="info-role">—</span></div>
+            <div class="info-row"><span class="info-label">登录状态</span><span class="info-value">已登录</span></div>
+          </div>
+          <p style="opacity:.7;line-height:1.7;margin-top:18px;">如需修改密码或其他账号安全设置，请使用后续开放的账号安全功能。</p>
+        </section>
+      </div>
+      <p id="account-error" role="alert" style="color:#c44;" hidden></p>
+    </div>
+  </main>
+  <script src="/js/config.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/theme.js"></script>
+  <script>
+    (() => {
+      const byId = id => document.getElementById(id);
+      const roleNames = { root: "超级管理员", admin: "管理员", user: "普通用户" };
+
+      async function loadAccount() {
+        const loading = byId("account-loading");
+        const guest = byId("account-guest");
+        const content = byId("account-content");
+        const error = byId("account-error");
+
+        try {
+          const { response, data } = await requestJSON("/api/auth/me", { method: "GET" });
+          loading.hidden = true;
+
+          if (!response.ok || !data?.ok) throw new Error(data?.error || "暂时无法读取账号信息");
+          if (!data.loggedIn || !data.user) {
+            guest.hidden = false;
+            return;
+          }
+
+          const user = data.user;
+          const username = typeof user.username === "string" ? user.username : "用户";
+          const role = typeof user.role === "string" ? user.role : "user";
+          const roleName = roleNames[role] || "普通用户";
+
+          byId("profile-avatar").textContent = Array.from(username)[0] || "♙";
+          byId("profile-name").textContent = username;
+          byId("profile-role").textContent = roleName;
+          byId("info-username").textContent = username;
+          byId("info-role").textContent = roleName;
+
+          if (user.id !== undefined && user.id !== null) {
+            byId("info-id").textContent = String(user.id);
+            byId("user-id-row").hidden = false;
+          }
+          if (role === "admin" || role === "root") byId("admin-link").hidden = false;
+
+          content.hidden = false;
+        } catch (err) {
+          loading.hidden = true;
+          error.textContent = err?.message || "加载账号信息失败，请稍后重试。";
+          error.hidden = false;
+        }
+      }
+
+      byId("logout-button").addEventListener("click", async event => {
+        const button = event.currentTarget;
+        button.disabled = true;
+        button.textContent = "正在退出…";
+        try {
+          const { response, data } = await requestJSON("/api/auth/logout", { method: "POST" });
+          if (!response.ok || data?.ok === false) throw new Error("退出登录失败，请重试。");
+          location.href = "/";
+        } catch (err) {
+          button.disabled = false;
+          button.textContent = "退出登录";
+          byId("account-error").textContent = err?.message || "退出登录失败，请重试。";
+          byId("account-error").hidden = false;
+        }
+      });
+
+      loadAccount();
+    })();
+  </script>
+</body>
+</html>
