@@ -1,4 +1,4 @@
-// 全站账号状态与菜单
+// 全站账号状态与入口
 async function getCurrentUser() {
   try {
     const { response, data } = await requestJSON("/api/auth/me", { method: "GET" });
@@ -12,49 +12,30 @@ async function getCurrentUser() {
 async function setupAuthUI() {
   const area = document.getElementById("authArea");
   if (!area) return;
+
   area.replaceChildren();
 
   const user = await getCurrentUser();
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = "account-button auth-user-button";
-  button.innerHTML = `<span class="account-icon">♙</span><span class="account-text"><span class="account-name">${user?.username || "账号"}</span><small>${user ? "Account" : "Login"}</small></span><span class="account-arrow">⌄</span>`;
+  const link = document.createElement("a");
+  link.className = "account-link";
+  link.href = "/account/";
+  link.setAttribute("aria-label", user ? "个人中心" : "登录或注册");
 
-  const menu = document.createElement("div");
-  menu.className = "auth-menu";
-  menu.hidden = true;
-  menu.innerHTML = user
-    ? `<a href="/my/">我的投稿 <span class="en">My Posts</span></a>${user.role === "admin" ? '<a href="/admin/">管理后台 <span class="en">Admin</span></a>' : ""}`
-    : '<a href="/login/">登录 <span class="en">Login</span></a><a href="/register/">注册 <span class="en">Register</span></a>';
+  const icon = document.createElement("span");
+  icon.className = "account-icon";
+  icon.textContent = "♙";
 
-  if (user) {
-    const logout = document.createElement("button");
-    logout.type = "button";
-    logout.innerHTML = '退出登录 <span class="en">Logout</span>';
-    logout.addEventListener("click", async () => {
-      logout.disabled = true;
-      logout.textContent = "退出中…";
-      try {
-        const { response } = await requestJSON("/api/auth/logout", { method: "POST" });
-        if (!response.ok) throw new Error("logout failed");
-        location.reload();
-      } catch {
-        logout.textContent = "退出失败";
-        logout.disabled = false;
-      }
-    });
-    menu.appendChild(logout);
-  }
+  const text = document.createElement("span");
+  text.className = "account-text";
 
-  area.append(button, menu);
-  button.addEventListener("click", event => {
-    event.stopPropagation();
-    menu.hidden = !menu.hidden;
-    button.setAttribute("aria-expanded", String(!menu.hidden));
-  });
-  menu.addEventListener("click", event => event.stopPropagation());
-  document.addEventListener("click", () => {
-    menu.hidden = true;
-    button.setAttribute("aria-expanded", "false");
-  });
+  const name = document.createElement("span");
+  name.className = "account-name";
+  name.textContent = user?.username || "登录 / 注册";
+
+  const subtitle = document.createElement("small");
+  subtitle.textContent = user ? "Account" : "Sign in";
+
+  text.append(name, subtitle);
+  link.append(icon, text);
+  area.append(link);
 }
